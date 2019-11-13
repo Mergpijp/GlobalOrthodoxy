@@ -1,18 +1,6 @@
 from django.contrib import admin
 
-from .models import Publication, Genre
-
-#class MembershipInline(admin.TabularInline):
-#    model = Group.members.through
-
-#class PublicationAdmin(admin.TabularInline):
-#	model = Publication
-
-#class GenreAdmin(admin.ModelAdmin):
-#	inlines = [PublicationAdmin,]
-
-#admin.site.register(Genre, GenreAdmin)
-#admin.site.register(Publication)
+from .models import Publication, Genre, Language, Author, Location, Document
 
 class GenreInline(admin.TabularInline):
     model = Publication.genre.through
@@ -30,5 +18,7 @@ class PublicationAdmin(admin.ModelAdmin):
 
 admin.site.register(Publication, PublicationAdmin)
 admin.site.register(Genre, GenreAdmin)
-#admin.site.register(PublicationAdmin)
-#admin.site.register(GemreAdmin)
+admin.site.register(Language)
+admin.site.register(Author)
+admin.site.register(Location)
+admin.site.register(Document)
