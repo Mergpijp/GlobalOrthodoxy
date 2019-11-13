@@ -21,6 +21,9 @@ class DocumentType(Enum):
 
 class Genre(models.Model):
     name = models.CharField(max_length=30)
+	
+    def __str__(self):
+        return 'Genre: ' + self.name
  
 def current_year():
     return datetime.date.today().year
@@ -34,11 +37,12 @@ class Publication(models.Model):
     year = models.IntegerField(('year'), validators=[MinValueValidator(1970), max_value_current_year])
     found_at = models.CharField(max_length=30)
     genre = models.ManyToManyField(Genre)
+    #genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
     usage = models.CharField(max_length=200)
     
     def __str__(self):
-        return 'title ' + self.title + ' language ' + self.language + ' year ' + str(self.year)\
-                + ' found at ' + self.found_at + ' usage ' + self.usage
+        return 'title: ' + self.title + ', language: ' + self.language + ', year: ' + str(self.year)\
+                + ', found at: ' + self.found_at + ', usage: ' + self.usage
 class Language(models.Model):
     direction = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in LanguageDirection], default='R')
 
