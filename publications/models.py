@@ -3,6 +3,7 @@ from enum import Enum
 from django import forms
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django_countries.fields import CountryField
 
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
@@ -33,21 +34,9 @@ def current_year():
 
 def max_value_current_year(value):
     return MaxValueValidator(current_year()+1)(value)  
-    
-class Publication(models.Model):
-    title = models.CharField(max_length=100)
-    language = models.CharField(max_length=30)
-    year = models.IntegerField(('year'), validators=[MinValueValidator(MINIMUM_YEAR_PUBLICATION), max_value_current_year])
-    found_at = models.CharField(max_length=30)
-    genre = models.ManyToManyField(Genre)
-    #genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
-    usage = models.CharField(max_length=200)
-    
-    def __str__(self):
-        return 'title: ' + self.title + ', language: ' + self.language + ', year: ' + str(self.year)\
-                + ', found at: ' + self.found_at + ', usage: ' + self.usage
-				
+    				
 class Language(models.Model):
+    name = models.CharField(max_length=30)
     direction = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in WritingDirection], default='R')
 
 class Author(models.Model):
@@ -62,18 +51,69 @@ class Location(models.Model):
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=2, choices=[(tag.value, tag) for tag in LocationType], default='CI')
     
-class Document(models.Model):
-    type = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in DocumentType], default='P')
-    publication = models.OneToOneField(Publication, on_delete=models.CASCADE, primary_key=True)
-    public = models.BooleanField(default=True)
+    def __str__(self):
+        return self.name
+     
+class Owner(models.Model):
     name = models.CharField(max_length=30)
-    location_on_disk = models.CharField(max_length=150)
     
+    def __str__(self):
+        return self.name
+
+class IllustrationLayoutType(models.Model):
+    name = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return self.name
+
+class SpecialOccasion(models.Model):
+    name = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return self.name
+
+class Church(models.Model):
+    name = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return self.name
 
 def year_choices():
     return [(r,r) for r in range(MINIMUM_YEAR, datetime.date.today().year+1)]
 
 class MyForm(forms.ModelForm):
     year = forms.TypedChoiceField(coerce=int, choices=year_choices, initial=current_year)
+
+class Publication(models.Model):
+    title_subtitle_european = models.CharField(max_length=100)
+    title_translation = models.CharField(max_length=100)
+    title_subtitle_transcription = models.CharField(max_length=100)
+    author = models.ManyToManyField(Author)
+    printed_by = models.CharField(max_length=30)
+    publication_date = models.DateField()
+    country = CountryField()
+    venue = models.CharField(max_length=30)
+    church = models.ManyToManyField(Church)
+    language = models.ManyToManyField(Language)
+    genre = models.ManyToManyField(Genre)
+    special_occasion = models.ManyToManyField(SpecialOccasion)
+    illustration_and_layout = models.ManyToManyField(IllustrationLayoutType)
+    nr_of_pages = models.IntegerField()
+    collection_date = models.DateField()
+    collection_country = CountryField()
+    collection_venue = models.CharField(max_length=30)
+    copyrights = models.NullBooleanField()
+    currently_owned_by = models.ManyToManyField(Owner)
+    comments = models.CharField(max_length=200)
     
+    def __str__(self):
+        return 'title: ' + self.title_translation +', publication date: ' + str(self.publication_date)\
+                + ', collection venue: ' + self.collection_venue + ', comments: ' + self.comments
+
+class Document(models.Model):
+    type = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in DocumentType], default='P')
+    publication = models.OneToOneField(Publication, on_delete=models.CASCADE, primary_key=True)
+    public = models.BooleanField(default=True)
+    name = models.CharField(max_length=30)
+    location_on_disk = models.CharField(max_length=150)    
 	

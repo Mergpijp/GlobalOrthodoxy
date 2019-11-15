@@ -1,24 +1,81 @@
 from django.contrib import admin
 
-from .models import Publication, Genre, Language, Author, Location, Document
+from .models import Publication, Genre, Language, Author, Location, Document, Church, Owner, SpecialOccasion, IllustrationLayoutType
 
 class GenreInline(admin.TabularInline):
     model = Publication.genre.through
+
+class AuthorInline(admin.TabularInline):
+    model = Publication.author.through
+
+class ChurchInline(admin.TabularInline):
+    model = Publication.church.through
+    
+class OwnerInline(admin.TabularInline):
+    model = Publication.currently_owned_by.through
+
+class SpecialOccasionInline(admin.TabularInline):
+    model = Publication.special_occasion.through
+
+class IllustrationLayoutTypeInline(admin.TabularInline):
+    model = Publication.illustration_and_layout.through
+
+class LanguageInline(admin.TabularInline):
+    model = Publication.language.through    
+
+class AuthorAdmin(admin.ModelAdmin):
+    inline = [
+        AuthorInline,
+    ]
 
 class GenreAdmin(admin.ModelAdmin):
     inlines = [
         GenreInline,
     ]
 
+class ChurchAdmin(admin.ModelAdmin):
+    inlines = [
+        ChurchInline,
+    ]
+
+class SpecialOccasionAdmin(admin.ModelAdmin):
+    inlines = [
+        SpecialOccasionInline,
+    ]
+    
+class OwnerAdmin(admin.ModelAdmin):
+    inlines = [
+        OwnerInline,
+    ]
+    
+class IllustrationLayoutTypeAdmin(admin.ModelAdmin):
+    inlines = [
+        IllustrationLayoutTypeInline,
+    ]
+class LanguageAdmin(admin.ModelAdmin):
+    inlines = [
+        LanguageInline,
+    ]
+    
 class PublicationAdmin(admin.ModelAdmin):
     inlines = [
         GenreInline,
+        AuthorInline,
+        ChurchInline,
+        OwnerInline,
+        SpecialOccasionInline,
+        IllustrationLayoutTypeInline,
+        LanguageInline,
     ]
-    exclude = ('genre',)
+    exclude = ('genre', 'author', 'church', 'currently_owned_by', 'special_occasion', 'illustration_and_layout', 'language')
 
 admin.site.register(Publication, PublicationAdmin)
 admin.site.register(Genre, GenreAdmin)
-admin.site.register(Language)
-admin.site.register(Author)
+admin.site.register(Language, LanguageAdmin)
+admin.site.register(Author, AuthorAdmin)
+admin.site.register(Church, ChurchAdmin)
+admin.site.register(Owner, OwnerAdmin)
+admin.site.register(SpecialOccasion, SpecialOccasionAdmin)
+admin.site.register(IllustrationLayoutType, IllustrationLayoutTypeAdmin)
 admin.site.register(Location)
 admin.site.register(Document)
