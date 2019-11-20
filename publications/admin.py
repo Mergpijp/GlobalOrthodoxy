@@ -1,21 +1,24 @@
 from django.contrib import admin
 
-from .models import Publication, Genre, Language, Author, Location, Document, Church, Owner, SpecialOccasion, IllustrationLayoutType
+from django import forms
+from django_select2.forms import ModelSelect2Widget
+from .models import Publication, Genre, Language, Author, Location, Document, Church, Owner, SpecialOccasion, IllustrationLayoutType, Translator, Country, City
+
 
 class GenreInline(admin.TabularInline):
-    model = Publication.genre.through
+    model = Publication.content_genre.through
 
 class AuthorInline(admin.TabularInline):
     model = Publication.author.through
 
 class ChurchInline(admin.TabularInline):
-    model = Publication.church.through
+    model = Publication.affiliated_church.through
     
 class OwnerInline(admin.TabularInline):
     model = Publication.currently_owned_by.through
 
 class SpecialOccasionInline(admin.TabularInline):
-    model = Publication.special_occasion.through
+    model = Publication.connected_to_special_occasion.through
 
 class IllustrationLayoutTypeInline(admin.TabularInline):
     model = Publication.illustration_and_layout.through
@@ -23,9 +26,17 @@ class IllustrationLayoutTypeInline(admin.TabularInline):
 class LanguageInline(admin.TabularInline):
     model = Publication.language.through    
 
+class TranslatorInline(admin.TabularInline):
+    model = Publication.translator.through
+
 class AuthorAdmin(admin.ModelAdmin):
     inline = [
         AuthorInline,
+    ]
+    
+class TranslatorAdmin(admin.ModelAdmin):
+    inline = [
+        TranslatorInline,
     ]
 
 class GenreAdmin(admin.ModelAdmin):
@@ -66,8 +77,10 @@ class PublicationAdmin(admin.ModelAdmin):
         SpecialOccasionInline,
         IllustrationLayoutTypeInline,
         LanguageInline,
+        TranslatorInline,
     ]
-    exclude = ('genre', 'author', 'church', 'currently_owned_by', 'special_occasion', 'illustration_and_layout', 'language')
+    exclude = ('content_genre', 'author', 'affiliated_church', 'currently_owned_by', 'connected_to_special_occasion', 'illustration_and_layout', 'language', 'translator',)
+    
 
 admin.site.register(Publication, PublicationAdmin)
 admin.site.register(Genre, GenreAdmin)
@@ -77,5 +90,8 @@ admin.site.register(Church, ChurchAdmin)
 admin.site.register(Owner, OwnerAdmin)
 admin.site.register(SpecialOccasion, SpecialOccasionAdmin)
 admin.site.register(IllustrationLayoutType, IllustrationLayoutTypeAdmin)
+admin.site.register(Translator, TranslatorAdmin)
 admin.site.register(Location)
 admin.site.register(Document)
+admin.site.register(City)
+admin.site.register(Country)

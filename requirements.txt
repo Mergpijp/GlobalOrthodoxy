@@ -1,1 +1,2 @@
 django-countries
+django-smart-selects

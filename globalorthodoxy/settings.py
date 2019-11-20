@@ -27,10 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+USE_DJANGO_JQUERY = True
+#JQUERY_URL = True
 
 # Application definition
 
 INSTALLED_APPS = [
+    'smart_selects',
     'publications',
     'django.contrib.admin',
     'django.contrib.auth',
