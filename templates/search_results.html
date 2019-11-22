@@ -1,0 +1,10 @@
+<!-- templates/search_results.html -->
+<h1>Search Results</h1>
+
+<ul>
+  {% for publication in object_list %}
+    <li>
+      {{ publication.title_subtitle_european }}, {{ publication.title_translation }}
+    </li>
+  {% endfor %}
+</ul>

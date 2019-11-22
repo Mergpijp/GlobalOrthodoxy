@@ -1,0 +1,29 @@
+<!-- templates/home.html -->
+<h1>Global Orthodoxy search</h1>
+
+<form action="{% url 'search_results' %}" method="get">
+  <label>Title original: </label>
+  <input name="title_original" type="text" placeholder="Search...">
+  <br>
+  <label>Title subtitle transcription: </label>
+  <input name="title_subtitle_transcription" type="text" placeholder="Search...">
+  <br>
+  <label>Title subtitle European: </label>
+  <input name="title_subtitle_european" type="text" placeholder="Search...">
+  <br>
+  <label>Title translation: </label>
+  <input name="title_translation" type="text" placeholder="Search...">
+  <br>
+  <label>Author</label>
+  <select name="author_id">
+  {% if authors %}
+  {% for a in authors %}
+    <option value="{{ a.id }}">{{ a.firstname }} {{a.lastname}}</option>
+  {% endfor %}
+  {% else %}
+    <option>No author</option>
+  {% endif %}
+  </select>
+  <br><br>
+  <input type="submit" value="Submit">
+</form>

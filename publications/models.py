@@ -98,12 +98,17 @@ class MyForm(forms.ModelForm):
 class Country(models.Model):
     name = models.CharField(max_length=255, blank=True)
     
+    class Meta:
+        verbose_name_plural = "countries"
     def __str__(self):
         return self.name
 
 class City(models.Model):
     name = models.CharField(max_length=255, blank=True)
     country = models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name_plural = "cities"
 
     def __str__(self):
         return self.name   

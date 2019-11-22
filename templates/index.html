@@ -1,0 +1,5 @@
+<form action="{% url 'search_results' %}" method="get">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
