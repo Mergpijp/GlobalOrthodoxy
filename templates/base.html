@@ -1,0 +1,35 @@
+{% load staticfiles %}
+{% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Global Orthodoxy</title>
+        <link rel = "stylesheet" href="{% static 'css/base.css' %}"/>
+        {% block headjavascript %}{% endblock headjavascript %}
+    </head>
+
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        {% if user.is_authenticated %}
+        <div class="nav-link disabled">
+            Hi {{ user.username }}!
+        </div>
+        <a class="nav-link" href="{% url 'logout' %}">logout</a>
+        {% else %}
+        <p>You are not logged in</p>
+        <a href="{% url 'login' %}">login</a>
+        {% endif %}
+    </nav>
+   <div class="container">
+      <div class="row">
+        <div class="col-sm">
+        {% block content %}{% endblock content %}
+        </div>
+      </div>
+    </div>
+     
+    </body>
+</html>

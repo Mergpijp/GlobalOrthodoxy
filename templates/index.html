@@ -1,16 +1,15 @@
-<form action="{% url 'search_results' %}" method="get">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
-{% block title %}Home{% endblock %}
-
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% block headjavascript %}{{ form.media.js }}{% endblock %}
 {% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">login</a>
-{% endif %}
-{% endblock %}
+<form action="{% url 'search_results' %}" method="get" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input type="submit" value="Search">
+</form>
+
+{% endblock %}  

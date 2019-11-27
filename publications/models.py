@@ -12,6 +12,14 @@ from smart_selects.db_fields import ChainedForeignKey
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
 
+
+class FormOfPublication(Enum):
+    PUBLISHED_PAPER = "P"
+    SELF_PUBLISHED_PAPER = "S"
+    TEXT_ON_WEBSITE = "T"
+    OTHER = "O"
+    NONE = None
+    
 class WritingDirection(Enum):
     LEFT = "L"
     RIGHT = "R"
@@ -120,7 +128,7 @@ class Publication(models.Model):
     title_translation = models.CharField(max_length=300, blank=True)
     author = models.ManyToManyField(Author)
     translator = models.ManyToManyField(Translator)
-    form_of_publication = models.CharField(max_length=300, blank=True)
+    form_of_publication = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in FormOfPublication], blank=True)
     printed_by = models.CharField(max_length=100, blank=True)
     published_by = models.CharField(max_length=100, blank=True)
     publication_date = models.DateField(blank=True, null=True)

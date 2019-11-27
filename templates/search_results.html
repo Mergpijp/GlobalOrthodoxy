@@ -1,10 +1,14 @@
 <!-- templates/search_results.html -->
+{% extends "base.html" %}
+{% block content %}
 <h1>Search Results</h1>
 
 <ul>
   {% for publication in object_list %}
     <li>
-      {{ publication.title_subtitle_european }}, {{ publication.title_translation }}
+      <a href="{% url 'admin:publications_publication_change' publication.id %}">{{ publication.title_subtitle_european }}, {{ publication.title_translation }}</a>
     </li>
   {% endfor %}
 </ul>
+
+{% endblock %}
