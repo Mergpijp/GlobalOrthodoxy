@@ -94,6 +94,8 @@ class SpecialOccasion(models.Model):
 class Church(models.Model):
     name = models.CharField(max_length=100, blank=True)
     
+    class Meta:
+        verbose_name_plural = "churches"
     def __str__(self):
         return self.name
 
@@ -113,8 +115,8 @@ class Country(models.Model):
 
 class City(models.Model):
     name = models.CharField(max_length=255, blank=True)
-    country = models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE)
-    
+    #country = models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE)
+    country = CountryField(blank=True)
     class Meta:
         verbose_name_plural = "cities"
 
@@ -132,7 +134,8 @@ class Publication(models.Model):
     printed_by = models.CharField(max_length=100, blank=True)
     published_by = models.CharField(max_length=100, blank=True)
     publication_date = models.DateField(blank=True, null=True)
-    publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, blank=True, null=True)
+    #publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, blank=True, null=True)
+    publication_country = CountryField(blank=True)
     publication_city = ChainedForeignKey(
         City,
         chained_field="publication_country",

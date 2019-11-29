@@ -1,6 +1,8 @@
 from django import forms
 
 from .models import Publication, FormOfPublication
+#from crispy_forms.helper import FormHelper
+#from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, TabHolder
 
 class NameForm(forms.Form):
     your_name = forms.CharField(label='Your name', max_length=100)
@@ -26,6 +28,21 @@ class PublicationForm(forms.ModelForm):
         self.fields['connected_to_special_occasion'].required = False
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
+        `
+        '''
+        self.helper = FormHelper()
+        
+       
+        self.helper.tabholder = TabHolder(
+                Tab('First Tab',
+                'field_name_1',
+                Div('field_name_2')
+            ),
+            Tab('Second Tab',
+                Field('field_name_3', css_class="extra")
+            )
+        )
+        '''
         #for key in self.fields.keys():
         #    print(self.fields[key].__class__.__name__)
         #    if self.fields[key].__class__.__name__ == 'ModelMultipleChoiceField':

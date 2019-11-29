@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from django import forms
 from django_select2.forms import ModelSelect2Widget
-from .models import Publication, Genre, Language, Author, Location, Document, Church, Owner, SpecialOccasion, IllustrationLayoutType, Translator, Country, City
+from .models import Publication, Genre, Language, Author, Location, Document, Church, Owner, SpecialOccasion, IllustrationLayoutType, Translator, City
 
 
 class GenreInline(admin.TabularInline):
@@ -94,4 +94,3 @@ admin.site.register(Translator, TranslatorAdmin)
 admin.site.register(Location)
 admin.site.register(Document)
 admin.site.register(City)
-admin.site.register(Country)
