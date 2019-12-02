@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap4',
+    #'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,4 @@ STATICFILES_DIRS = [
 LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/'
+

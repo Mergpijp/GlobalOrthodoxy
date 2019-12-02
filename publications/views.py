@@ -3,7 +3,6 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
 from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City
-from .forms import PublicationForm
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
@@ -13,6 +12,7 @@ from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
+'''
 @login_required(login_url='/accounts/login/')
 def my_view(request):
     username = request.POST['username']
@@ -25,7 +25,7 @@ def my_view(request):
     else:
         # Return an 'invalid login' error message.
         ...
-
+'''
 @login_required(login_url='/accounts/login/')        
 def get_name(request):
     # if this is a GET request we need to process the form data
