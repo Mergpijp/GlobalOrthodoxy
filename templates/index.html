@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-
+{% block headjavascript %}{{ form.media.js }}{% endblock %}
 {% load crispy_forms_tags %}
 
 {% block content %}

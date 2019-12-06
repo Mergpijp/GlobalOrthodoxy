@@ -10,5 +10,5 @@ urlpatterns = [
     path('search/', SearchResultsView.as_view(), name='search_results'),
     # #path('', HomePageView.as_view(), name='home'),
     path('', get_name, name='index'),
-    # #path(r'^chaining/', include('smart_selects.urls')),
+    #path(r'^chaining/', include('smart_selects.urls')),
 ]
