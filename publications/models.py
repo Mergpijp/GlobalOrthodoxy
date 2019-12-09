@@ -4,8 +4,8 @@ from django import forms
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django_countries.fields import CountryField
-from django_select2.forms import ModelSelect2Widget
-from smart_selects.db_fields import GroupedForeignKey
+#from django_select2.forms import ModelSelect2Widget
+#from smart_selects.db_fields import GroupedForeignKey
 from smart_selects.db_fields import ChainedForeignKey
 
 

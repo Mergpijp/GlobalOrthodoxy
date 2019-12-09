@@ -1,14 +1,14 @@
 from django.urls import path, include
 
-#from . import views
-from .views import SearchResultsView, get_name
+from .views import SearchResultsView, render_search, publication_new, PublicationCreate, PublicationUpdate, PublicationDelete
 
 urlpatterns = [
     #path('', views.index, name='index'),
     # #path('<int:publication_id>/', views.detail, name='detail'),
-    # #path('publications/new/', views.publication_new, name='publication_new'),
+    path('publications/new/', PublicationCreate.as_view(), name='publication-new'),
+    path('publication/<int:pk>/', PublicationUpdate.as_view(), name='publication-update'),
+    path('publication/<int:pk>/delete/', PublicationDelete.as_view(), name='publiaction-delete'),
     path('search/', SearchResultsView.as_view(), name='search_results'),
     # #path('', HomePageView.as_view(), name='home'),
-    path('', get_name, name='index'),
-    #path(r'^chaining/', include('smart_selects.urls')),
+    path('', render_search, name='index'),
 ]

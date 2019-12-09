@@ -1,9 +1,10 @@
 from django.contrib import admin
 
 from django import forms
-from django_select2.forms import ModelSelect2Widget
+#from django_select2.forms import ModelSelect2Widget
 from .models import Publication, Genre, Language, Author, Location, Document, Church, Owner, SpecialOccasion, IllustrationLayoutType, Translator, City
-
+from .forms import NewCrispyForm
+from . import models
 
 class GenreInline(admin.TabularInline):
     model = Publication.content_genre.through
@@ -67,8 +68,11 @@ class LanguageAdmin(admin.ModelAdmin):
     inlines = [
         LanguageInline,
     ]
-    
+      
 class PublicationAdmin(admin.ModelAdmin):
+    #form = AdminCrispyForm
+    #add_form_template = "admin/form.html"
+    
     inlines = [
         GenreInline,
         AuthorInline,
@@ -80,7 +84,6 @@ class PublicationAdmin(admin.ModelAdmin):
         TranslatorInline,
     ]
     exclude = ('content_genre', 'author', 'affiliated_church', 'currently_owned_by', 'connected_to_special_occasion', 'illustration_and_layout', 'language', 'translator',)
-    
 
 admin.site.register(Publication, PublicationAdmin)
 admin.site.register(Genre, GenreAdmin)

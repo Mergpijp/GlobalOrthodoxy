@@ -7,10 +7,11 @@ from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
-from .forms import NameForm, PublicationForm
+from .forms import PublicationForm, NewCrispyForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 '''
 @login_required(login_url='/accounts/login/')
@@ -26,8 +27,60 @@ def my_view(request):
         # Return an 'invalid login' error message.
         ...
 '''
+class PublicationUpdate(UpdateView):
+    template_name = 'form.html'
+    form_class = NewCrispyForm
+    model = Publication
+    success_url = '/thanks/'
+    
+    def form_valid(self, form):
+    # This method is called when valid form data has been POSTed.
+    # It should return an HttpResponse.
+        return super().form_valid(form)
+
+class PublicationDelete(DeleteView):
+    model = Publication
+    #form_class = NewCrispyForm
+    success_url = '/thanks/'
+    
+class PublicationCreate(CreateView):
+    template_name = 'form.html'
+    form_class = NewCrispyForm
+    success_url = '/thanks/'
+    
+    def form_valid(self, form):
+    # This method is called when valid form data has been POSTed.
+    # It should return an HttpResponse.
+        return super().form_valid(form)
+'''
+    model = Publication
+    fields = ['title_original', 'title_subtitle_transcription', 'title_subtitle_european', 'title_translation', 'author', 'translator', \
+      'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
+      'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
+      'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_info', \
+      'comments']
+'''
+@login_required(login_url='/accounts/login/')
+def publication_new(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = NewCrispyForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/thanks/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = NewCrispyForm()
+
+    return render(request, 'form.html', {'form': form})
+    
 @login_required(login_url='/accounts/login/')        
-def get_name(request):
+def render_search(request):
     '''
     # if this is a GET request we need to process the form data
     if request.method == 'GET':
