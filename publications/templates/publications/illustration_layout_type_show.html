@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<table class="table table-striped table-bordered table-sm">  
+    <thead class="thead-light">  
+    <tr>  
+        <th>name </th>  
+        <th>Actions</th>  
+    </tr>  
+    </thead>  
+    <tbody>  
+{% for il in IllustrationLayoutTypes %}  
+    <tr>  
+        <td>{{ il.name }}</td>
+        <td>  
+            <a href="/illustration_layout_type/{{ il.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
+            <a href="/illustration_layout_type/{{ il.id }}/delete">Delete</a>  
+        </td>  
+    </tr>  
+{% endfor %}  
+    </tbody>  
+</table>  
+<br>  
+<br>  
+<center><a href="/illustration_layout_type/new" class="btn btn-primary">Add New Record</a></center>  
+{% endblock %}

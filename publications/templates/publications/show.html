@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<table class="table table-striped table-bordered table-sm">  
+    <thead class="thead-light">  
+    <tr>  
+        <th>Title original</th>  
+        <th>Title subtitle transcription</th>  
+        <th>Title subtitle european</th>  
+        <th>Title translation</th>  
+        <th>Actions</th>  
+    </tr>  
+    </thead>  
+    <tbody>  
+{% for publication in publications %}  
+    <tr>  
+        <td>{{ publication.title_original }}</td>  
+        <td>{{ publication.title_subtitle_transcription}}</td>  
+        <td>{{ publication.title_subtitle_european }}</td>  
+        <td>{{ publication.title_translation }}</td>  
+        <td>  
+            <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
+            <a href="/publication/{{ publication.id }}/delete">Delete</a>  
+        </td>  
+    </tr>  
+{% endfor %}  
+    </tbody>  
+</table>  
+<br>  
+<br>  
+<center><a href="/publications/new" class="btn btn-primary">Add New Record</a></center>  
+{% endblock %}

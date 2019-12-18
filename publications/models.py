@@ -4,6 +4,7 @@ from django import forms
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django_countries.fields import CountryField
+from django_countries import countries
 #from django_select2.forms import ModelSelect2Widget
 #from smart_selects.db_fields import GroupedForeignKey
 from smart_selects.db_fields import ChainedForeignKey
@@ -50,7 +51,8 @@ def max_value_current_year(value):
 class Language(models.Model):
     name = models.CharField(max_length=100, blank=True)
     direction = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in WritingDirection], default='R')
-
+    def __str__(self):
+        return 'name: ' + self.name + ' direction: ' + str(self.direction)
 class Author(models.Model):
     firstname = models.CharField(max_length=100, blank=True)
     lastname = models.CharField(max_length=100, blank=True)
@@ -104,7 +106,8 @@ def year_choices():
 
 class MyForm(forms.ModelForm):
     year = forms.TypedChoiceField(coerce=int, choices=year_choices, initial=current_year)
- 
+
+'''
 class Country(models.Model):
     name = models.CharField(max_length=255, blank=True)
     
@@ -112,16 +115,30 @@ class Country(models.Model):
         verbose_name_plural = "countries"
     def __str__(self):
         return self.name
+'''
+        
+class Country(models.Model):
+    country = CountryField(choices=list(countries))
 
+    def __unicode__(self):
+        return self.country
+        
+    class Meta:
+        verbose_name_plural = "countries"
+
+    def __str__(self):
+        return self.name
+        
 class City(models.Model):
     name = models.CharField(max_length=255, blank=True)
     #country = models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE)
     country = CountryField(blank=True)
+    #country = models.OneToOneField(Country, on_delete=models.CASCADE, blank=True, null=True)
     class Meta:
         verbose_name_plural = "cities"
 
     def __str__(self):
-        return self.name   
+        return self.name  
 
 class Publication(models.Model):
     title_original = models.CharField(max_length=300, blank=True)
@@ -136,6 +153,7 @@ class Publication(models.Model):
     publication_date = models.DateField(blank=True, null=True)
     #publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, blank=True, null=True)
     publication_country = CountryField(blank=True)
+    #publication_country = models.OneToOneField(Country, on_delete=models.CASCADE, blank=True, null=True)
     publication_city = ChainedForeignKey(
         City,
         chained_field="publication_country",
@@ -166,12 +184,19 @@ class Publication(models.Model):
     
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)
-    illustration_and_layout = models.ManyToManyField(IllustrationLayoutType)
+    illustration_and_layout_type = models.ManyToManyField(IllustrationLayoutType)
    
     def __str__(self):
         return 'title: ' + self.title_translation +', publication date: ' + str(self.publication_date)\
                 + ', collection venue: ' + self.collection_venue_and_city + ', comments: ' + self.comments
 
+
+'''
+class PublicationLanguage(models.Model): # table to store which publication has which language
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE)
+'''
+    
 class Document(models.Model):
     type = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in DocumentType], default='P')
     publication = models.OneToOneField(Publication, on_delete=models.CASCADE, primary_key=True)

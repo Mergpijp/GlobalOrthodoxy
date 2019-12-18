@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block headjavascript %}{{ form.media.js }}{% endblock %}
+
 {% load crispy_forms_tags %}
 
 {% block content %}
-<form action="{% url 'search_results' %}" method="get" class="form">
+
+<form action="{% url 'publication-show' %}" method="get" class="form">
     {% csrf_token %}
     {% crispy form form.helper %}
 </form>

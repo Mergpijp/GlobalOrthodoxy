@@ -2,166 +2,51 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
-from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City, Language
+from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
-from .forms import PublicationForm, NewCrispyForm
+from .forms import PublicationForm, NewCrispyForm, AuthorForm, TranslatorForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.shortcuts import redirect
 
-'''
-@login_required(login_url='/accounts/login/')
-def my_view(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        # Redirect to a success page.
-        ...
-    else:
-        # Return an 'invalid login' error message.
-        ...
-'''
 class PublicationUpdate(UpdateView):
-    template_name = 'form.html'
+    template_name = 'publications/form.html'
     form_class = NewCrispyForm
     model = Publication
-    success_url = '/thanks/'
-    
-    def form_valid(self, form):
-    # This method is called when valid form data has been POSTed.
-    # It should return an HttpResponse.
-        return super().form_valid(form)
+    success_url = '/publication/show/'
 
-class PublicationDelete(DeleteView):
-    model = Publication
-    #form_class = NewCrispyForm
-    success_url = '/thanks/'
-    
-class PublicationCreate(CreateView):
-    template_name = 'form.html'
-    form_class = NewCrispyForm
-    success_url = '/thanks/'
-    
-    def form_valid(self, form):
-    # This method is called when valid form data has been POSTed.
-    # It should return an HttpResponse.
-        return super().form_valid(form)
-'''
-    model = Publication
-    fields = ['title_original', 'title_subtitle_transcription', 'title_subtitle_european', 'title_translation', 'author', 'translator', \
-      'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
-      'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
-      'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_info', \
-      'comments']
-'''
 @login_required(login_url='/accounts/login/')
-def publication_new(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = NewCrispyForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/thanks/')
+def PublicationDelete(request, pk):
+    publication = Publication.objects.get(id=pk)
+    publication.delete()
+    return redirect('/publication/show')
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = NewCrispyForm()
-
-    return render(request, 'form.html', {'form': form})
+class PublicationCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = NewCrispyForm
+    success_url = '/publication/show/'
     
 @login_required(login_url='/accounts/login/')        
 def render_search(request):
-    '''
-    # if this is a GET request we need to process the form data
-    if request.method == 'GET':
-        # create a form instance and populate it with data from the request:
-        form = PublicationForm(request.GET)
-            
-        # check whether it's valid:
-        if form.is_valid():
-            #print(form.cleaned_data)
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            print(form.cleaned_data)
-            valid = False
-            for key in form.cleaned_data.keys():
-                if not isinstance(form.cleaned_data[key], QuerySet) and form.cleaned_data[key] != None:
-                    if form.cleaned_data[key] != "":
-                        valid = True
-                else:
-                    if form.cleaned_data[key]:
-                        valid = True
-            if not valid:
-                print(form.cleaned_data)
-                return render(request, 'index.html', {'form': form})
-            print("check: " + str(valid))
-            print(form.cleaned_data)
-            return HttpResponseRedirect("/search")
-        #print('form not valid')
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        print(form.cleaned_data)
-        form = PublicationForm()
-    '''
     form = PublicationForm()
     return render(request, 'index.html', {'form': form})
 
-'''   
-class HomePageView(TemplateView):
-    template_name = 'home.html'
-    
-    def home(request):
-        author_list = Author.objects.all()
-        
-        return render(request, 'templates/home.html', {'authors': author_list})
-'''
-
 class SearchResultsView(ListView):
     model = Publication
-    template_name = 'search_results.html'
+    template_name = 'publications/show.html'
+    context_object_name  = 'publications'
       
-    #@login_required(login_url='/accounts/login/')     
     def get_queryset(self): # new
         
         form = PublicationForm(self.request.GET)
         if not form.is_valid():
             form = PublicationForm()
             return render(self.request, 'index.html', {'form': form})
-        '''
-        title_original = self.request.GET.get('title_original')
-        title_subtitle_transcription = self.request.GET.get('title_subtitle_transcription')
-        title_subtitle_european = self.request.GET.get('title_subtitle_european')
-        title_translation = self.request.GET.get('title_translation')
-        form_of_publication = self.request.GET.get('form_of_publication')
-        printed_by = self.request.GET.get('printed_by')
-        published_by = self.request.GET.get('published_by')
-        publication_date = self.request.GET.get('publication_date')
-        publication_country = self.request.GET.get('publication_country')
-        publication_city = self.request.GET.get('publication_city')
-        publishing_organisation = self.request.GET.get('publishing_organisation')
-        possible_donor = self.request.GET.get('possible_donor')
-        content_description = self.request.GET.get('content_description')
-        description_of_illustration = self.request.GET.get('description_of_illustration')
-        image_details = self.request.GET.get('image_details')
-        nr_of_pages = self.request.GET.get('nr_of_pages')
-        collection_date = self.request.GET.get('collection_date')
-        collection_country = self.request.GET.get('collection_country')
-        collection_venue_and_city = self.request.GET.get('collection_venue_and_city')
-        contact_info = self.request.GET.get('contact_info')
-        comments = self.request.GET.get('comments')
-        '''
-        
         authors = self.request.GET.getlist('author')
         translators = self.request.GET.getlist('translator')
         authors = Author.objects.filter(pk__in=authors).all()
@@ -177,22 +62,9 @@ class SearchResultsView(ListView):
         currently_owned_by = self.request.GET.getlist('currently_owned_by')
         currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
-        object_list = Publication.objects.all()
-        print(object_list)
+        publications = Publication.objects.all()
+        print(publications)
 
-        '''
-        FIELDS = [('title_original',False, False),('title_subtitle_transcription',False, False),('title_subtitle_european',False, False), ('title_translation', False, False),('authors',True, False) \
-                  ('translators', True, False), ('form_of_publication', False, False), ('printed_by', False, False), ('published_by', False, False), ('publication_date', False, True), ('publication_country', False, False \
-                  ('publication_city',]
-        received_results = {}
-        
-        for field, islist, isnone in FIELDS:
-        
-            if islist:
-                received_results[field] = self.request.GET.getlist(field)
-            else:
-                received_results[field] = self.request.GET.get(field)
-        '''
         exclude = ['csrfmiddlewaretoken','search']
         in_variables = [('author', authors), ('translator', translators), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by)]
@@ -202,123 +74,222 @@ class SearchResultsView(ListView):
             get_value = self.request.GET.get(field_name)
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
                not field_name in special_case:
-                object_list = object_list.filter(**{field_name+'__icontains':get_value})
-                #object_list = object_list.filter(title__icontains, 'ein')
-        '''
-        if title_original != "":
-            object_list = object_list.filter(title_original__icontains=title_original)
-        if title_subtitle_transcription != "":
-            object_list = object_list.filter(title_subtitle_transcription__icontains=title_subtitle_transcription)
-        if title_subtitle_european != "":
-            object_list = object_list.filter(title_subtitle_european__icontains=title_subtitle_european)
-        if title_translation != "":
-            object_list = object_list.filter(title_translation__icontains=title_translation)
-        '''
+                publications = publications.filter(**{field_name+'__icontains':get_value})
+                #publications = publications.filter(title__icontains, 'ein')
         
         for field_name, list_object in in_variables:
             #print('------>',var)
-            #object_list = object_list.filter(**{'author__in':authors})
-            #print('9999',object_list)
+            #publications = publications.filter(**{'author__in':authors})
+            #print('9999',publications)
             print('****', list_object)
             if list_object:
-                object_list = object_list.filter(**{field_name+'__in': list_object})
-            '''
-            if var == "currently_owned_by":
-                
-            elif var == "affiliated_church":
-                object_list = object_list.filter(**{var+'__in':var+'es'})
-            else:
-                object_list = object_list.filter(**{var+'__in=': *[var+'s']})
-            '''
-       #object_list = object_list.filter(author__in = authors)
-        '''
-        '''
-        '''
-        for author in authors:
-            object_list = object_list.filter(author__firstname__iexact = author.firstname, \
-                               author__lastname__iexact = author.lastname)
-        '''
-        '''
-        for translator in translators:
-            object_list = object_list.filter(translator__firstname__iexact = translator.firstname, \
-                               translator__lastname__iexact = translator.lastname)
-        '''     
-        '''
-        if form_of_publication != "":
-            object_list = object_list.filter(form_of_publication__icontains=form_of_publication) 
-        if printed_by != "":
-            object_list = object_list.filter(printed_by__icontains=printed_by)   
-        if published_by != "":
-            object_list = object_list.filter(published_by__icontains=published_by)
-        if publication_date != "":
-            object_list = object_list.filter(publication_date__icontains=publication_date) 
-        if publication_country != "":
-            object_list = object_list.filter(publication_country__icontains=publication_country)
-        
-        if publication_city != "":
-            object_list = object_list.filter(publication_city__name__icontains=publication_city)
-        if publishing_organisation != "":
-            object_list = object_list.filter(publishing_organisation__icontains=publishing_organisation)
-        if possible_donor != "":
-            object_list = object_list.filter(possible_donor__icontains=possible_donor)
-        '''
-        '''
-        for church in affiliated_churches:
-            object_list = object_list.filter(affiliated_church__name__iexact = church.name)
-        for language in languages:
-            object_list = object_list.filter(language__name__iexact = language.name)
-        '''
-        '''
-        if content_description != "":
-            object_list = object_list.filter(content_description__icontaints = content_description)
-        '''
-        '''
-        for genre in content_genres:
-            object_list = object_list.filter(content_genre__name__iexact = genre.name)
-        for occasion in connected_to_special_occasions:
-            object_list = object_list.filter(connected_to_special_occasion__name__iexact = occasion.name)
-        '''
-        '''
-        if description_of_illustration != "":
-            object_list = object_list.filter(description_of_illustration__icontains=description_of_illustration)
-        if image_details != "":
-            object_list = object_list.filter(image_details__icontains=image_details)
-        if nr_of_pages != "":
-            object_list = object_list.filter(nr_of_pages__icontains=nr_of_pages)
-        if collection_date != "":
-            object_list = object_list.filter(collection_date__icontains=collection_date)
-        if collection_country != "":
-            object_list = object_list.filter(collection_country__icontains=collection_country)
-        if collection_venue_and_city != "":
-            object_list = object_list.filter(collection_venue_and_city__icontains=collection_venue_and_city)
-        '''
+                publications = publications.filter(**{field_name+'__in': list_object})
+
+
         if str(copyrights) != "unknown":
-            object_list = object_list.filter(copyrights__iexact=copyrights)
-        '''
-        for owner in currently_owned_by:
-            object_list = object_list.filter(currently_owned_by__name__iexact = owner.name)
-        '''
-        '''
-        if contact_info != "":
-            object_list = object_list.filter(contact_info__icontains=contact_info)
-        if comments != "":
-            object_list = object_list.filter(comments__icontains=comments)
-        #print('after: ' + str(object_list))    
-        '''
-        return object_list.distinct()
+            publications = publications.filter(copyrights__iexact=copyrights)
+
+        print(publications)
+        publications = publications.distinct()
+        return publications
+
+class AuthorCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = AuthorForm
+    success_url = '/author/show/'
+
+class AuthorShow(ListView):
+    model = Author
+    template_name = 'publications/author_show.html'
+    context_object_name = 'authors'
+
+@login_required(login_url='/accounts/login/')
+def AuthorDelete(request, pk):
+    author = Author.objects.get(id=pk)
+    author.delete()
+    return redirect('/author/show')
+
+class AuthorUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = AuthorForm
+    model = Author
+    success_url = '/author/show/'
         
-# def index(request):
-    #return HttpResponse("Hello, world. You're at the publication index.")
-    # latest_publication_list = Publication.objects.all()
-    # context = {
-        # 'latest_publication_list': latest_publication_list,
-    # }
-    # return render(request, 'publications/index.html', context)
-	
-# def detail(request, publication_id):
-	# publication = get_object_or_404(Publication, pk=publication_id)
-	# return render(request, 'publications/detail.html', {'publication': publication})
+class TranslatorCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = TranslatorForm
+    success_url = '/translator/show/'
+
+class TranslatorShow(ListView):
+    model = Translator
+    template_name = 'publications/translator_show.html'
+    context_object_name = 'translators'
+
+@login_required(login_url='/accounts/login/')
+def TranslatorDelete(request, pk):
+    translator = Translator.objects.get(id=pk)
+    translator.delete()
+    return redirect('/translator/show')
+
+class TranslatorUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = TranslatorForm
+    model = Translator
+    success_url = '/translator/show/'
+
+class CityCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = CityForm
+    success_url = '/city/show/'
+
+class CityShow(ListView):
+    model = City
+    template_name = 'publications/city_show.html'
+    context_object_name = 'cities'
+
+@login_required(login_url='/accounts/login/')
+def CityDelete(request, pk):
+    city = City.objects.get(id=pk)
+    city.delete()
+    return redirect('/city/show')
+
+class CityUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = CityForm
+    model = City
+    success_url = '/city/show/'
     
-# def publication_new(request):
-    # form = PublicationForm()
-    # return render(request, 'publication/publication_edit.html', {'form': form})
+        
+class GenreCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = GenreForm
+    success_url = '/genre/show/'
+
+class GenreShow(ListView):
+    model = Genre
+    template_name = 'publications/genre_show.html'
+    context_object_name = 'genres'
+
+@login_required(login_url='/accounts/login/')
+def GenreDelete(request, pk):
+    genre = Genre.objects.get(id=pk)
+    genre.delete()
+    return redirect('/genre/show')
+
+class GenreUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = GenreForm
+    model = Genre
+    success_url = '/genre/show/'
+        
+class ChurchCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = ChurchForm
+    success_url = '/church/show/'
+
+class ChurchShow(ListView):
+    model = Church
+    template_name = 'publications/church_show.html'
+    context_object_name = 'churches'
+
+@login_required(login_url='/accounts/login/')
+def ChurchDelete(request, pk):
+    church = Church.objects.get(id=pk)
+    church.delete()
+    return redirect('/church/show')
+
+class ChurchUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = ChurchForm
+    model = Church
+    success_url = '/church/show/'
+      
+class LanguageCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = LanguageForm
+    success_url = '/language/show/'
+    
+class LanguageShow(ListView):
+    model = Language
+    template_name = 'publications/language_show.html'
+    context_object_name = 'languages'
+    
+@login_required(login_url='/accounts/login/')
+def LanguageDelete(request, pk):
+    language = Language.objects.get(id=pk)
+    language.delete()
+    return redirect('/language/show')
+
+ 
+class LanguageUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = LanguageForm
+    model = Language
+    success_url = '/language/show/'
+    
+class SpecialOccasionCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = SpecialOccasionForm
+    success_url = '/special_occasion/show/'
+    
+class SpecialOccasionShow(ListView):
+    model = SpecialOccasion
+    template_name = 'publications/specialoccasion_show.html'
+    context_object_name = 'specialoccasions'
+    
+@login_required(login_url='/accounts/login/')
+def SpecialOccasionDelete(request, pk):
+    special_occasion = SpecialOccasion.objects.get(id=pk)
+    special_occasion.delete()
+    return redirect('/special_occasion/show')
+
+class SpecialOccasionUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = SpecialOccasionForm
+    model = SpecialOccasion
+    success_url = '/special_occasion/show/'   
+
+class OwnerCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = OwnerForm
+    success_url = '/owner/show/'
+    
+class OwnerShow(ListView):
+    model = Owner
+    template_name = 'publications/owner_show.html'
+    context_object_name = 'owners'
+    
+@login_required(login_url='/accounts/login/')
+def OwnerDelete(request, pk):
+    owner = Owner.objects.get(id=pk)
+    owner.delete()
+    return redirect('/owner/show')
+
+class OwnerUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = OwnerForm
+    model = Owner
+    success_url = '/owner/show/'  
+
+class IllustrationLayoutTypeCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = IllustrationLayoutTypeForm
+    success_url = '/illustration_layout_type/show/'
+    
+class IllustrationLayoutTypeShow(ListView):
+    model = IllustrationLayoutType
+    template_name = 'publications/illustration_layout_type_show.html'
+    context_object_name = 'IllustrationLayoutTypes'
+    
+@login_required(login_url='/accounts/login/')
+def IllustrationLayoutTypeDelete(request, pk):
+    illustration_layout_type = IllustrationLayoutType.objects.get(id=pk)
+    illustration_layout_type.delete()
+    return redirect('/illustration_layout_type/show')
+
+class IllustrationLayoutTypeUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = IllustrationLayoutTypeForm
+    model = IllustrationLayoutType
+    success_url = '/illustration_layout_type/show/'    
+         

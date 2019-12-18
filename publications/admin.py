@@ -22,7 +22,7 @@ class SpecialOccasionInline(admin.TabularInline):
     model = Publication.connected_to_special_occasion.through
 
 class IllustrationLayoutTypeInline(admin.TabularInline):
-    model = Publication.illustration_and_layout.through
+    model = Publication.illustration_and_layout_type.through
 
 class LanguageInline(admin.TabularInline):
     model = Publication.language.through    

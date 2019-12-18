@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    path('select2/', include('django_select2.urls')),
     path('', include('publications.urls')),
     path('admin/', admin.site.urls),
     path('admin/', include('smart_selects.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    
     path('', include('smart_selects.urls')),
     #path('', include('publications.urls')),
 ]
