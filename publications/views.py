@@ -2,12 +2,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
-from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType
+from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, Document
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
-from .forms import PublicationForm, NewCrispyForm, AuthorForm, TranslatorForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm
+from .forms import PublicationForm, NewCrispyForm, AuthorForm, TranslatorForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, DocumentForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -270,6 +270,28 @@ class OwnerUpdate(UpdateView):
     form_class = OwnerForm
     model = Owner
     success_url = '/owner/show/'  
+
+class DocumentCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = DocumentForm
+    success_url = '/document/show/'   
+    
+class DocumentShow(ListView):
+    model = Document
+    template_name = 'publications/document_show.html'
+    context_object_name = 'documents'
+    
+@login_required(login_url='/accounts/login/')
+def DocumentDelete(request, pk):
+    document = Document.objects.get(id=pk)
+    document.delete()
+    return redirect('/document/show')
+
+class DocumentUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = DocumentForm
+    model = Document
+    success_url = '/document/show/'  
 
 class IllustrationLayoutTypeCreate(CreateView):
     template_name = 'publications/form.html'

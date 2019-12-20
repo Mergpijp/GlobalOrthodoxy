@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City, Language, Country, IllustrationLayoutType
+from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City, Language, Country, IllustrationLayoutType, Document
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field
 from crispy_forms.bootstrap import Tab, TabHolder
@@ -21,7 +21,7 @@ class PublicationForm(forms.ModelForm):
                   'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_info', \
-                  'comments')
+                  'comments', 'documents')
         
     def __init__(self, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
@@ -33,7 +33,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['connected_to_special_occasion'].required = False
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
-      
+        self.fields['documents'].required = False
       
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'  
@@ -81,7 +81,9 @@ class PublicationForm(forms.ModelForm):
                    'currently_owned_by',
                    'contact_info',
                    'comments',
-             )
+             ),
+              Tab('Files',
+                  'documents',)
             ),
             ButtonHolder(
                 Submit('search', 'Search', css_class='button white')
@@ -105,6 +107,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['connected_to_special_occasion'].required = False
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
+        self.fields['documents'].required = False
         self.helper.layout = Layout(
             TabHolder(
                 Tab('Titles',
@@ -148,7 +151,10 @@ class NewCrispyForm(forms.ModelForm):
                    'currently_owned_by',
                    'contact_info',
                    'comments',
-             )
+             ),
+               Tab('files',
+                   'documents',
+              )
             ),
             ButtonHolder(
                 Submit('Submit', 'Submit', css_class='button white')
@@ -162,7 +168,7 @@ class NewCrispyForm(forms.ModelForm):
           'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
           'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
           'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_info', \
-          'comments')
+          'comments', 'documents')
         #publication_country = forms.ChoiceField(choices=list(countries))
           
 class AuthorForm(forms.ModelForm):
@@ -429,6 +435,41 @@ class OwnerForm(forms.ModelForm):
     class Meta:
         model = Owner
         fields = ('name',) 
+        
+    def save(self, commit=True):
+        instance = super().save(commit)
+
+        if self.cleaned_data['publications'].count() > instance.publication_set.count():
+            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all()) 
+            for pub in diff:
+                instance.publication_set.add(pub)
+        
+        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
+            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all()) 
+            if not diff:
+                for pub in instance.publication_set:
+                    instance.publication_set.remove(pub)
+            for pub in diff:
+               instance.publication_set.remove(pub)
+               
+        return instance 
+
+class DocumentForm(forms.ModelForm):
+    publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        queryset=Publication.objects.all(),
+        search_fields=['title_subtitle_european__icontains'],
+    ), queryset=Publication.objects.all(), required=False)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(documents = self.instance)]
+        self.helper = FormHelper()
+        self.helper.layout = Layout('description', 'document', 'publications',
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+    
+    class Meta:
+        model = Document
+        fields = ('description', 'document',) 
         
     def save(self, commit=True):
         instance = super().save(commit)

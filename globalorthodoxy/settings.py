@@ -28,6 +28,12 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 USE_DJANGO_JQUERY = True
+
+SELECT2_USE_BUNDLED_JQUERY = False
+
+parent_dir = os.path.abspath(os.path.dirname(__file__) + '/..')
+MEDIA_ROOT = os.path.join(parent_dir, '/media')
+MEDIA_URL = '/media/'
 #JQUERY_URL = True
 
 # Application definition

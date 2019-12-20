@@ -139,6 +139,14 @@ class City(models.Model):
 
     def __str__(self):
         return self.name  
+        
+class Document(models.Model):
+    description = models.CharField(max_length=255, blank=True)
+    document = models.FileField(upload_to='documents', blank=True, null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return self.description  
 
 class Publication(models.Model):
     title_original = models.CharField(max_length=300, blank=True)
@@ -182,6 +190,7 @@ class Publication(models.Model):
     contact_info = models.CharField(max_length=300, blank=True)
     comments = models.CharField(max_length=200, blank=True)
     
+    documents = models.ManyToManyField(Document)
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)
     illustration_and_layout_type = models.ManyToManyField(IllustrationLayoutType)
@@ -196,11 +205,11 @@ class PublicationLanguage(models.Model): # table to store which publication has 
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
 '''
-    
+'''
 class Document(models.Model):
     type = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in DocumentType], default='P')
     publication = models.OneToOneField(Publication, on_delete=models.CASCADE, primary_key=True)
     public = models.BooleanField(default=True)
     name = models.CharField(max_length=100)
     location_on_disk = models.CharField(max_length=150)    
-	
+'''
