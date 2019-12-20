@@ -9,11 +9,11 @@ from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidg
 from django_countries.fields import CountryField
 from django_countries import countries
 
-class NameForm(forms.Form):
-    your_name = forms.CharField(label='Your name', max_length=100)
-
-
 class PublicationForm(forms.ModelForm):
+    author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(attrs={'width' : '660px'},
+        queryset=Author.objects.all(),
+        search_fields=['firstname', 'lastname'],
+    ), queryset=Author.objects.all(), required=False)
 
     class Meta:
         model = Publication
@@ -45,9 +45,10 @@ class PublicationForm(forms.ModelForm):
                 'title_subtitle_transcription',
                 'title_subtitle_european',
                 'title_translation',
+                'author',
                 ),
                 Tab('Author',
-                    'author',
+                    
                     'translator',
                 ),
                 Tab('Publishing information',
@@ -83,7 +84,8 @@ class PublicationForm(forms.ModelForm):
                    'comments',
              ),
               Tab('Files',
-                  'documents',)
+                  'documents',
+                 )
             ),
             ButtonHolder(
                 Submit('search', 'Search', css_class='button white')

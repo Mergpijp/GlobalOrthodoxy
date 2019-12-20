@@ -1,0 +1,7 @@
+https://stackoverflow.com/questions/19753160/python-django-and-an-arabic-document-search-application/19753350
+https://stackoverflow.com/questions/28759717/arabic-encode-django
+https://www.hostinger.com/tutorials/sqlite-vs-mysql-whats-the-difference/
+https://stackoverflow.com/questions/6859018/save-data-in-arabic-in-mysql-database
+http://heyman.info/2011/jul/5/extending-templates-specific-django-app/
+https://stackoverflow.com/questions/6583877/how-to-override-and-extend-basic-django-admin-templates
+https://wsvincent.com/django-search/

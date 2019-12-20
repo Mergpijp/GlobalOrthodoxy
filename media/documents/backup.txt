@@ -1,0 +1,45 @@
+    <table>
+    {{ form.as_table }}
+    </table>
+
+{% bootstrap_form form %}
+
+        <script src="http://code.jquery.com/jquery-1.9.1.js">
+        </script>
+        <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js">
+        </script>
+<link rel = "stylesheet" href="{% static 'css/base.css' %}"/>
+<input type="submit" value="Search">
+
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% block headjavascript %}{{ form.media.js }}{% endblock %}
+{% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+
+{% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+
+{% extends "admin/change_form.html" %}
+{% crispy adminform.form adminform.form.helper %}
+
+http://127.0.0.1:8000/search/?csrfmiddlewaretoken=hChMs5z7ItcwjkZ2f4xHh1ylZqZwlCmwWRoUGYlC2A3A8Ap335TogKIsBpZckUbv&csrfmiddlewaretoken=hChMs5z7ItcwjkZ2f4xHh1ylZqZwlCmwWRoUGYlC2A3A8Ap335TogKIsBpZckUbv&title_original=&title_subtitle_transcription=&title_subtitle_european=ein&title_translation=&form_of_publication=&printed_by=&published_by=&publication_date=&publication_country=&publication_city=&publishing_organisation=&possible_donor=&content_description=&description_of_illustration=&image_details=&nr_of_pages=&collection_date=&collection_country=&collection_venue_and_city=&copyrights=unknown&contact_info=&comments=&search=Search
+http://127.0.0.1:8000/search/?csrfmiddlewaretoken=hChMs5z7ItcwjkZ2f4xHh1ylZqZwlCmwWRoUGYlC2A3A8Ap335TogKIsBpZckUbv&csrfmiddlewaretoken=hChMs5z7ItcwjkZ2f4xHh1ylZqZwlCmwWRoUGYlC2A3A8Ap335TogKIsBpZckUbv&title_original=&title_subtitle_transcription=eine&title_subtitle_european=&title_translation=&form_of_publication=&printed_by=&published_by=&publication_date=&publication_country=&publication_city=&publishing_organisation=&possible_donor=&content_description=&description_of_illustration=&image_details=&nr_of_pages=&collection_date=&collection_country=&collection_venue_and_city=&copyrights=unknown&contact_info=&comments=&search=Search
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+
+x = [a,b]
+y = [a,b,c]
+
+x = []
+y = [a,b,c]
