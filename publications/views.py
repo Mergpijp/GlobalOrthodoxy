@@ -63,17 +63,32 @@ class SearchResultsView(ListView):
         currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
         publications = Publication.objects.all()
+        documents = self.request.GET.getlist('documents')
+        documents = Document.objects.filter(pk__in=documents).all()
+        city = self.request.GET.getlist('publication_city')
+        print('....', city)
+        if list(city) != ['']:
+            city = City.objects.filter(pk__in=city).all()
+        #else:
+            #city = QuerySet()
         print(publications)
 
         exclude = ['csrfmiddlewaretoken','search']
         in_variables = [('author', authors), ('translator', translators), ('language',languages), ('affiliated_church', affiliated_churches) \
-        , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by)]
+        , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by), \
+        ('documents', documents), ('publication_city', city)]
         special_case = ['copyrights']
        
         for field_name in self.request.GET:
             get_value = self.request.GET.get(field_name)
+            #if get_value == 'publication_country':
+            #    continue
+            #print('||||||', get_value)
+            #if field_name == 'publication_country':
+            #    continue
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
                not field_name in special_case:
+                print('******', field_name)
                 publications = publications.filter(**{field_name+'__icontains':get_value})
                 #publications = publications.filter(title__icontains, 'ein')
         
@@ -82,14 +97,19 @@ class SearchResultsView(ListView):
             #publications = publications.filter(**{'author__in':authors})
             #print('9999',publications)
             print('****', list_object)
+            #if field_name == 'publication_city':
+            #    continue
             if list_object:
-                publications = publications.filter(**{field_name+'__in': list_object})
+                print('------', field_name)
+                if list(list_object) != ['']:
+                    publications = publications.filter(**{field_name+'__in': list_object})
 
 
         if str(copyrights) != "unknown":
             publications = publications.filter(copyrights__iexact=copyrights)
 
-        print(publications)
+        #publications = publications.filter(publication_city__in=City))
+        #print(publications)
         publications = publications.distinct()
         return publications
 

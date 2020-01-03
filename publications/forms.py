@@ -10,11 +10,12 @@ from django_countries.fields import CountryField
 from django_countries import countries
 
 class PublicationForm(forms.ModelForm):
-    author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(attrs={'width' : '660px'},
+    #need a dummy field for select2 workaround
+    something = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Author.objects.all(),
         search_fields=['firstname', 'lastname'],
     ), queryset=Author.objects.all(), required=False)
-
+    
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_european', 'title_translation', 'author', 'translator', \
@@ -45,10 +46,10 @@ class PublicationForm(forms.ModelForm):
                 'title_subtitle_transcription',
                 'title_subtitle_european',
                 'title_translation',
-                'author',
+                
                 ),
                 Tab('Author',
-                    
+                    'author',
                     'translator',
                 ),
                 Tab('Publishing information',
@@ -93,7 +94,11 @@ class PublicationForm(forms.ModelForm):
         )
         
 class NewCrispyForm(forms.ModelForm):
-
+    #need a dummy field for select2 workaround
+    something = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        queryset=Author.objects.all(),
+        search_fields=['firstname', 'lastname'],
+    ), queryset=Author.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

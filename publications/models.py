@@ -118,8 +118,8 @@ class Country(models.Model):
 '''
         
 class Country(models.Model):
-    country = CountryField(choices=list(countries))
-
+    #country = CountryField(choices=list(countries))
+    country = CountryField(blank=True, null=True)
     def __unicode__(self):
         return self.country
         
@@ -131,8 +131,8 @@ class Country(models.Model):
         
 class City(models.Model):
     name = models.CharField(max_length=255, blank=True)
-    #country = models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE)
-    country = CountryField(blank=True)
+    #country = models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE, blank=True, null=True)
+    country = CountryField(blank=True, null=True)
     #country = models.OneToOneField(Country, on_delete=models.CASCADE, blank=True, null=True)
     class Meta:
         verbose_name_plural = "cities"
@@ -160,7 +160,7 @@ class Publication(models.Model):
     published_by = models.CharField(max_length=100, blank=True)
     publication_date = models.DateField(blank=True, null=True)
     #publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, blank=True, null=True)
-    publication_country = CountryField(blank=True)
+    publication_country = CountryField(blank=True, null=True)
     #publication_country = models.OneToOneField(Country, on_delete=models.CASCADE, blank=True, null=True)
     publication_city = ChainedForeignKey(
         City,
@@ -190,10 +190,10 @@ class Publication(models.Model):
     contact_info = models.CharField(max_length=300, blank=True)
     comments = models.CharField(max_length=200, blank=True)
     
-    documents = models.ManyToManyField(Document)
+    documents = models.ManyToManyField(Document, blank=True, null=True)
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)
-    illustration_and_layout_type = models.ManyToManyField(IllustrationLayoutType)
+    illustration_and_layout_type = models.ManyToManyField(IllustrationLayoutType, blank=True, null=True)
    
     def __str__(self):
         return 'title: ' + self.title_translation +', publication date: ' + str(self.publication_date)\
