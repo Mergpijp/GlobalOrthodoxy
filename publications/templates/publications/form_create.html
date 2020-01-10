@@ -1,7 +1,10 @@
 
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-
+{% load staticfiles %}
+{% block headjavascript %}
+<script type="text/javascript" src="{% static 'js/base.js' %}">  </script>
+{% endblock headjavascript %}
 {% block content %}
 
 <form method="post" class="form" enctype="multipart/form-data">

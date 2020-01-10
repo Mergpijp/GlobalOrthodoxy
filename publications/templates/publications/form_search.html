@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block headjavascript %}
+<script type="text/javascript" src="{% static 'js/base.js' %}">  </script>
+{% endblock headjavascript %}
+{% block content %}
+
+<form action="{% url 'publication-show' %}" method="get" class="form">
+    {% csrf_token %}
+    {% crispy form form.helper %}
+</form>
+{% endblock %}

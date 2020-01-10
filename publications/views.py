@@ -15,7 +15,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
 
 class PublicationUpdate(UpdateView):
-    template_name = 'publications/form.html'
+    template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
     model = Publication
     success_url = '/publication/show/'
@@ -27,14 +27,14 @@ def PublicationDelete(request, pk):
     return redirect('/publication/show')
 
 class PublicationCreate(CreateView):
-    template_name = 'publications/form.html'
+    template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
     success_url = '/publication/show/'
     
 @login_required(login_url='/accounts/login/')        
 def render_search(request):
     form = PublicationForm()
-    return render(request, 'publications/form.html', {'form': form})
+    return render(request, 'publications/form_search.html', {'form': form})
 
 class SearchResultsView(ListView):
     model = Publication
