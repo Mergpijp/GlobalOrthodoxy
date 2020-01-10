@@ -7,7 +7,7 @@ from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
-from .forms import PublicationForm, NewCrispyForm, AuthorForm, TranslatorForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, DocumentForm
+from .forms import PublicationForm, NewCrispyForm, AuthorForm, TranslatorForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, DocumentForm, CityForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -34,7 +34,7 @@ class PublicationCreate(CreateView):
 @login_required(login_url='/accounts/login/')        
 def render_search(request):
     form = PublicationForm()
-    return render(request, 'index.html', {'form': form})
+    return render(request, 'publications/form.html', {'form': form})
 
 class SearchResultsView(ListView):
     model = Publication

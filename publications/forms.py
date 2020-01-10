@@ -249,7 +249,7 @@ class CityForm(forms.ModelForm):
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_european__icontains'],
     ), queryset=Publication.objects.all(), required=False)
-    #country = forms.ModelChoiceField(queryset=Country.objects.all(), widget=Select2Widget()) 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['publications'].initial = [pub for pub in Publication.objects.filter(publication_city = self.instance)]
@@ -260,7 +260,6 @@ class CityForm(forms.ModelForm):
     class Meta:
         model = City
         fields = ('name','country',) 
-        #widget = {'country', Select2Widget}
         
     def save(self, commit=True):
         instance = super().save(commit)
@@ -496,6 +495,7 @@ class DocumentForm(forms.ModelForm):
                
         return instance 
         
+
 class IllustrationLayoutTypeForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),

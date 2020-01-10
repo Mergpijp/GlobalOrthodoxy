@@ -1,0 +1,10 @@
+.rtl-direction {
+   direction: rtl; 
+}
+.ltr-direction {
+   direction: ltr; 
+}
+#id_title_original {
+    text-align: start;
+    unicode-bidi: plaintext;
+}
