@@ -18,7 +18,7 @@ class PublicationForm(forms.ModelForm):
     
     class Meta:
         model = Publication
-        fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_european', 'title_translation', 'author', 'translator', \
+        fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
                   'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_info', \
@@ -44,7 +44,7 @@ class PublicationForm(forms.ModelForm):
                 Tab('Titles',
                 'title_original',
                 'title_subtitle_transcription',
-                'title_subtitle_european',
+                'title_subtitle_European',
                 'title_translation',
                 
                 ),
@@ -64,9 +64,10 @@ class PublicationForm(forms.ModelForm):
                Tab('Affiliation',
                    'possible_donor',
                    'affiliated_church',
+              ),
+               Tab('Language',
                    'language',
               ),
-                   
                Tab('Content',
                    'content_description',
                    'content_genre',
@@ -120,7 +121,7 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Titles',
                 'title_original',
                 'title_subtitle_transcription',
-                'title_subtitle_european',
+                'title_subtitle_European',
                 'title_translation',
                 ),
                 Tab('Author',
@@ -171,7 +172,7 @@ class NewCrispyForm(forms.ModelForm):
     class Meta:
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
-        fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_european', 'title_translation', 'author', 'translator', \
+        fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
           'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
           'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
           'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_info', \
@@ -181,7 +182,7 @@ class NewCrispyForm(forms.ModelForm):
 class AuthorForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -215,7 +216,7 @@ class TranslatorForm(forms.ModelForm):
 
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -247,7 +248,7 @@ class TranslatorForm(forms.ModelForm):
 class CityForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
@@ -282,7 +283,7 @@ class CityForm(forms.ModelForm):
 class ChurchForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -322,7 +323,7 @@ class LanguageForm(forms.ModelForm):
    
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -358,7 +359,7 @@ class LanguageForm(forms.ModelForm):
 class GenreForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -393,7 +394,7 @@ class GenreForm(forms.ModelForm):
 class SpecialOccasionForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -428,7 +429,7 @@ class SpecialOccasionForm(forms.ModelForm):
 class OwnerForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -463,7 +464,7 @@ class OwnerForm(forms.ModelForm):
 class DocumentForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -499,7 +500,7 @@ class DocumentForm(forms.ModelForm):
 class IllustrationLayoutTypeForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_european__icontains'],
+        search_fields=['title_subtitle_European__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):

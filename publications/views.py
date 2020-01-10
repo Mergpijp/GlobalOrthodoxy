@@ -13,6 +13,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect
+import re
+from django_countries import countries
 
 class PublicationUpdate(UpdateView):
     template_name = 'publications/form_create.html'
@@ -36,6 +38,9 @@ def render_search(request):
     form = PublicationForm()
     return render(request, 'publications/form_search.html', {'form': form})
 
+
+countries_dict = dict([(y.lower(), x) for (x,y) in countries])
+
 class SearchResultsView(ListView):
     model = Publication
     template_name = 'publications/show.html'
@@ -46,7 +51,7 @@ class SearchResultsView(ListView):
         form = PublicationForm(self.request.GET)
         if not form.is_valid():
             form = PublicationForm()
-            return render(self.request, 'index.html', {'form': form})
+            return render(self.request, 'publications/form_search.html', {'form': form})
         authors = self.request.GET.getlist('author')
         translators = self.request.GET.getlist('translator')
         authors = Author.objects.filter(pk__in=authors).all()
@@ -79,6 +84,22 @@ class SearchResultsView(ListView):
         ('documents', documents), ('publication_city', city)]
         special_case = ['copyrights']
        
+        if ('q' in self.request.GET) and self.request.GET['q'].strip():
+            query_string = self.request.GET['q']
+            if query_string.lower() in countries_dict.keys():
+                query_string = countries_dict[query_string.lower()]
+            entry_query = get_query(query_string, ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__firstname', 'author__lastname', \
+                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
+                  'translator__lastname', 'language__name', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
+                  'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'contact_info', 'currently_owned_by__name', 'documents__description', \
+                  'comments'])
+
+            print('&&&&&&', query_string)
+            publications = publications.filter(entry_query)
+            print(publications)
+            publications = publications.distinct()
+            return publications
+       
         for field_name in self.request.GET:
             get_value = self.request.GET.get(field_name)
             #if get_value == 'publication_country':
@@ -102,11 +123,16 @@ class SearchResultsView(ListView):
             if list_object:
                 print('------', field_name)
                 if list(list_object) != ['']:
+                    
                     publications = publications.filter(**{field_name+'__in': list_object})
 
 
-        if str(copyrights) != "unknown":
-            publications = publications.filter(copyrights__iexact=copyrights)
+        if str(copyrights) != "unknown" and str(copyrights) != "None":
+            val = False
+            if str(copyrights):
+                val = True
+            print('11111', str(copyrights))
+            publications = publications.filter(copyrights=val)
 
         #publications = publications.filter(publication_city__in=City))
         #print(publications)
@@ -333,5 +359,41 @@ class IllustrationLayoutTypeUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = IllustrationLayoutTypeForm
     model = IllustrationLayoutType
-    success_url = '/illustration_layout_type/show/'    
+    success_url = '/illustration_layout_type/show/'  
+
+def normalize_query(query_string,
+    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+    normspace=re.compile(r'\s{2,}').sub):
+
+    '''
+    Splits the query string in invidual keywords, getting rid of unecessary spaces and grouping quoted words together.
+    Example:
+    >>> normalize_query('  some random  words "with   quotes  " and   spaces')
+        ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
+    '''
+
+    return [normspace(' ',(t[0] or t[1]).strip()) for t in findterms(query_string)]
+
+def get_query(query_string, search_fields):
+
+    '''
+    Returns a query, that is a combination of Q objects. 
+    That combination aims to search keywords within a model by testing the given search fields.
+    '''
+
+    query = None # Query to search for every search term
+    terms = normalize_query(query_string)
+    for term in terms:
+        or_query = None # Query to search for a given term in each field
+        for field_name in search_fields:
+            q = Q(**{"%s__icontains" % field_name: term})
+            if or_query is None:
+                or_query = q
+            else:
+                or_query = or_query | q
+        if query is None:
+            query = or_query
+        else:
+            query = query & or_query
+    return query    
          

@@ -151,7 +151,7 @@ class Document(models.Model):
 class Publication(models.Model):
     title_original = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription = models.CharField(max_length=300, blank=True)
-    title_subtitle_european = models.CharField(max_length=300, blank=True)
+    title_subtitle_European = models.CharField(max_length=300, blank=True)
     title_translation = models.CharField(max_length=300, blank=True)
     author = models.ManyToManyField(Author)
     translator = models.ManyToManyField(Translator)
