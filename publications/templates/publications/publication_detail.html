@@ -23,7 +23,13 @@
     {% empty %}
         </br>
     {% endfor %} 
-    <p>form of publication: {{object.form_of_publication}} </p>
+    <p><b>Form of publications:</b></p>
+    {% for form_of_publication in object.form_of_publication.all %}
+        <p>name: {{form_of_publication.name}}</p>
+        </br>
+    {% empty %}
+        </br>
+    {% endfor %} 
     <p>printed by: {{object.printed_by}}</p>
     <p>published by: {{object.published_by}}</p>
     <p>publication date: {{object.publication_date}}</p>
