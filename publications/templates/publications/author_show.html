@@ -8,13 +8,16 @@
         <th>Year of birth</th>  
         <th>Actions</th>  
     </tr>  
-    </thead>  
+    </thead> 
+<br> 
+<center><a href="/author/new" class="btn btn-primary">Add New Author</a></center>   
+<br>      
     <tbody>  
 {% for author in authors %}  
     <tr>  
-        <td>{{ author.firstname }}</td>  
-        <td>{{ author.lastname }}</td>  
-        <td>{{ author.year_of_birth }}</td>  
+        <td><a href="{% url 'publication-show' %}?q={{author.firstname}}">{{ author.firstname }}</a></td>  
+        <td><a href="{% url 'publication-show' %}?q={{author.lastname}}">{{ author.lastname }}</a></td>  
+        <td><a href="{% url 'publication-show' %}?q={{author.year_of_birth}}">{{ author.year_of_birth }}</a></td>  
         <td>  
             <a href="/author/{{ author.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/author/{{ author.id }}/delete">Delete</a>  
@@ -23,7 +26,6 @@
 {% endfor %}  
     </tbody>  
 </table>  
-<br>  
-<br>  
-<center><a href="/author/new" class="btn btn-primary">Add New Record</a></center>  
+
+
 {% endblock %}

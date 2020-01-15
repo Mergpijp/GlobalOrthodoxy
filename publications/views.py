@@ -2,19 +2,21 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
-from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, Document
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
-from .forms import PublicationForm, NewCrispyForm, AuthorForm, TranslatorForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, DocumentForm, CityForm
+from .forms import PublicationForm, NewCrispyForm, AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.detail import DetailView
 from django.shortcuts import redirect
 import re
 from django_countries import countries
+from django.utils import timezone
 
 class PublicationUpdate(UpdateView):
     template_name = 'publications/form_create.html'
@@ -32,7 +34,14 @@ class PublicationCreate(CreateView):
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
     success_url = '/publication/show/'
+
+class PublicationDetailView(DetailView):
+    model = Publication
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context    
 @login_required(login_url='/accounts/login/')        
 def render_search(request):
     form = PublicationForm()
@@ -56,6 +65,8 @@ class SearchResultsView(ListView):
         translators = self.request.GET.getlist('translator')
         authors = Author.objects.filter(pk__in=authors).all()
         translators = Translator.objects.filter(pk__in=translators).all()
+        form_of_publications = self.request.GET.getlist('form_of_publication')
+        form_of_publications = FormOfPublication.objects.filter(pk__in=form_of_publications).all()
         languages = self.request.GET.getlist('language')
         languages = Language.objects.filter(pk__in=languages).all()
         affiliated_churches = self.request.GET.getlist('affiliated_church')
@@ -68,8 +79,8 @@ class SearchResultsView(ListView):
         currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
         publications = Publication.objects.all()
-        documents = self.request.GET.getlist('documents')
-        documents = Document.objects.filter(pk__in=documents).all()
+        uploadedfiles = self.request.GET.getlist('uploadedfiles')
+        uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
         city = self.request.GET.getlist('publication_city')
         print('....', city)
         if list(city) != ['']:
@@ -79,20 +90,20 @@ class SearchResultsView(ListView):
         print(publications)
 
         exclude = ['csrfmiddlewaretoken','search']
-        in_variables = [('author', authors), ('translator', translators), ('language',languages), ('affiliated_church', affiliated_churches) \
+        in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by), \
-        ('documents', documents), ('publication_city', city)]
+        ('uploadedfiles', uploadedfiles), ('publication_city', city)]
         special_case = ['copyrights']
        
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
             query_string = self.request.GET['q']
             if query_string.lower() in countries_dict.keys():
                 query_string = countries_dict[query_string.lower()]
-            entry_query = get_query(query_string, ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__firstname', 'author__lastname', \
-                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
-                  'translator__lastname', 'language__name', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
-                  'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'contact_info', 'currently_owned_by__name', 'documents__description', \
-                  'comments'])
+            entry_query = get_query(query_string, ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__firstname', 'author__lastname', 'author__year_of_birth', \
+                  'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
+                  'translator__lastname', 'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
+                  'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments'])
 
             print('&&&&&&', query_string)
             publications = publications.filter(entry_query)
@@ -182,6 +193,28 @@ class TranslatorUpdate(UpdateView):
     form_class = TranslatorForm
     model = Translator
     success_url = '/translator/show/'
+    
+class FormOfPublicationCreate(CreateView):
+    template_name = 'publications/form.html'
+    form_class = FormOfPublicationForm
+    success_url = '/form_of_publication/show/'
+
+class FormOfPublicationShow(ListView):
+    model = FormOfPublication
+    template_name = 'publications/form_of_publication_show.html'
+    context_object_name = 'form_of_publications'
+
+@login_required(login_url='/accounts/login/')
+def FormOfPublicationDelete(request, pk):
+    form_of_publication = FormOfPublication.objects.get(id=pk)
+    form_of_publication.delete()
+    return redirect('/form_of_publication/show')
+
+class FormOfPublicationUpdate(UpdateView):
+    template_name = 'publications/form.html'
+    form_class = FormOfPublicationForm
+    model = FormOfPublication
+    success_url = '/form_of_publication/show/'
 
 class CityCreate(CreateView):
     template_name = 'publications/form.html'
@@ -317,27 +350,27 @@ class OwnerUpdate(UpdateView):
     model = Owner
     success_url = '/owner/show/'  
 
-class DocumentCreate(CreateView):
+class UploadedFileCreate(CreateView):
     template_name = 'publications/form.html'
-    form_class = DocumentForm
-    success_url = '/document/show/'   
+    form_class = UploadedFileForm
+    success_url = '/uploadedfile/show/'   
     
-class DocumentShow(ListView):
-    model = Document
-    template_name = 'publications/document_show.html'
-    context_object_name = 'documents'
+class UploadedFileShow(ListView):
+    model = UploadedFile
+    template_name = 'publications/uploadedfile_show.html'
+    context_object_name = 'uploadedfiles'
     
 @login_required(login_url='/accounts/login/')
-def DocumentDelete(request, pk):
-    document = Document.objects.get(id=pk)
-    document.delete()
-    return redirect('/document/show')
+def UploadedFileDelete(request, pk):
+    uploadedfile = UploadedFile.objects.get(id=pk)
+    uploadedfile.delete()
+    return redirect('/uploadedfile/show')
 
-class DocumentUpdate(UpdateView):
+class UploadedFileUpdate(UpdateView):
     template_name = 'publications/form.html'
-    form_class = DocumentForm
-    model = Document
-    success_url = '/document/show/'  
+    form_class = UploadedFileForm
+    model = UploadedFile
+    success_url = '/UploadedFile/show/'  
 
 class IllustrationLayoutTypeCreate(CreateView):
     template_name = 'publications/form.html'

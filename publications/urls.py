@@ -1,12 +1,13 @@
 from django.urls import path, include
 
-from .views import SearchResultsView, render_search, PublicationCreate, PublicationUpdate, PublicationDelete
+from .views import SearchResultsView, render_search, PublicationCreate, PublicationUpdate, PublicationDelete, PublicationDetailView
 from . import views
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('publication/new/', login_required(PublicationCreate.as_view()), name='publication-new'),
     path('publication/show/', login_required(SearchResultsView.as_view()), name='publication-show'), 
+    path('publication/<int:pk>/detail_view/', login_required(PublicationDetailView.as_view()), name='publication-detail'),
     path('publication/<int:pk>/edit/', login_required(PublicationUpdate.as_view()), name='publication-update'),
     path('publication/<int:pk>/delete/', PublicationDelete, name='publication-delete'),
     path('author/new/', login_required(views.AuthorCreate.as_view()), name='author-new'),
@@ -16,7 +17,11 @@ urlpatterns = [
     path('translator/new/', login_required(views.TranslatorCreate.as_view()), name='translator-new'),
     path('translator/show/', login_required(views.TranslatorShow.as_view()), name='translator-show'),
     path('translator/<int:pk>/edit/', login_required(views.TranslatorUpdate.as_view()), name='translator-update'),
-    path('translator/<int:pk>/delete/', views.TranslatorDelete, name='translator-delete'),   
+    path('translator/<int:pk>/delete/', views.TranslatorDelete, name='translator-delete'), 
+    path('form_of_publication/new/', login_required(views.FormOfPublicationCreate.as_view()), name='form-of-publication-new'),
+    path('form_of_publication/show/', login_required(views.FormOfPublicationShow.as_view()), name='form-of-publication-show'),
+    path('form_of_publication/<int:pk>/edit/', login_required(views.FormOfPublicationUpdate.as_view()), name='form-of-publication-update'),
+    path('form_of_publication/<int:pk>/delete/', views.FormOfPublicationDelete, name='form-of-publlication-delete'),    
     path('city/new/', login_required(views.CityCreate.as_view()), name='city-new'),
     path('city/show/', login_required(views.CityShow.as_view()), name='city-show'),
     path('city/<int:pk>/edit/', login_required(views.CityUpdate.as_view()), name='city-update'),
@@ -41,10 +46,10 @@ urlpatterns = [
     path('owner/show/', login_required(views.OwnerShow.as_view()), name='owner-show'),
     path('owner/<int:pk>/edit/', login_required(views.OwnerUpdate.as_view()), name='owner-update',),
     path('owner/<int:pk>/delete/', views.OwnerDelete, name='owner-delete'),
-    path('document/new/', login_required(views.DocumentCreate.as_view()), name='document-new'),
-    path('document/show/', login_required(views.DocumentShow.as_view()), name='document-show'),
-    path('document/<int:pk>/edit/', login_required(views.DocumentUpdate.as_view()), name='document-update',),
-    path('document/<int:pk>/delete/', views.DocumentDelete, name='document-delete'),    
+    path('uploadedfile/new/', login_required(views.UploadedFileCreate.as_view()), name='uploadedfile-new'),
+    path('uploadedfile/show/', login_required(views.UploadedFileShow.as_view()), name='uploadedfile-show'),
+    path('uploadedfile/<int:pk>/edit/', login_required(views.UploadedFileUpdate.as_view()), name='uploadedfile-update',),
+    path('uploadedfile/<int:pk>/delete/', views.UploadedFileDelete, name='uploadedfile-delete'),    
     path('illustration_layout_type/new/', login_required(views.IllustrationLayoutTypeCreate.as_view()), name='illustration-layout-type-new'),
     path('illustration_layout_type/show/', login_required(views.IllustrationLayoutTypeShow.as_view()), name='illustration-layout-type-show'),
     path('illustration_layout_type/<int:pk>/edit/', login_required(views.IllustrationLayoutTypeUpdate.as_view()), name='illustration-layout-type-update',),

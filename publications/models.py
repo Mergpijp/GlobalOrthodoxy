@@ -8,19 +8,34 @@ from django_countries import countries
 #from django_select2.forms import ModelSelect2Widget
 #from smart_selects.db_fields import GroupedForeignKey
 from smart_selects.db_fields import ChainedForeignKey
-
+from django.utils.translation import ugettext_lazy
+from django_enumfield import enum
+from django_enumfield.forms.fields import EnumChoiceField
 
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
 
-
-class FormOfPublication(Enum):
-    PUBLISHED_PAPER = "P"
-    SELF_PUBLISHED_PAPER = "S"
-    TEXT_ON_WEBSITE = "T"
-    OTHER = "O"
-    NONE = None
-    
+'''
+class FormOfPublication(enum.Enum):
+    PUBLISHED_PAPER = 1
+    SELF_PUBLISHED_PAPER = 2
+    TEXT_ON_WEBSITE = 3
+    OTHER = 4
+    NONE = 0
+   
+    __labels__ = {
+        PUBLISHED_PAPER: ugettext_lazy("Published paper"),
+        SELF_PUBLISHED_PAPER: ugettext_lazy("Self published paper"),
+        TEXT_ON_WEBSITE: ugettext_lazy("Text on website"),
+        OTHER: ugettext_lazy("Other"),
+        NONE: ugettext_lazy("None"),
+    }   
+'''
+class FormOfPublication(models.Model):
+    name = models.CharField(max_length=100, blank=True)
+	
+    def __str__(self):
+        return 'Form of Publication: ' + self.name        
 class WritingDirection(Enum):
     LEFT = "L"
     RIGHT = "R"
@@ -140,9 +155,9 @@ class City(models.Model):
     def __str__(self):
         return self.name  
         
-class Document(models.Model):
+class UploadedFile(models.Model):
     description = models.CharField(max_length=255, blank=True)
-    document = models.FileField(upload_to='documents', blank=True, null=True)
+    files = models.FileField(upload_to='files', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
@@ -155,10 +170,12 @@ class Publication(models.Model):
     title_translation = models.CharField(max_length=300, blank=True)
     author = models.ManyToManyField(Author)
     translator = models.ManyToManyField(Translator)
-    form_of_publication = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in FormOfPublication], blank=True)
+    form_of_publication = models.ManyToManyField(FormOfPublication)
+    #form_of_publication = EnumChoiceField(FormOfPublication)
+    #form_of_publication = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in FormOfPublication], blank=True)
     printed_by = models.CharField(max_length=100, blank=True)
     published_by = models.CharField(max_length=100, blank=True)
-    publication_date = models.DateField(blank=True, null=True)
+    publication_date = models.CharField(max_length=100, blank=True)
     #publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, blank=True, null=True)
     publication_country = CountryField(blank=True, null=True)
     #publication_country = models.OneToOneField(Country, on_delete=models.CASCADE, blank=True, null=True)
@@ -182,22 +199,24 @@ class Publication(models.Model):
     description_of_illustration = models.CharField(max_length=300, blank=True)
     image_details = models.CharField(max_length=300, blank=True)
     nr_of_pages = models.IntegerField(blank=True, null=True)
-    collection_date = models.DateField(blank=True, null=True)
+    collection_date = models.CharField(max_length=100, blank=True)
     collection_country = CountryField(blank=True)
     collection_venue_and_city = models.CharField(max_length=100, blank=True)
     copyrights = models.NullBooleanField()
     currently_owned_by = models.ManyToManyField(Owner)
-    contact_info = models.CharField(max_length=300, blank=True)
+    contact_telephone_number = models.CharField(max_length=100, blank=True)
+    contact_email = models.CharField(max_length=100, blank=True)
+    contact_website = models.CharField(max_length=100, blank=True)
     comments = models.CharField(max_length=200, blank=True)
     
-    documents = models.ManyToManyField(Document, blank=True, null=True)
+    uploadedfiles = models.ManyToManyField(UploadedFile, blank=True, null=True)
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)
     illustration_and_layout_type = models.ManyToManyField(IllustrationLayoutType, blank=True, null=True)
    
     def __str__(self):
-        return 'title: ' + self.title_translation +', publication date: ' + str(self.publication_date)\
-                + ', collection venue: ' + self.collection_venue_and_city + ', comments: ' + self.comments
+        return 'title_original: ' + self.title_original +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
+                + ', title_subtitle_European: ' + self.title_subtitle_European + ', title_translation: ' + self.title_translation
 
 
 '''

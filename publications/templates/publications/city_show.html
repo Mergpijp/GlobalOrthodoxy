@@ -7,12 +7,15 @@
         <th>country </th>
         <th>Actions</th>  
     </tr>  
-    </thead>  
+    </thead> 
+<br>
+<center><a href="/city/new" class="btn btn-primary">Add New City</a></center>    
+<br>      
     <tbody>  
 {% for city in cities %}  
     <tr>  
-        <td>{{ city.name }}</td>
-        <td>{{ city.country }} </td>
+        <td><a href="{% url 'publication-show' %}?q={{city.name}}">{{ city.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{city.country.name}}">{{ city.country.name }}</a></td>
         <td>  
             <a href="/city/{{ city.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/city/{{ city.id }}/delete">Delete</a>  
@@ -21,7 +24,6 @@
 {% endfor %}  
     </tbody>  
 </table>  
-<br>  
-<br>  
-<center><a href="/city/new" class="btn btn-primary">Add New Record</a></center>  
+
+
 {% endblock %}

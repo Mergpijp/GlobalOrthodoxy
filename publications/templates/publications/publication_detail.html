@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+    <p><b> Titles</b></p>
+    <p>title original: {{ object.title_original }}</p>
+    <p>title subtitle transcription: {{ object.title_subtitle_transcription }}</p>
+    <p>title subtitle European: {{ object.title_subtitle_European }}</p>
+    <p>title translation: {{ object.title_translation }}</p>
+    </br>
+    <p><b>Authors:</b></p>
+    {% for author in object.author.all %}
+        <p>firstname: {{author.firstname}}</p>
+        <p>lastname:  {{author.lastname}}</p>
+        <p>year of birth: {{author.year_of_birth}}</p>
+        </br>
+    {% empty %}
+        </br>
+    {% endfor %}  
+    <p><b>Translators:</b></p>
+    {% for translator in object.translator.all %}
+        <p>firstname: {{translator.firstname}}</p>
+        <p>lastname:  {{translator.lastname}}</p>
+        </br>
+    {% empty %}
+        </br>
+    {% endfor %} 
+    <p>form of publication: {{object.form_of_publication}} </p>
+    <p>printed by: {{object.printed_by}}</p>
+    <p>published by: {{object.published_by}}</p>
+    <p>publication date: {{object.publication_date}}</p>
+    <p>publication country: {{object.publication_country.name}}</p>
+    <p>publication city: {{object.publication_city.name}}</p>
+    <p>publishing organisation: {{object.publishing_organisation}}</p>
+    <p>possible donor: {{object.possible_donor}}</p>
+    <p><b>Churches:</b></p>
+    {% for church in object.affiliated_church.all %}
+        <p>name: {{church.name}}</p>
+        </br>
+    {% empty %}
+        </br>
+    {% endfor %}   
+    <p>content description: {{object.content_description}}</p>
+    <p><b>Content genres:</b></p>
+    {% for genre in object.content_genere.all %}
+        <p>name: {{genre.name}}</p>
+        </br>
+    {% empty %}
+        </br>
+    {% endfor %} 
+    <p><b>Connected to special occassions:</b></p>
+    {% for occasion in object.connected_to_special_occasion.all %}
+        <p>name: {{occasion.name}}</p>
+        </br>
+    {% empty %}
+        </br>
+    {% endfor %}
+    <p>description of illustration: {{object.description_of_illustration}}</p>
+    <p>image details: {{object.image_details}}</p>
+    <p>nummer of pages: {{object.nr_of_pages}}</p>
+    <p>collection date: {{object.collection_date}}</p>
+    <p>collection country: {{object.collection_country.name}}</p>
+    <p>collection venue and city: {{object.collection_venue_and_city}}</p>
+    <p>copyrights: {{object.copyrights}}</p>
+    <p><b>Currently owned by:</b></p>
+    {% for owner in object.currently_owned_by.all %}
+        <p>name: {{owner.name}}</p>
+        </br>
+    {% empty %}
+        </br>
+    {% endfor %}
+    <p>contact telephone number: {{object.contact_telephone_number}}</p>
+    <p>contact email: {{object.contact_email}}</p>
+    <p>contact website: {{object.contact_website}}</p>
+    <p>comments: {{object.comments}}</p>
+        <p><b>Uploaded files:</b></p>
+    {% for files in object.uploadedfiles.all %}
+        <p>description: {{files.description}}</p>
+        <p>files: {{files.files}}</p>
+        <p>uploaded at: {{files.uploaded_at}}</p>
+        </br>
+    {% empty %}
+        </br>
+    {% endfor %}
+    
+{% endblock %}

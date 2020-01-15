@@ -7,10 +7,13 @@
         <th>Actions</th>  
     </tr>  
     </thead>  
+<br>  
+<center><a href="/special_occasion/new" class="btn btn-primary">Add New Special Occasion</a></center>  
+<br>  
     <tbody>  
 {% for specialoccasion in specialoccasions %}  
     <tr>  
-        <td>{{ specialoccasion.name }}</td>
+        <td><a href="{% url 'publication-show' %}?connected_to_special_occasion={{specialoccasion.id}}">{{ specialoccasion.name }}</a></td>
         <td>  
             <a href="/special_occasion/{{ specialoccasion.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/special_occasion/{{ specialoccasion.id }}/delete">Delete</a>  
@@ -19,7 +22,5 @@
 {% endfor %}  
     </tbody>  
 </table>  
-<br>  
-<br>  
-<center><a href="/special_occasion/new" class="btn btn-primary">Add New Record</a></center>  
+
 {% endblock %}

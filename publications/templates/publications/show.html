@@ -17,7 +17,8 @@
         <td>{{ publication.title_subtitle_transcription}}</td>  
         <td>{{ publication.title_subtitle_european }}</td>  
         <td>{{ publication.title_translation }}</td>  
-        <td>  
+        <td> 
+            <a href="/publication/{{ publication.id }}/detail_view">View</a>
             <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/publication/{{ publication.id }}/delete">Delete</a>  
         </td>  

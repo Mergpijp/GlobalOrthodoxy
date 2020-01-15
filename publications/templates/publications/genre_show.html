@@ -6,11 +6,14 @@
         <th>name </th>    
         <th>Actions</th>  
     </tr>  
-    </thead>  
+    </thead>
+<br>
+<center><a href="/genre/new" class="btn btn-primary">Add New Genre</a></center>    
+<br>    
     <tbody>  
 {% for genre in genres %}  
     <tr>  
-        <td>{{ genre.name }}</td>  
+        <td><a href="{% url 'publication-show' %}?content_genre={{genre.id}}">{{ genre.name }}</a></td>  
         <td>  
             <a href="/genre/{{ genre.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/genre/{{ genre.id }}/delete">Delete</a>  
@@ -19,7 +22,6 @@
 {% endfor %}  
     </tbody>  
 </table>  
-<br>  
-<br>  
-<center><a href="/genre/new" class="btn btn-primary">Add New Record</a></center>  
+  
+
 {% endblock %}

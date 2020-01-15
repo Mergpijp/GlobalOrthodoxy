@@ -7,10 +7,13 @@
         <th>Actions</th>  
     </tr>  
     </thead>  
+<br>
+<center><a href="/owner/new" class="btn btn-primary">Add New Owner</a></center>    
+<br>  
     <tbody>  
 {% for owner in owners %}  
     <tr>  
-        <td>{{ owner.name }}</td>
+        <td><a href="{% url 'publication-show' %}?currently_owned_by={{owner.id}}">{{ owner.name }}</a></td>
         <td>  
             <a href="/owner/{{ owner.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/owner/{{ owner.id }}/delete">Delete</a>  
@@ -19,7 +22,5 @@
 {% endfor %}  
     </tbody>  
 </table>  
-<br>  
-<br>  
-<center><a href="/owner/new" class="btn btn-primary">Add New Record</a></center>  
+
 {% endblock %}

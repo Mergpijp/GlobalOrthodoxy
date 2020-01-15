@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<table class="table table-striped table-bordered table-sm">  
+    <thead class="thead-light">  
+    <tr>  
+        <th>Name</th>    
+        <th>Actions</th>  
+    </tr>  
+    </thead>
+<br>  
+<center><a href="/form_of_publication/new" class="btn btn-primary">Add New Form of publication</a></center>  
+<br>    
+    <tbody>  
+{% for form_of_publication in form_of_publications %}  
+    <tr>  
+        <td><a href="{% url 'publication-show' %}?form_of_publication={{form_of_publication.id}}">{{ form_of_publication.name }}</a></td>  
+        <td>  
+            <a href="/form_of_publication/{{ form_of_publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
+            <a href="/form_of_publication/{{ form_of_publication.id }}/delete">Delete</a>  
+        </td>  
+    </tr>  
+{% endfor %}  
+    </tbody>  
+</table>  
+  
+
+{% endblock %}

@@ -7,12 +7,15 @@
         <th>Lastname</th>   
         <th>Actions</th>  
     </tr>  
-    </thead>  
+    </thead>
+<br>  
+<center><a href="/translator/new" class="btn btn-primary">Add New Translator</a></center>  
+<br>    
     <tbody>  
 {% for translator in translators %}  
     <tr>  
-        <td>{{ translator.firstname }}</td>  
-        <td>{{ translator.lastname }}</td>  
+        <td><a href="{% url 'publication-show' %}?q={{translator.firstname}}">{{ translator.firstname }}</a></td>  
+        <td><a href="{% url 'publication-show' %}?q={{translator.lastname}}">{{ translator.lastname }}</a></td>  
         <td>  
             <a href="/translator/{{ translator.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/translator/{{ translator.id }}/delete">Delete</a>  
@@ -21,7 +24,6 @@
 {% endfor %}  
     </tbody>  
 </table>  
-<br>  
-<br>  
-<center><a href="/translator/new" class="btn btn-primary">Add New Record</a></center>  
+  
+
 {% endblock %}

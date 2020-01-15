@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Publication, Author, Translator, Genre, Church, SpecialOccasion, Owner, City, Language, Country, IllustrationLayoutType, Document
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, Country, IllustrationLayoutType, UploadedFile
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field
 from crispy_forms.bootstrap import Tab, TabHolder
@@ -21,8 +21,8 @@ class PublicationForm(forms.ModelForm):
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
                   'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
-                  'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_info', \
-                  'comments', 'documents')
+                  'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
+                  'contact_email', 'contact_website','comments', 'uploadedfiles')
         
     def __init__(self, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
@@ -34,7 +34,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['connected_to_special_occasion'].required = False
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
-        self.fields['documents'].required = False
+        self.fields['uploadedfiles'].required = False
       
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'  
@@ -82,11 +82,13 @@ class PublicationForm(forms.ModelForm):
                    'collection_venue_and_city',
                    'copyrights',
                    'currently_owned_by',
-                   'contact_info',
+                   'contact_telephone_number',
+                   'contact_email',
+                   'contact_website',
                    'comments',
              ),
               Tab('Files',
-                  'documents',
+                  'uploadedfiles',
                  )
             ),
             ButtonHolder(
@@ -115,7 +117,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['connected_to_special_occasion'].required = False
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
-        self.fields['documents'].required = False
+        self.fields['uploadedfiles'].required = False
         self.helper.layout = Layout(
             TabHolder(
                 Tab('Titles',
@@ -140,9 +142,10 @@ class NewCrispyForm(forms.ModelForm):
                Tab('Affiliation',
                    'possible_donor',
                    'affiliated_church',
+              ),
+               Tab('Language',
                    'language',
               ),
-                   
                Tab('Content',
                    'content_description',
                    'content_genre',
@@ -157,12 +160,14 @@ class NewCrispyForm(forms.ModelForm):
                    'collection_venue_and_city',
                    'copyrights',
                    'currently_owned_by',
-                   'contact_info',
+                   'contact_telephone_number',
+                   'contact_email',
+                   'contact_website',
                    'comments',
              ),
-               Tab('files',
-                   'documents',
-              )
+              Tab('Files',
+                  'uploadedfiles',
+                 )
             ),
             ButtonHolder(
                 Submit('Submit', 'Submit', css_class='button white')
@@ -173,21 +178,22 @@ class NewCrispyForm(forms.ModelForm):
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
-          'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
-          'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
-          'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_info', \
-          'comments', 'documents')
+                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
+                  'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
+                  'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
+                  'contact_email', 'contact_website','comments', 'uploadedfiles')
         #publication_country = forms.ChoiceField(choices=list(countries))
           
 class AuthorForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        model=Publication,
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(author = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(author=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('firstname', 'lastname', 'year_of_birth', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
@@ -216,11 +222,12 @@ class TranslatorForm(forms.ModelForm):
 
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(translator = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(translator=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('firstname', 'lastname', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
@@ -244,16 +251,51 @@ class TranslatorForm(forms.ModelForm):
             for pub in diff:
                instance.publication_set.remove(pub)
         return instance  
+
+class FormOfPublicationForm(forms.ModelForm):
+
+    publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        queryset=Publication.objects.all(),
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+    ), queryset=Publication.objects.all(), required=False)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(translator=self.instance)
+        self.helper = FormHelper()
+        self.helper.layout = Layout('name',
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+    
+    class Meta:
+        model = FormOfPublication
+        fields = ('name',) 
+        
+    def save(self, commit=True):
+        instance = super().save(commit)
+        if self.cleaned_data['publications'].count() > instance.publication_set.count():
+            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all()) 
+            for pub in diff:
+                instance.publication_set.add(pub)
+        
+        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
+            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all()) 
+            if not diff:
+                for pub in instance.publication_set:
+                    instance.publication_set.remove(pub)
+            for pub in diff:
+               instance.publication_set.remove(pub)
+        return instance         
         
 class CityForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(publication_city = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(publication_city=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'country', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
@@ -283,12 +325,13 @@ class CityForm(forms.ModelForm):
 class ChurchForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(affiliated_church = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(affiliated_church=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
@@ -323,12 +366,13 @@ class LanguageForm(forms.ModelForm):
    
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(language = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(language=self.instance)
         
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'direction', 'publications',
@@ -359,12 +403,13 @@ class LanguageForm(forms.ModelForm):
 class GenreForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(content_genre = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(content_genre=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
@@ -394,12 +439,13 @@ class GenreForm(forms.ModelForm):
 class SpecialOccasionForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(connected_to_special_occasion = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(connected_to_special_occasion=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
@@ -429,12 +475,13 @@ class SpecialOccasionForm(forms.ModelForm):
 class OwnerForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(currently_owned_by = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(currently_owned_by=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
@@ -461,22 +508,23 @@ class OwnerForm(forms.ModelForm):
                
         return instance 
 
-class DocumentForm(forms.ModelForm):
+class UploadedFileForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(documents = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(uploadedfiles=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('description', 'document', 'publications',
+        self.helper.layout = Layout('description', 'files', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
     
     class Meta:
-        model = Document
-        fields = ('description', 'document',) 
+        model = UploadedFile
+        fields = ('description', 'files',) 
         
     def save(self, commit=True):
         instance = super().save(commit)
@@ -500,12 +548,13 @@ class DocumentForm(forms.ModelForm):
 class IllustrationLayoutTypeForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['publications'].initial = [pub for pub in Publication.objects.filter(illustration_and_layout_type = self.instance)]
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(illustration_and_layout_type=self.instance)        
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))

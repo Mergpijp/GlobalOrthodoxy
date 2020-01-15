@@ -7,12 +7,15 @@
         <th>writing direction </th>
         <th>Actions</th>  
     </tr>  
-    </thead>  
+    </thead>
+<br>  
+<center><a href="/language/new" class="btn btn-primary">Add New Language</a></center>  
+<br>      
     <tbody>  
 {% for language in languages %}  
     <tr>  
-        <td>{{ language.name }}</td>
-        <td>{{ language.direction }} </td>
+        <td><a href="{% url 'publication-show' %}?q={{language.name}}">{{ language.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{language.direction}}">{{ language.direction }}</a></td>
         <td>  
             <a href="/language/{{ language.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/language/{{ language.id }}/delete">Delete</a>  
@@ -21,7 +24,4 @@
 {% endfor %}  
     </tbody>  
 </table>  
-<br>  
-<br>  
-<center><a href="/language/new" class="btn btn-primary">Add New Record</a></center>  
 {% endblock %}

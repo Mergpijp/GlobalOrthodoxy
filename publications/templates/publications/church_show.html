@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block content %}
 <table class="table table-striped table-bordered table-sm">  
     <thead class="thead-light">  
@@ -7,10 +8,13 @@
         <th>Actions</th>  
     </tr>  
     </thead>  
+<br> 
+<center><a href="/church/new" class="btn btn-primary">Add New Church</a></center>   
+<br>  
     <tbody>  
 {% for church in churches %}  
     <tr>  
-        <td>{{ church.name }}</td>  
+        <td><a href="{% url 'publication-show' %}?affiliated_church={{church.id}}">{{ church.name }}</a></td>  
         <td>  
             <a href="/church/{{ church.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/church/{{ church.id }}/delete">Delete</a>  
@@ -19,7 +23,5 @@
 {% endfor %}  
     </tbody>  
 </table>  
-<br>  
-<br>  
-<center><a href="/church/new" class="btn btn-primary">Add New Record</a></center>  
+  
 {% endblock %}
