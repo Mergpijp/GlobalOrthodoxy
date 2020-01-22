@@ -3,19 +3,80 @@ from django import forms
 from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, Country, IllustrationLayoutType, UploadedFile
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field
-from crispy_forms.bootstrap import Tab, TabHolder
+from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton
 from django.forms.models import inlineformset_factory
 from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, ModelSelect2TagWidget, Select2Widget, ModelSelect2Widget, HeavySelect2MultipleWidget
 from django_countries.fields import CountryField
 from django_countries import countries
+from django_countries.widgets import CountrySelectWidget
+
+
+
+class CustomCountrySelectWidget(Select2Widget, CountrySelectWidget):
+    pass
+
+class AuthorWdiget(ModelSelect2MultipleWidget):
+    model = Author
+    search_fields = ['firstname__icontains', 'lastname__icontains']
+
+    def label_from_instance(self,obj):
+        return obj.name
+
+    def get_queryset(self):
+        return Author.objects.all()
+        
+    def filter_queryset(self, queryset=None):
+        return queryset.filter(do='whaterver')
+        
+    def get_model_field_values(self, value):
+        return {'title': value}
+
+    def prepare_qs_params(self, request, search_term, search_fields):
+        res = super(Endpoints, self).prepare_qs_params(request, search_term, search_fields)
+        res['and'] = {'id': request.GET.get('id')}
+        return res
 
 class PublicationForm(forms.ModelForm):
-    #need a dummy field for select2 workaround
-    something = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Author.objects.all(),
-        search_fields=['firstname', 'lastname'],
+    author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Author,
+        search_fields=['firstname__icontains', 'lastname__icontains'],
     ), queryset=Author.objects.all(), required=False)
-    
+    translator = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Translator,
+        search_fields=['firstname__icontains', 'lastname__icontains'],
+    ), queryset=Translator.objects.all(), required=False)
+    form_of_publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=FormOfPublication,
+        search_fields=['name__icontains',],
+    ), queryset=FormOfPublication.objects.all(), required=False)
+    publication_city = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=City,
+        search_fields=['name__icontains',],
+    ), queryset=City.objects.all(), required=False)    
+    affiliated_church = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Church,
+        search_fields=['name__icontains',],
+    ), queryset=Church.objects.all(), required=False)
+    language = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Language,
+        search_fields=['name__icontains',],
+    ), queryset=Language.objects.all(), required=False)    
+    content_genre = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Genre,
+        search_fields=['name__icontains',],
+    ), queryset=Genre.objects.all(), required=False)        
+    connected_to_special_occasion = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=SpecialOccasion,
+        search_fields=['name__icontains',],
+    ), queryset=SpecialOccasion.objects.all(), required=False)   
+    currently_owned_by = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Owner,
+        search_fields=['name__icontains',],
+    ), queryset=Owner.objects.all(), required=False) 
+    uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=UploadedFile,
+        search_fields=['description__icontains',],
+    ), queryset=UploadedFile.objects.all(), required=False) 
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
@@ -95,13 +156,48 @@ class PublicationForm(forms.ModelForm):
                 Submit('search', 'Search', css_class='button white')
             )
         )
-        
+
 class NewCrispyForm(forms.ModelForm):
-    #need a dummy field for select2 workaround
-    something = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Author.objects.all(),
-        search_fields=['firstname', 'lastname'],
+    author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Author,
+        search_fields=['firstname__icontains', 'lastname__icontains'],
     ), queryset=Author.objects.all(), required=False)
+    translator = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Translator,
+        search_fields=['firstname__icontains', 'lastname__icontains'],
+    ), queryset=Translator.objects.all(), required=False)
+    form_of_publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=FormOfPublication,
+        search_fields=['name__icontains',],
+    ), queryset=FormOfPublication.objects.all(), required=False)
+    publication_city = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=City,
+        search_fields=['name__icontains',],
+    ), queryset=City.objects.all(), required=False)    
+    affiliated_church = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Church,
+        search_fields=['name__icontains',],
+    ), queryset=Church.objects.all(), required=False)
+    language = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Language,
+        search_fields=['name__icontains',],
+    ), queryset=Language.objects.all(), required=False)    
+    content_genre = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Genre,
+        search_fields=['name__icontains',],
+    ), queryset=Genre.objects.all(), required=False)        
+    connected_to_special_occasion = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=SpecialOccasion,
+        search_fields=['name__icontains',],
+    ), queryset=SpecialOccasion.objects.all(), required=False)   
+    currently_owned_by = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Owner,
+        search_fields=['name__icontains',],
+    ), queryset=Owner.objects.all(), required=False) 
+    uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=UploadedFile,
+        search_fields=['description__icontains',],
+    ), queryset=UploadedFile.objects.all(), required=False)    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -127,29 +223,29 @@ class NewCrispyForm(forms.ModelForm):
                 'title_translation',
                 ),
                 Tab('Author',
-                    'author',
-                    'translator',
+                    FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                 ),
                 Tab('Publishing information',
-                    'form_of_publication',
+                    FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'printed_by',
                     'published_by',
                     'publication_date',
                     'publication_country',
-                    'publication_city',
+                    FieldWithButtons('publication_city', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/city/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'publishing_organisation',
                ),
                Tab('Affiliation',
                    'possible_donor',
-                   'affiliated_church',
+                   FieldWithButtons('affiliated_church', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/church/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
               ),
                Tab('Language',
-                   'language',
+                   FieldWithButtons('language', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
               ),
                Tab('Content',
                    'content_description',
-                   'content_genre',
-                   'connected_to_special_occasion',
+                   FieldWithButtons('content_genre', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/genre/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                   FieldWithButtons('connected_to_special_occasion', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/special_occasion/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'description_of_illustration',
                    'image_details',
                    'nr_of_pages',
@@ -159,14 +255,14 @@ class NewCrispyForm(forms.ModelForm):
                    'collection_country',
                    'collection_venue_and_city',
                    'copyrights',
-                   'currently_owned_by',
+                   FieldWithButtons('currently_owned_by', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/owner/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'contact_telephone_number',
                    'contact_email',
                    'contact_website',
                    'comments',
              ),
               Tab('Files',
-                  'uploadedfiles',
+                  FieldWithButtons('uploadedfiles', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/uploadedfile/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                  )
             ),
             ButtonHolder(
@@ -183,11 +279,11 @@ class NewCrispyForm(forms.ModelForm):
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website','comments', 'uploadedfiles')
         #publication_country = forms.ChoiceField(choices=list(countries))
-          
+  
 class AuthorForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Publication,
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -222,7 +318,7 @@ class TranslatorForm(forms.ModelForm):
 
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -256,12 +352,12 @@ class FormOfPublicationForm(forms.ModelForm):
 
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.id:
-            self.fields['publications'].initial = Publication.objects.filter(translator=self.instance)
+            self.fields['publications'].initial = Publication.objects.filter(form_of_publication=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
@@ -289,9 +385,9 @@ class FormOfPublicationForm(forms.ModelForm):
 class CityForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
-
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.id:
@@ -325,7 +421,7 @@ class CityForm(forms.ModelForm):
 class ChurchForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -366,7 +462,7 @@ class LanguageForm(forms.ModelForm):
    
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -403,7 +499,7 @@ class LanguageForm(forms.ModelForm):
 class GenreForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -439,7 +535,7 @@ class GenreForm(forms.ModelForm):
 class SpecialOccasionForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -475,7 +571,7 @@ class SpecialOccasionForm(forms.ModelForm):
 class OwnerForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -511,7 +607,7 @@ class OwnerForm(forms.ModelForm):
 class UploadedFileForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
@@ -548,7 +644,7 @@ class UploadedFileForm(forms.ModelForm):
 class IllustrationLayoutTypeForm(forms.ModelForm):
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription', 'title_translation'],
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):

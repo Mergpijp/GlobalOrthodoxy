@@ -218,7 +218,11 @@ class Publication(models.Model):
         return 'title_original: ' + self.title_original +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
                 + ', title_subtitle_European: ' + self.title_subtitle_European + ', title_translation: ' + self.title_translation
 
-
+'''
+class PublicationAuthor(models.Model):
+    author=models.ForeignKey(Author, on_delete=models.CASCADE)
+    publication=models.ForeignKey(Publication, on_delete=models.CASCADE)
+'''
 '''
 class PublicationLanguage(models.Model): # table to store which publication has which language
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE)

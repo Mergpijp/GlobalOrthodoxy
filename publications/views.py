@@ -17,6 +17,13 @@ from django.shortcuts import redirect
 import re
 from django_countries import countries
 from django.utils import timezone
+import json
+from django.core import serializers
+
+@login_required(login_url='/accounts/login/')
+def author_json(request):
+    response_data=serializers.serialize('json',Author.objects.all())
+    return HttpResponse(response_data,content_type='json')
 
 class PublicationUpdate(UpdateView):
     template_name = 'publications/form_create.html'
@@ -58,9 +65,9 @@ class SearchResultsView(ListView):
     def get_queryset(self): # new
         
         form = PublicationForm(self.request.GET)
-        if not form.is_valid():
-            form = PublicationForm()
-            return render(self.request, 'publications/form_search.html', {'form': form})
+        #if not form.is_valid():
+        #    form = PublicationForm()
+        #    return render(self.request, 'publications/form_search.html', {'form': form})
         authors = self.request.GET.getlist('author')
         translators = self.request.GET.getlist('translator')
         authors = Author.objects.filter(pk__in=authors).all()

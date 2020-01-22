@@ -68,7 +68,7 @@ class LanguageAdmin(admin.ModelAdmin):
     inlines = [
         LanguageInline,
     ]
-      
+  
 class PublicationAdmin(admin.ModelAdmin):
     #form = AdminCrispyForm
     #add_form_template = "admin/form.html"

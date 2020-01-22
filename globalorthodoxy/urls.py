@@ -14,12 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('select2/', include('django_select2.urls')),
+    re_path(r'^select2/', include('django_select2.urls')),
     path('', include('publications.urls')),
     path('admin/', admin.site.urls),
     path('admin/', include('smart_selects.urls')),

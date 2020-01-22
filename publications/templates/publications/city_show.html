@@ -14,8 +14,8 @@
     <tbody>  
 {% for city in cities %}  
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{city.name}}">{{ city.name }}</a></td>
-        <td><a href="{% url 'publication-show' %}?q={{city.country.name}}">{{ city.country.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?publication_city={{city.id}}">{{ city.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?publication_country={{city.country}}">{{ city.country.name }}</a></td>
         <td>  
             <a href="/city/{{ city.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a href="/city/{{ city.id }}/delete">Delete</a>  

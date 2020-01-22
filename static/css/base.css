@@ -1,8 +1,11 @@
-.rtl-direction {
-   direction: rtl; 
+/* ViaCss: Set the width. It will work since the inline style width is removed. */
+.select2-container {
+  width: 100%;
 }
-.ltr-direction {
-   direction: ltr; 
+
+/* ViaCSS: We can, of course, define other widths for specific occasions */
+.shorter-selects2 .select2-container {
+  width: 80%;
 }
 #id_title_original {
     text-align: start;
