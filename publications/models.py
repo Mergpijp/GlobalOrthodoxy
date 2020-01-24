@@ -121,16 +121,6 @@ def year_choices():
 
 class MyForm(forms.ModelForm):
     year = forms.TypedChoiceField(coerce=int, choices=year_choices, initial=current_year)
-
-'''
-class Country(models.Model):
-    name = models.CharField(max_length=255, blank=True)
-    
-    class Meta:
-        verbose_name_plural = "countries"
-    def __str__(self):
-        return self.name
-'''
         
 class Country(models.Model):
     #country = CountryField(choices=list(countries))
@@ -157,7 +147,7 @@ class City(models.Model):
         
 class UploadedFile(models.Model):
     description = models.CharField(max_length=255, blank=True)
-    files = models.FileField(upload_to='files', blank=True, null=True)
+    file = models.FileField(upload_to='files', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):

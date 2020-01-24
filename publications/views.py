@@ -20,12 +20,13 @@ from django.utils import timezone
 import json
 from django.core import serializers
 
-@login_required(login_url='/accounts/login/')
-def author_json(request):
-    response_data=serializers.serialize('json',Author.objects.all())
-    return HttpResponse(response_data,content_type='json')
-
 class PublicationUpdate(UpdateView):
+    '''
+    Inherits UpdateView
+    Uses edit/create template and the edit/create NewCrispyForm
+    Uses Publication as model
+    redirects to main page of Publication (publication show) 
+    '''
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
     model = Publication
@@ -33,24 +34,45 @@ class PublicationUpdate(UpdateView):
 
 @login_required(login_url='/accounts/login/')
 def PublicationDelete(request, pk):
+    '''
+    Deletes a publication 
+    argument pk int value of the id of the to be deleted publication
+    redirect to main publication page (Show)
+    '''
     publication = Publication.objects.get(id=pk)
     publication.delete()
     return redirect('/publication/show')
 
 class PublicationCreate(CreateView):
+    '''
+    inherits CreateView
+    Uses template for creating/updating.
+    Uses standard edit/new form (NewCrispyForm)
+    redirect to publication main page (publication show)
+    '''
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
     success_url = '/publication/show/'
 
 class PublicationDetailView(DetailView):
+    '''
+    Inherits DetailView
+    Detailview for publication
+    Usess now in template thus the function get_context_data
+    '''
     model = Publication
     
     def get_context_data(self, **kwargs):
+        self.object = []
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
-        return context    
+        return context 
+        
 @login_required(login_url='/accounts/login/')        
 def render_search(request):
+    '''
+    Initialize the home page with a form to search publications
+    '''
     form = PublicationForm()
     return render(request, 'publications/form_search.html', {'form': form})
 
@@ -58,16 +80,20 @@ def render_search(request):
 countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 
 class SearchResultsView(ListView):
+    '''
+    ListView of the initial search page.
+    The function get_queryset works for the search bar and the search form home page.
+    The search bar typically uses q for query otherwise a id for list search.
+    Use a countries_dict to convert for example Netherlands to NL so that search succeeds.
+    If a normal field is searched use __icontains if a list element is searched use: __in.
+    '''
     model = Publication
     template_name = 'publications/show.html'
     context_object_name  = 'publications'
       
-    def get_queryset(self): # new
+    def get_queryset(self): 
         
         form = PublicationForm(self.request.GET)
-        #if not form.is_valid():
-        #    form = PublicationForm()
-        #    return render(self.request, 'publications/form_search.html', {'form': form})
         authors = self.request.GET.getlist('author')
         translators = self.request.GET.getlist('translator')
         authors = Author.objects.filter(pk__in=authors).all()
@@ -92,8 +118,6 @@ class SearchResultsView(ListView):
         print('....', city)
         if list(city) != ['']:
             city = City.objects.filter(pk__in=city).all()
-        #else:
-            #city = QuerySet()
         print(publications)
 
         exclude = ['csrfmiddlewaretoken','search']
@@ -120,24 +144,13 @@ class SearchResultsView(ListView):
        
         for field_name in self.request.GET:
             get_value = self.request.GET.get(field_name)
-            #if get_value == 'publication_country':
-            #    continue
-            #print('||||||', get_value)
-            #if field_name == 'publication_country':
-            #    continue
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
                not field_name in special_case:
                 print('******', field_name)
                 publications = publications.filter(**{field_name+'__icontains':get_value})
-                #publications = publications.filter(title__icontains, 'ein')
         
         for field_name, list_object in in_variables:
-            #print('------>',var)
-            #publications = publications.filter(**{'author__in':authors})
-            #print('9999',publications)
             print('****', list_object)
-            #if field_name == 'publication_city':
-            #    continue
             if list_object:
                 print('------', field_name)
                 if list(list_object) != ['']:
@@ -152,94 +165,174 @@ class SearchResultsView(ListView):
             print('11111', str(copyrights))
             publications = publications.filter(copyrights=val)
 
-        #publications = publications.filter(publication_city__in=City))
-        #print(publications)
         publications = publications.distinct()
         return publications
 
 class AuthorCreate(CreateView):
+    '''
+    Inherits CreateView uses a standard form for Authors.
+    redirects to the author main page (show).
+    '''
     template_name = 'publications/form.html'
     form_class = AuthorForm
     success_url = '/author/show/'
 
 class AuthorShow(ListView):
+    '''
+    Inherits ListView shows author mainpage (author_show)
+    Uses context_object_name authors for all authors.
+    '''
     model = Author
     template_name = 'publications/author_show.html'
     context_object_name = 'authors'
 
 @login_required(login_url='/accounts/login/')
 def AuthorDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects author object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     author = Author.objects.get(id=pk)
     author.delete()
     return redirect('/author/show')
 
 class AuthorUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses AuthorForm as layout. And model Author.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = AuthorForm
     model = Author
     success_url = '/author/show/'
         
 class TranslatorCreate(CreateView):
+    '''
+    Inherits CreateView. Uses TranslatorForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = TranslatorForm
     success_url = '/translator/show/'
 
 class TranslatorShow(ListView):
+    '''
+    Inherits ListView.
+    Uses Translator as model.
+    Uses translator_show.html as template_name.
+    Set context_object_name to translators.
+    '''
     model = Translator
     template_name = 'publications/translator_show.html'
     context_object_name = 'translators'
 
 @login_required(login_url='/accounts/login/')
 def TranslatorDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects translator object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     translator = Translator.objects.get(id=pk)
     translator.delete()
     return redirect('/translator/show')
 
 class TranslatorUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses TranslatorForm as layout. And model Translator.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = TranslatorForm
     model = Translator
     success_url = '/translator/show/'
     
 class FormOfPublicationCreate(CreateView):
+    '''
+    Inherits CreateView. Uses FormOfPublicationForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = FormOfPublicationForm
     success_url = '/form_of_publication/show/'
 
 class FormOfPublicationShow(ListView):
+    '''
+    Inherits ListView.
+    Uses FormOfPublication as model.
+    Uses form_of_publication_show.html as template_name.
+    Set context_object_name to form_of_publications.
+    '''
     model = FormOfPublication
     template_name = 'publications/form_of_publication_show.html'
     context_object_name = 'form_of_publications'
 
 @login_required(login_url='/accounts/login/')
 def FormOfPublicationDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects form_of_publication object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     form_of_publication = FormOfPublication.objects.get(id=pk)
     form_of_publication.delete()
     return redirect('/form_of_publication/show')
 
 class FormOfPublicationUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses FormOfPublicationForm as layout. And model FormOfPublication.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = FormOfPublicationForm
     model = FormOfPublication
     success_url = '/form_of_publication/show/'
 
 class CityCreate(CreateView):
+    '''
+    Inherits CreateView. Uses CityForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = CityForm
     success_url = '/city/show/'
 
 class CityShow(ListView):
+    '''
+    Inherits ListView.
+    Uses City as model.
+    Uses city_show.html as template_name.
+    Set context_object_name to cities.
+    '''
     model = City
     template_name = 'publications/city_show.html'
     context_object_name = 'cities'
 
 @login_required(login_url='/accounts/login/')
 def CityDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects city object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     city = City.objects.get(id=pk)
     city.delete()
     return redirect('/city/show')
 
 class CityUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses CityForm as layout. And model City.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = CityForm
     model = City
@@ -247,155 +340,302 @@ class CityUpdate(UpdateView):
     
         
 class GenreCreate(CreateView):
+    '''
+    Inherits CreateView. Uses GenreForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = GenreForm
     success_url = '/genre/show/'
 
 class GenreShow(ListView):
+    '''
+    Inherits ListView.
+    Uses Genre as model.
+    Uses genre_show.html as template_name.
+    Set context_object_name to genres.
+    '''
     model = Genre
     template_name = 'publications/genre_show.html'
     context_object_name = 'genres'
 
 @login_required(login_url='/accounts/login/')
 def GenreDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects genre object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     genre = Genre.objects.get(id=pk)
     genre.delete()
     return redirect('/genre/show')
 
 class GenreUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses GenreForm as layout. And model Genre.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = GenreForm
     model = Genre
     success_url = '/genre/show/'
         
 class ChurchCreate(CreateView):
+    '''
+    Inherits CreateView. Uses ChurchForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = ChurchForm
     success_url = '/church/show/'
 
 class ChurchShow(ListView):
+    '''
+    Inherits ListView.
+    Uses Church as model.
+    Uses church_show.html as template_name.
+    Set context_object_name to churches.
+    '''
     model = Church
     template_name = 'publications/church_show.html'
     context_object_name = 'churches'
 
 @login_required(login_url='/accounts/login/')
 def ChurchDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects church object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     church = Church.objects.get(id=pk)
     church.delete()
     return redirect('/church/show')
 
 class ChurchUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses ChurchForm as layout. And model Church.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = ChurchForm
     model = Church
     success_url = '/church/show/'
       
 class LanguageCreate(CreateView):
+    '''
+    Inherits CreateView. Uses LanguageForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = LanguageForm
     success_url = '/language/show/'
     
 class LanguageShow(ListView):
+    '''
+    Inherits ListView.
+    Uses Language as model.
+    Uses language_show.html as template_name.
+    Set context_object_name to languages.
+    '''
     model = Language
     template_name = 'publications/language_show.html'
     context_object_name = 'languages'
     
 @login_required(login_url='/accounts/login/')
 def LanguageDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects language object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     language = Language.objects.get(id=pk)
     language.delete()
     return redirect('/language/show')
 
  
 class LanguageUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses LanguageForm as layout. And model Language.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = LanguageForm
     model = Language
     success_url = '/language/show/'
     
 class SpecialOccasionCreate(CreateView):
+    '''
+    Inherits CreateView. Uses SpecialOccasionForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = SpecialOccasionForm
     success_url = '/special_occasion/show/'
     
 class SpecialOccasionShow(ListView):
+    '''
+    Inherits ListView.
+    Uses SpecialOccasion as model.
+    Uses specialoccasion_show.html as template_name.
+    Set context_object_name to specialoccasions.
+    '''
     model = SpecialOccasion
     template_name = 'publications/specialoccasion_show.html'
     context_object_name = 'specialoccasions'
     
 @login_required(login_url='/accounts/login/')
 def SpecialOccasionDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects special_occasion object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     special_occasion = SpecialOccasion.objects.get(id=pk)
     special_occasion.delete()
     return redirect('/special_occasion/show')
 
 class SpecialOccasionUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses SpecialOccasionForm as layout. And model SpecialOccasion.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = SpecialOccasionForm
     model = SpecialOccasion
     success_url = '/special_occasion/show/'   
 
 class OwnerCreate(CreateView):
+    '''
+    Inherits CreateView. Uses OwnerForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = OwnerForm
     success_url = '/owner/show/'
     
 class OwnerShow(ListView):
+    '''
+    Inherits ListView.
+    Uses Owner as model.
+    Uses owner_show.html as template_name.
+    Set context_object_name to owners.
+    '''
     model = Owner
     template_name = 'publications/owner_show.html'
     context_object_name = 'owners'
     
 @login_required(login_url='/accounts/login/')
 def OwnerDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects owner object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     owner = Owner.objects.get(id=pk)
     owner.delete()
     return redirect('/owner/show')
 
 class OwnerUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses OwnerForm as layout. And model Owner.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = OwnerForm
     model = Owner
     success_url = '/owner/show/'  
 
 class UploadedFileCreate(CreateView):
+    '''
+    Inherits CreateView. Uses UploadedFileForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = UploadedFileForm
     success_url = '/uploadedfile/show/'   
     
 class UploadedFileShow(ListView):
+    '''
+    Inherits ListView.
+    Uses UploadedFile as model.
+    Uses uploadedfile_show.html as template_name.
+    Set context_object_name to uploadedfiles.
+    '''
     model = UploadedFile
     template_name = 'publications/uploadedfile_show.html'
     context_object_name = 'uploadedfiles'
     
 @login_required(login_url='/accounts/login/')
 def UploadedFileDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects uploadedfile object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     uploadedfile = UploadedFile.objects.get(id=pk)
     uploadedfile.delete()
     return redirect('/uploadedfile/show')
 
 class UploadedFileUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses UploadedFileForm as layout. And model UploadedFileForm.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = UploadedFileForm
     model = UploadedFile
-    success_url = '/UploadedFile/show/'  
+    success_url = '/uploadedfile/show/'  
 
 class IllustrationLayoutTypeCreate(CreateView):
+    '''
+    Inherits CreateView. Uses IllustrationLayoutTypeForm as layout.
+    redirects to main page (show)
+    '''
     template_name = 'publications/form.html'
     form_class = IllustrationLayoutTypeForm
     success_url = '/illustration_layout_type/show/'
     
 class IllustrationLayoutTypeShow(ListView):
+    '''
+    Inherits ListView.
+    Uses IllustrationLayoutType as model.
+    Uses illustration_layout_type_show.html as template_name.
+    Set context_object_name to IllustrationLayoutTypes.
+    '''
     model = IllustrationLayoutType
     template_name = 'publications/illustration_layout_type_show.html'
     context_object_name = 'IllustrationLayoutTypes'
     
 @login_required(login_url='/accounts/login/')
 def IllustrationLayoutTypeDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects illustration_layout_type object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
     illustration_layout_type = IllustrationLayoutType.objects.get(id=pk)
     illustration_layout_type.delete()
     return redirect('/illustration_layout_type/show')
 
 class IllustrationLayoutTypeUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses IllustrationLayoutTypeForm as layout. And model IllustrationLayoutType.
+    redirects to local main page. (show)
+    '''
     template_name = 'publications/form.html'
     form_class = IllustrationLayoutTypeForm
     model = IllustrationLayoutType

@@ -11,32 +11,15 @@ from django_countries import countries
 from django_countries.widgets import CountrySelectWidget
 
 
-
-class CustomCountrySelectWidget(Select2Widget, CountrySelectWidget):
-    pass
-
-class AuthorWdiget(ModelSelect2MultipleWidget):
-    model = Author
-    search_fields = ['firstname__icontains', 'lastname__icontains']
-
-    def label_from_instance(self,obj):
-        return obj.name
-
-    def get_queryset(self):
-        return Author.objects.all()
-        
-    def filter_queryset(self, queryset=None):
-        return queryset.filter(do='whaterver')
-        
-    def get_model_field_values(self, value):
-        return {'title': value}
-
-    def prepare_qs_params(self, request, search_term, search_fields):
-        res = super(Endpoints, self).prepare_qs_params(request, search_term, search_fields)
-        res['and'] = {'id': request.GET.get('id')}
-        return res
-
 class PublicationForm(forms.ModelForm):
+    '''
+    This is a search form.
+    All select2 fields are defined so that they load content dynamically.
+    Crispy forms is used with layout object for the layout.
+    All many-to-many fields are not required.
+    The button is a search button instead of a submit button.
+    
+    '''
     author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
         search_fields=['firstname__icontains', 'lastname__icontains'],
@@ -49,7 +32,7 @@ class PublicationForm(forms.ModelForm):
         model=FormOfPublication,
         search_fields=['name__icontains',],
     ), queryset=FormOfPublication.objects.all(), required=False)
-    publication_city = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+    publication_city = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=City,
         search_fields=['name__icontains',],
     ), queryset=City.objects.all(), required=False)    
@@ -89,6 +72,8 @@ class PublicationForm(forms.ModelForm):
         super(PublicationForm, self).__init__(*args, **kwargs)
         self.fields['author'].required = False
         self.fields['translator'].required = False
+        self.fields['form_of_publication'].required = False
+        self.fields['publication_city'].required = False
         self.fields['affiliated_church'].required = False
         self.fields['language'].required = False
         self.fields['content_genre'].required = False
@@ -158,6 +143,11 @@ class PublicationForm(forms.ModelForm):
         )
 
 class NewCrispyForm(forms.ModelForm):
+    '''
+        Crispy form for publication create/update(edit).
+        Added field with buttons for inline add.
+        
+    '''
     author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
         search_fields=['firstname__icontains', 'lastname__icontains'],
@@ -202,11 +192,10 @@ class NewCrispyForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.helper = FormHelper()
-        #self.helper.form_id = 'id-my-form'
-        #self.helper.form_class = 'my-form'
-        #self.helper.form_method = 'post'
         self.fields['author'].required = False
         self.fields['translator'].required = False
+        self.fields['form_of_publication'].required = False
+        self.fields['publication_city'].required = False
         self.fields['affiliated_church'].required = False
         self.fields['language'].required = False
         self.fields['content_genre'].required = False
@@ -615,12 +604,12 @@ class UploadedFileForm(forms.ModelForm):
         if self.instance.id:
             self.fields['publications'].initial = Publication.objects.filter(uploadedfiles=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('description', 'files', 'publications',
+        self.helper.layout = Layout('description', 'file', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
     
     class Meta:
         model = UploadedFile
-        fields = ('description', 'files',) 
+        fields = ('description', 'file',) 
         
     def save(self, commit=True):
         instance = super().save(commit)

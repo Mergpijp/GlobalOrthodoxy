@@ -54,7 +54,5 @@ urlpatterns = [
     path('illustration_layout_type/show/', login_required(views.IllustrationLayoutTypeShow.as_view()), name='illustration-layout-type-show'),
     path('illustration_layout_type/<int:pk>/edit/', login_required(views.IllustrationLayoutTypeUpdate.as_view()), name='illustration-layout-type-update',),
     path('illustration_layout_type/<int:pk>/delete/', views.IllustrationLayoutTypeDelete, name='illustration-layout-type-delete'),
-    path('author_json', views.author_json, name='author_json'),
     path('', render_search, name='index'),
-    #path('select2/', include('django_select2.urls')),
 ]

@@ -1,90 +1,462 @@
 {% extends "base.html" %}
 {% block content %}
-    <p><b> Titles</b></p>
-    <p>title original: {{ object.title_original }}</p>
-    <p>title subtitle transcription: {{ object.title_subtitle_transcription }}</p>
-    <p>title subtitle European: {{ object.title_subtitle_European }}</p>
-    <p>title translation: {{ object.title_translation }}</p>
+</br>
+<p><b> Titles</b></p>
+
+<table class="table table-striped table-bordered table-sm">  
+    <thead class="thead-light">  
+    <tr>  
+        <th>Title original</th>  
+        <th>Title subtitle transcription</th>  
+        <th>Title subtitle european</th>  
+        <th>Title translation</th>  
+    </tr>
+    </thead>
+    <tbody>  
+    <tr>  
+        <td style="text-align: start;unicode-bidi: plaintext;">{{ object.title_original }}</td>  
+        <td>{{ object.title_subtitle_transcription}}</td>  
+        <td>{{ object.title_subtitle_european }}</td>  
+        <td>{{ object.title_translation }}</td>
+    </tr>
+    </tbody>
+</table>    
+</br>
+{% if object.author.all %}
+<p><b>Authors</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>firstname </th>
+        <th>lastname </th> 
+        <th>year of birth</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for author in object.author.all %}
+    <tr>
+        <td>{{author.firstname}}</td>
+        <td>{{author.lastname}}</td>
+        <td>{{author.year_of_birth}}</td>
+    </tr>
+{% empty %}
+     </br>
+{% endfor %}
+    </tbody>
+</table>
+</br>
+{% endif %}
+{% if object.translator.all %}
+<p><b>Translators</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>firstname </th>
+        <th>lastname </th> 
+    </tr>
+    </thead>
+    <tbody>
+{% for translator in object.translator.all %}
+    <tr>
+        <td>{translator.firstname}}</td>
+        <td>{{translator.lastname}}</td>
+    </tr>
+{% empty %}
     </br>
-    <p><b>Authors:</b></p>
-    {% for author in object.author.all %}
-        <p>firstname: {{author.firstname}}</p>
-        <p>lastname:  {{author.lastname}}</p>
-        <p>year of birth: {{author.year_of_birth}}</p>
-        </br>
-    {% empty %}
-        </br>
-    {% endfor %}  
-    <p><b>Translators:</b></p>
-    {% for translator in object.translator.all %}
-        <p>firstname: {{translator.firstname}}</p>
-        <p>lastname:  {{translator.lastname}}</p>
-        </br>
-    {% empty %}
-        </br>
-    {% endfor %} 
-    <p><b>Form of publications:</b></p>
-    {% for form_of_publication in object.form_of_publication.all %}
-        <p>name: {{form_of_publication.name}}</p>
-        </br>
-    {% empty %}
-        </br>
-    {% endfor %} 
-    <p>printed by: {{object.printed_by}}</p>
-    <p>published by: {{object.published_by}}</p>
-    <p>publication date: {{object.publication_date}}</p>
-    <p>publication country: {{object.publication_country.name}}</p>
-    <p>publication city: {{object.publication_city.name}}</p>
-    <p>publishing organisation: {{object.publishing_organisation}}</p>
-    <p>possible donor: {{object.possible_donor}}</p>
-    <p><b>Churches:</b></p>
-    {% for church in object.affiliated_church.all %}
-        <p>name: {{church.name}}</p>
-        </br>
-    {% empty %}
-        </br>
-    {% endfor %}   
-    <p>content description: {{object.content_description}}</p>
-    <p><b>Content genres:</b></p>
-    {% for genre in object.content_genere.all %}
-        <p>name: {{genre.name}}</p>
-        </br>
-    {% empty %}
-        </br>
-    {% endfor %} 
-    <p><b>Connected to special occassions:</b></p>
-    {% for occasion in object.connected_to_special_occasion.all %}
-        <p>name: {{occasion.name}}</p>
-        </br>
-    {% empty %}
-        </br>
-    {% endfor %}
-    <p>description of illustration: {{object.description_of_illustration}}</p>
-    <p>image details: {{object.image_details}}</p>
-    <p>nummer of pages: {{object.nr_of_pages}}</p>
-    <p>collection date: {{object.collection_date}}</p>
-    <p>collection country: {{object.collection_country.name}}</p>
-    <p>collection venue and city: {{object.collection_venue_and_city}}</p>
-    <p>copyrights: {{object.copyrights}}</p>
-    <p><b>Currently owned by:</b></p>
-    {% for owner in object.currently_owned_by.all %}
-        <p>name: {{owner.name}}</p>
-        </br>
-    {% empty %}
-        </br>
-    {% endfor %}
-    <p>contact telephone number: {{object.contact_telephone_number}}</p>
-    <p>contact email: {{object.contact_email}}</p>
-    <p>contact website: {{object.contact_website}}</p>
-    <p>comments: {{object.comments}}</p>
-        <p><b>Uploaded files:</b></p>
-    {% for files in object.uploadedfiles.all %}
-        <p>description: {{files.description}}</p>
-        <p>files: {{files.files}}</p>
-        <p>uploaded at: {{files.uploaded_at}}</p>
-        </br>
-    {% empty %}
-        </br>
-    {% endfor %}
+{% endfor %} 
+    </tbody>
+</table>  
+</br>  
+{% endif %}
+{% if object.form_of_publication.all %}
+<p><b>Form of publications</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>name </th> 
+    </tr>
+    </thead>
+    <tbody>
+{% for form_of_publication in object.form_of_publication.all %}
+    <tr>
+        <td>{{form_of_publication.name}}</td>
+    </tr>
+{% empty %}
+    </br>
+{% endfor %} 
+    </tbody>
+</table>   
+</br> 
+{% endif %} 
+{% if object.printed_by %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>printed by</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.printed_by}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.published_by %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>published by by</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.published_by}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.publication_date %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>publication date</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.publication_date}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.publication_country %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>publication country</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.publication_country.name}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.publication_city %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>publication city</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.publication_city.name}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.publishing_organisation %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>publishing organisation</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.publishing_organisation}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.possible_donor %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>possible donor</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.possible_donor}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.affiliated_church.all %}
+<p><b>Churches</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>name</th> 
+    </tr>
+    </thead>
+    <tbody>
+{% for church in object.affiliated_church.all %}
+    <tr>
+        <td>{{church.name}}</td>
+    </tr>
+{% empty %}
+    </br>
+{% endfor %} 
+    </tbody>
+</table>   
+</br> 
+{% endif %} 
+{% if object.content_description %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>content description</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.content_description}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.content_genre.all %}
+<p><b>Content genres</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>name</th> 
+    </tr>
+    </thead>
+    <tbody>
+{% for genre in object.content_genre.all %}
+    <tr>
+        <td>{{genre.name}}</td>
+    </tr>
+{% empty %}
+    </br>
+{% endfor %} 
+    </tbody>
+</table>   
+</br> 
+{% endif %}
+{% if object.connected_to_special_occasion.all %}
+<p><b>Connected to special occassions</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>name</th> 
+    </tr>
+    </thead>
+    <tbody>
+{% for occasion in object.connected_to_special_occasion.all %}
+    <tr>
+        <td>{{occasion.name}}</td>
+    </tr>
+{% empty %}
+    </br>
+{% endfor %} 
+    </tbody>
+</table>   
+</br> 
+{% endif %}
+{% if object.description_of_illustration %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>description of illustration</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.description_of_illustration}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.image_details %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>image details</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.image_details}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.nr_of_pages %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>number of pages</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.nr_of_pages}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.collection_date %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>collection date</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.collection_date}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.collection_country %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>collection country</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.collection_country.name}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.collection_venue_and_city %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>collection venue and city</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.collection_venue_and_city}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.copyrights %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>copyrights</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.copyrights}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.currently_owned_by.all %}
+<p><b>Currently owned by</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>name</th> 
+    </tr>
+    </thead>
+    <tbody>
+{% for owner in object.currently_owned_by.all %}
+    <tr>
+        <td>{{owner.name}}</td>
+    </tr>
+{% empty %}
+    </br>
+{% endfor %} 
+    </tbody>
+</table>   
+</br> 
+{% endif %}
+{% if object.contact_telephone_number %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>contact telephone number</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.contact_telephone_number}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.contact_email %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>contact email</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.contact_email}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.contact_website %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>contact website</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.contact_website}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.comments %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>comments</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.comments}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.uploadedfiles.all %}
+<p><b>Uploaded files</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>description</th> 
+        <th>files </th>
+        <th>uploaded at</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for files in object.uploadedfiles.all %}
+    <tr>
+        <td>{{files.description}}</td>
+        <td>{{files.files}}</td>
+        <td>{{files.uploaded_at}}</td>
+    </tr>
+{% empty %}
+    </br>
+{% endfor %} 
+    </tbody>
+</table>   
+</br> 
+{% endif %}
     
 {% endblock %}
