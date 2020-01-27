@@ -23,7 +23,7 @@
         <td> 
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
             <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a href="/publication/{{ publication.id }}/delete">Delete</a>  
+            <a class="confirm-delete" href="/publication/{{ publication.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  
