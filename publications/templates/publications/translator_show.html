@@ -18,7 +18,7 @@
         <td><a href="{% url 'publication-show' %}?q={{translator.lastname}}">{{ translator.lastname }}</a></td>  
         <td>  
             <a href="/translator/{{ translator.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a href="/translator/{{ translator.id }}/delete">Delete</a>  
+            <a class="confirm-delete" href="/translator/{{ translator.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  

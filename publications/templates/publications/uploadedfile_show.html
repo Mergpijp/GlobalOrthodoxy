@@ -20,7 +20,7 @@
         <td><a href="{% url 'publication-show' %}?q={{uploadedfile.uploaded_at}}">{{ uploadedfile.uploaded_at }}</a></td>
         <td>  
             <a href="/uploadedfile/{{ uploadedfile.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a href="/uploadedfile/{{ uploadedfile.id }}/delete">Delete</a>  
+            <a class="confirm-delete" href="/uploadedfile/{{ uploadedfile.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  

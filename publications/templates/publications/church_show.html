@@ -17,7 +17,7 @@
         <td><a href="{% url 'publication-show' %}?affiliated_church={{church.id}}">{{ church.name }}</a></td>  
         <td>  
             <a href="/church/{{ church.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a href="/church/{{ church.id }}/delete">Delete</a>  
+            <a class="confirm-delete" href="/church/{{ church.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  

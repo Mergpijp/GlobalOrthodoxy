@@ -18,7 +18,7 @@
         <td><a href="{% url 'publication-show' %}?publication_country={{city.country}}">{{ city.country.name }}</a></td>
         <td>  
             <a href="/city/{{ city.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a href="/city/{{ city.id }}/delete">Delete</a>  
+            <a class="confirm-delete" href="/city/{{ city.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  

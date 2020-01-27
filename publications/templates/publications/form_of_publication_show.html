@@ -16,7 +16,7 @@
         <td><a href="{% url 'publication-show' %}?form_of_publication={{form_of_publication.id}}">{{ form_of_publication.name }}</a></td>  
         <td>  
             <a href="/form_of_publication/{{ form_of_publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a href="/form_of_publication/{{ form_of_publication.id }}/delete">Delete</a>  
+            <a class="confirm-delete" href="/form_of_publication/{{ form_of_publication.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  

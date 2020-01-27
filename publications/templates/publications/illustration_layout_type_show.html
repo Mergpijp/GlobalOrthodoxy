@@ -13,7 +13,7 @@
         <td>{{ il.name }}</td>
         <td>  
             <a href="/illustration_layout_type/{{ il.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a href="/illustration_layout_type/{{ il.id }}/delete">Delete</a>  
+            <a class="confirm-delete" href="/illustration_layout_type/{{ il.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  
