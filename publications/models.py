@@ -13,27 +13,12 @@ from django.utils.translation import ugettext_lazy
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
 
-'''
-class FormOfPublication(enum.Enum):
-    PUBLISHED_PAPER = 1
-    SELF_PUBLISHED_PAPER = 2
-    TEXT_ON_WEBSITE = 3
-    OTHER = 4
-    NONE = 0
-   
-    __labels__ = {
-        PUBLISHED_PAPER: ugettext_lazy("Published paper"),
-        SELF_PUBLISHED_PAPER: ugettext_lazy("Self published paper"),
-        TEXT_ON_WEBSITE: ugettext_lazy("Text on website"),
-        OTHER: ugettext_lazy("Other"),
-        NONE: ugettext_lazy("None"),
-    }   
-'''
 class FormOfPublication(models.Model):
     name = models.CharField(max_length=100, blank=True)
 	
     def __str__(self):
-        return 'Form of Publication: ' + self.name        
+        return 'Form of Publication: ' + self.name
+
 class WritingDirection(Enum):
     LEFT = "L"
     RIGHT = "R"
