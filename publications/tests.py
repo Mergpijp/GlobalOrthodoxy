@@ -38,4 +38,6 @@ class PublicationModelTests(TestCase):
         #there should be one search result publication with the title 'eindhoven'
         self.assertEqual(1, response.context[-1]['publications'].count())
 
+    def test_author_creation(self):
+        pass
     

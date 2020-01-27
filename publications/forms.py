@@ -145,7 +145,7 @@ class PublicationForm(forms.ModelForm):
 class NewCrispyForm(forms.ModelForm):
     '''
         Crispy form for publication create/update(edit).
-        Added field with buttons for inline add.
+        Added field with buttons for inline add. Is almost the same as PublicationForm but has a submit button.
         
     '''
     author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
@@ -270,6 +270,11 @@ class NewCrispyForm(forms.ModelForm):
         #publication_country = forms.ChoiceField(choices=list(countries))
   
 class AuthorForm(forms.ModelForm):
+    '''
+        Form to create or edit an author. Can add Publications to the to be created author object.
+        If its a author edit load all linked publications.
+        If its a author create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Publication,
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -304,7 +309,11 @@ class AuthorForm(forms.ModelForm):
         return instance        
 
 class TranslatorForm(forms.ModelForm):
-
+    '''
+        Form to create or edit an translator. Can add Publications to the to be created translator object.
+        If its a translator edit load all linked publications.
+        If its a translator create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -338,7 +347,11 @@ class TranslatorForm(forms.ModelForm):
         return instance  
 
 class FormOfPublicationForm(forms.ModelForm):
-
+    '''
+        Form to create or edit an form of publication. Can add Publications to the to be created form of publication object.
+        If its a form of publication edit load all linked publications.
+        If its a form of publication create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -372,6 +385,11 @@ class FormOfPublicationForm(forms.ModelForm):
         return instance         
         
 class CityForm(forms.ModelForm):
+    '''
+        Form to create or edit an city. Can add Publications to the to be created city object.
+        If its a city edit load all linked publications.
+        If its a city create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -408,6 +426,11 @@ class CityForm(forms.ModelForm):
           
         
 class ChurchForm(forms.ModelForm):
+    '''
+        Form to create or edit an church. Can add Publications to the to be created church object.
+        If its a church edit load all linked publications.
+        If its a church create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -444,11 +467,11 @@ class ChurchForm(forms.ModelForm):
         
 
 class LanguageForm(forms.ModelForm):
-    #publications = forms.MultipleChoiceField(queryset=Publication.objects.all(), widget=Select2MultipleWidget)
-    #ModelSelect2MultipleWidget
-    #initial_values = Publication.objects.filter(language=self.instance)
-    #publications = forms.ModelMultipleChoiceField(queryset=Publication.objects.all(), required=False)
-   
+    '''
+        Form to create or edit an language. Can add Publications to the to be created language object.
+        If its a language edit load all linked publications.
+        If its a language create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -486,6 +509,11 @@ class LanguageForm(forms.ModelForm):
         return instance        
    
 class GenreForm(forms.ModelForm):
+    '''
+        Form to create or edit an genre. Can add Publications to the to be created genre object.
+        If its a genre edit load all linked publications.
+        If its a genre create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -522,6 +550,11 @@ class GenreForm(forms.ModelForm):
         return instance  
 
 class SpecialOccasionForm(forms.ModelForm):
+    '''
+        Form to create or edit an special occasion. Can add Publications to the to be created special occasion object.
+        If its a special occasion edit load all linked publications.
+        If its a special occasion create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -558,6 +591,11 @@ class SpecialOccasionForm(forms.ModelForm):
         return instance 
 
 class OwnerForm(forms.ModelForm):
+    '''
+        Form to create or edit an owner. Can add Publications to the to be created owner object.
+        If its a owner edit load all linked publications.
+        If its a owner create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -594,6 +632,11 @@ class OwnerForm(forms.ModelForm):
         return instance 
 
 class UploadedFileForm(forms.ModelForm):
+    '''
+        Form to create or edit an uploaded file. Can add Publications to the to be created uploaded file object.
+        If its a uploaded file edit load all linked publications.
+        If its a uploaded file create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
@@ -631,6 +674,11 @@ class UploadedFileForm(forms.ModelForm):
         
 
 class IllustrationLayoutTypeForm(forms.ModelForm):
+    '''
+        Form to create or edit an illustration layout type. Can add Publications to the to be created illustration layout type object.
+        If its a illustration layout type edit load all linked publications.
+        If its a illustration layout type create do not load any publications at start.
+    '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
