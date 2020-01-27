@@ -34,7 +34,7 @@ USE_DJANGO_JQUERY = True
 SELECT2_USE_BUNDLED_JQUERY = False
 
 parent_dir = os.path.abspath(os.path.dirname(__file__) + '/../..')
-MEDIA_ROOT = parent_dir + 'media'
+MEDIA_ROOT = parent_dir + '/media'
 MEDIA_URL = '/media/'
 
 # Application definition

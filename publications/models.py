@@ -9,8 +9,6 @@ from django_countries import countries
 #from smart_selects.db_fields import GroupedForeignKey
 from smart_selects.db_fields import ChainedForeignKey
 from django.utils.translation import ugettext_lazy
-from django_enumfield import enum
-from django_enumfield.forms.fields import EnumChoiceField
 
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970

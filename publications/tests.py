@@ -28,11 +28,6 @@ class PublicationModelTests(TestCase):
 
         context = view.get_context_data()
         self.assertIn('now', context)
-'''
-class PublicationDetailViewTests(TestCase):
-    
-    def setUp(self):
-        Publication.objects.create(title_original='eindhoven')
-'''
+
 
     
