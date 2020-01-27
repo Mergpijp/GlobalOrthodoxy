@@ -1,1 +1,0 @@
--author year of birth moet None kunnen zijn

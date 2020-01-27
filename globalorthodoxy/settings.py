@@ -26,7 +26,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[])
+#ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 JQUERY_URL = False
 USE_DJANGO_JQUERY = True
@@ -36,6 +38,8 @@ SELECT2_USE_BUNDLED_JQUERY = False
 parent_dir = os.path.abspath(os.path.dirname(__file__) + '/../..')
 MEDIA_ROOT = parent_dir + '/media'
 MEDIA_URL = '/media/'
+
+#FIXTURE_DIRS = os.path.abspath(os.path.dirname(__file__) + '/../../fixtures')
 
 # Application definition
 
@@ -51,7 +55,6 @@ INSTALLED_APPS = [
     'bootstrap4',
     'crispy_forms',
     'django_select2',
-    'bootstrap_modal_forms',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -146,3 +149,22 @@ LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    'select2': {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Set the cache backend to select2
+SELECT2_CACHE_BACKEND = 'select2'

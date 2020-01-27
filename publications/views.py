@@ -89,7 +89,7 @@ class SearchResultsView(ListView):
     '''
     model = Publication
     template_name = 'publications/show.html'
-    context_object_name  = 'publications'
+    context_object_name = 'publications'
       
     def get_queryset(self): 
         
