@@ -5,23 +5,24 @@ import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django_countries.fields import CountryField
 from django_countries import countries
-#from django_select2.forms import ModelSelect2Widget
-#from smart_selects.db_fields import GroupedForeignKey
 from smart_selects.db_fields import ChainedForeignKey
-from django.utils.translation import ugettext_lazy
+from countries_plus.models import Country
 
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
 
 class FormOfPublication(models.Model):
+    ''''
+
+    '''
     name = models.CharField(max_length=100, blank=True)
 	
     def __str__(self):
         return 'Form of Publication: ' + self.name
 
 class WritingDirection(Enum):
-    LEFT = "L"
-    RIGHT = "R"
+    L = "Left"
+    R = "Right"
 
 class LocationType(Enum):
     CITY  = "CI"
@@ -48,9 +49,11 @@ def max_value_current_year(value):
     				
 class Language(models.Model):
     name = models.CharField(max_length=100, blank=True)
-    direction = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in WritingDirection], default='R')
+    #direction = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in WritingDirection], default='R')
+    direction = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in WritingDirection])
     def __str__(self):
         return 'name: ' + self.name + ' direction: ' + str(self.direction)
+
 class Author(models.Model):
     firstname = models.CharField(max_length=100, blank=True)
     lastname = models.CharField(max_length=100, blank=True)
@@ -104,10 +107,15 @@ def year_choices():
 
 class MyForm(forms.ModelForm):
     year = forms.TypedChoiceField(coerce=int, choices=year_choices, initial=current_year)
-        
+
+
+countries_list = [(x,y) for (x, y) in countries]
+
+
+'''
 class Country(models.Model):
-    #country = CountryField(choices=list(countries))
-    country = CountryField(blank=True, null=True)
+    name = models.CharField(max_length=2, choices=countries_list, blank=True)
+
     def __unicode__(self):
         return self.country
         
@@ -116,12 +124,13 @@ class Country(models.Model):
 
     def __str__(self):
         return self.name
-        
+'''
 class City(models.Model):
     name = models.CharField(max_length=255, blank=True)
-    #country = models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE, blank=True, null=True)
-    country = CountryField(blank=True, null=True)
-    #country = models.OneToOneField(Country, on_delete=models.CASCADE, blank=True, null=True)
+    country = models.OneToOneField(Country, on_delete=models.CASCADE)
+    #country = models.CharField(max_length=2, choices=countries_list, blank=True)
+        #models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE)
+
     class Meta:
         verbose_name_plural = "cities"
 
@@ -136,6 +145,9 @@ class UploadedFile(models.Model):
     def __str__(self):
         return self.description  
 
+
+
+
 class Publication(models.Model):
     title_original = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription = models.CharField(max_length=300, blank=True)
@@ -144,14 +156,14 @@ class Publication(models.Model):
     author = models.ManyToManyField(Author)
     translator = models.ManyToManyField(Translator)
     form_of_publication = models.ManyToManyField(FormOfPublication)
-    #form_of_publication = EnumChoiceField(FormOfPublication)
-    #form_of_publication = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in FormOfPublication], blank=True)
     printed_by = models.CharField(max_length=100, blank=True)
     published_by = models.CharField(max_length=100, blank=True)
     publication_date = models.CharField(max_length=100, blank=True)
-    #publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, blank=True, null=True)
-    publication_country = CountryField(blank=True, null=True)
-    #publication_country = models.OneToOneField(Country, on_delete=models.CASCADE, blank=True, null=True)
+    #publication_country = models.ManyToManyField(Country)
+    #publication_country = models.CharField(max_length=2, choices=countries_list, blank=True)
+    #publication_country = CountryField(blank=True, null=True)
+    publication_city = models.ManyToManyField(City)
+    '''
     publication_city = ChainedForeignKey(
         City,
         chained_field="publication_country",
@@ -161,7 +173,7 @@ class Publication(models.Model):
         sort=True, 
         blank=True,
         null=True)
-    
+    '''
     publishing_organisation = models.CharField(max_length=100, blank=True)
     possible_donor = models.CharField(max_length=100, blank=True)
     affiliated_church = models.ManyToManyField(Church)
@@ -186,26 +198,20 @@ class Publication(models.Model):
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)
     illustration_and_layout_type = models.ManyToManyField(IllustrationLayoutType, blank=True, null=True)
+    #create_countries()
    
     def __str__(self):
         return 'title_original: ' + self.title_original +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
                 + ', title_subtitle_European: ' + self.title_subtitle_European + ', title_translation: ' + self.title_translation
 
 '''
-class PublicationAuthor(models.Model):
-    author=models.ForeignKey(Author, on_delete=models.CASCADE)
-    publication=models.ForeignKey(Publication, on_delete=models.CASCADE)
-'''
-'''
-class PublicationLanguage(models.Model): # table to store which publication has which language
-    publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, on_delete=models.CASCADE)
-'''
-'''
-class Document(models.Model):
-    type = models.CharField(max_length=1, choices=[(tag.value, tag) for tag in DocumentType], default='P')
-    publication = models.OneToOneField(Publication, on_delete=models.CASCADE, primary_key=True)
-    public = models.BooleanField(default=True)
-    name = models.CharField(max_length=100)
-    location_on_disk = models.CharField(max_length=150)    
+    def create_countries(self):
+        countries_list = [y for (x, y) in countries]
+
+        for country in countries_list:
+            c = Country(name=country)
+            c.save()
+            for pub in Publication.objects.all():
+                pub.publication_country.add(c)
+                pub.save()
 '''

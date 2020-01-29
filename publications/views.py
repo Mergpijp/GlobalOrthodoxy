@@ -20,6 +20,11 @@ from django.utils import timezone
 import json
 from django.core import serializers
 
+countries_dict = dict([(y.lower(), x) for (x,y) in countries])
+countries_list = [y for (x,y) in countries]
+
+def _populate_countries(form):
+    pass
 class PublicationUpdate(UpdateView):
     '''
     Inherits UpdateView
@@ -73,11 +78,8 @@ def render_search(request):
     '''
     Initialize the home page with a form to search publications
     '''
-    form = PublicationForm()
+    form = PublicationForm(countries=countries_list)
     return render(request, 'publications/form_search.html', {'form': form})
-
-
-countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 
 class SearchResultsView(ListView):
     '''

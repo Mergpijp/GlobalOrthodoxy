@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
-                ('direction', models.CharField(choices=[('L', publications.models.WritingDirection('L')), ('R', publications.models.WritingDirection('R'))], default='R', max_length=1)),
+                ('direction', models.CharField(choices=[('Left', publications.models.WritingDirection.L, ('Right', publications.models.WritingDirection.R))], default='Right', max_length=5)),
             ],
         ),
         migrations.CreateModel(

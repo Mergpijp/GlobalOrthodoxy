@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'crispy_forms',
     'django_select2',
+    'countries_plus',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

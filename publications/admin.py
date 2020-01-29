@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from django import forms
 #from django_select2.forms import ModelSelect2Widget
-from .models import Publication, Genre, Language, Author, Location, UploadedFile, Church, Owner, SpecialOccasion, IllustrationLayoutType, Translator, City
+from .models import Publication, Genre, Language, Author, Location, UploadedFile, Church, Owner, SpecialOccasion, IllustrationLayoutType, Translator, City, Country
 from .forms import NewCrispyForm
 from . import models
 

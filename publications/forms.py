@@ -1,14 +1,15 @@
 from django import forms
 
-from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, Country, IllustrationLayoutType, UploadedFile
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field
 from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton
 from django.forms.models import inlineformset_factory
 from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, ModelSelect2TagWidget, Select2Widget, ModelSelect2Widget, HeavySelect2MultipleWidget
-from django_countries.fields import CountryField
-from django_countries import countries
+#from django_countries.fields import CountryField
+#from django_countries import countries
 from django_countries.widgets import CountrySelectWidget
+from countries_plus.models import Country
 
 
 class PublicationForm(forms.ModelForm):
@@ -32,9 +33,18 @@ class PublicationForm(forms.ModelForm):
         model=FormOfPublication,
         search_fields=['name__icontains',],
     ), queryset=FormOfPublication.objects.all(), required=False)
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.all(),
+        label=u"Publication Country",
+        widget=ModelSelect2Widget(
+            model=Country,
+            search_fields=['name__icontains'],
+        )
+    )
     publication_city = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=City,
         search_fields=['name__icontains',],
+        dependent_fields={'country': 'country'},
     ), queryset=City.objects.all(), required=False)    
     affiliated_church = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Church,
@@ -63,12 +73,12 @@ class PublicationForm(forms.ModelForm):
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
-                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
+                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website','comments', 'uploadedfiles')
         
-    def __init__(self, *args, **kwargs):
+    def __init__(self, countries=None, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
         self.fields['author'].required = False
         self.fields['translator'].required = False
@@ -81,6 +91,8 @@ class PublicationForm(forms.ModelForm):
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
+        self.fields['country'].required = False
+        #self.fields['publication_country'].initial = countries
       
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'  
@@ -103,7 +115,7 @@ class PublicationForm(forms.ModelForm):
                     'printed_by',
                     'published_by',
                     'publication_date',
-                    'publication_country',
+                    'country',
                     'publication_city',
                     'publishing_organisation',
                ),
@@ -160,10 +172,19 @@ class NewCrispyForm(forms.ModelForm):
         model=FormOfPublication,
         search_fields=['name__icontains',],
     ), queryset=FormOfPublication.objects.all(), required=False)
-    publication_city = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.all(),
+        label=u"Publication Country",
+        widget=ModelSelect2Widget(
+            model=Country,
+            search_fields=['name__icontains'],
+        )
+    )
+    publication_city = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=City,
         search_fields=['name__icontains',],
-    ), queryset=City.objects.all(), required=False)    
+        dependent_fields={'country': 'country'},
+    ), queryset=City.objects.all(), required=False)
     affiliated_church = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Church,
         search_fields=['name__icontains',],
@@ -203,6 +224,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
+        self.fields['country'].required = False
         self.helper.layout = Layout(
             TabHolder(
                 Tab('Titles',
@@ -220,7 +242,7 @@ class NewCrispyForm(forms.ModelForm):
                     'printed_by',
                     'published_by',
                     'publication_date',
-                    'publication_country',
+                    'country',
                     FieldWithButtons('publication_city', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/city/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'publishing_organisation',
                ),
@@ -263,7 +285,7 @@ class NewCrispyForm(forms.ModelForm):
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
-                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
+                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website','comments', 'uploadedfiles')
@@ -394,11 +416,20 @@ class CityForm(forms.ModelForm):
         queryset=Publication.objects.all(),
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
-    
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.all(),
+        label=u"Country",
+        widget=ModelSelect2Widget(
+            model=Country,
+            search_fields=['name__icontains'],
+        )
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.id:
             self.fields['publications'].initial = Publication.objects.filter(publication_city=self.instance)
+        self.fields['country'].required = False
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'country', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
