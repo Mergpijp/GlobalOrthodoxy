@@ -38,7 +38,7 @@ class PublicationForm(forms.ModelForm):
         label=u"Publication Country",
         widget=ModelSelect2Widget(
             model=Country,
-            search_fields=['name__icontains'],
+            search_fields=['name__icontains',],
         )
     )
     publication_city = forms.ModelChoiceField(widget=ModelSelect2Widget(
@@ -225,6 +225,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
         self.fields['country'].required = False
+
         self.helper.layout = Layout(
             TabHolder(
                 Tab('Titles',
@@ -285,7 +286,7 @@ class NewCrispyForm(forms.ModelForm):
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
-                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_city', 'publishing_organisation', \
+                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website','comments', 'uploadedfiles')

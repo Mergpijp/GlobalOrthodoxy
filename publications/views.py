@@ -23,8 +23,6 @@ from django.core import serializers
 countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 countries_list = [y for (x,y) in countries]
 
-def _populate_countries(form):
-    pass
 class PublicationUpdate(UpdateView):
     '''
     Inherits UpdateView
@@ -95,7 +93,7 @@ class SearchResultsView(ListView):
       
     def get_queryset(self): 
         
-        form = PublicationForm(self.request.GET)
+        #form = PublicationForm(self.request.GET)
         authors = self.request.GET.getlist('author')
         translators = self.request.GET.getlist('translator')
         authors = Author.objects.filter(pk__in=authors).all()
@@ -116,10 +114,13 @@ class SearchResultsView(ListView):
         publications = Publication.objects.all()
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
+
         city = self.request.GET.getlist('publication_city')
+
         print('....', city)
         if list(city) != ['']:
             city = City.objects.filter(pk__in=city).all()
+
         print(publications)
 
         exclude = ['csrfmiddlewaretoken','search']
@@ -133,7 +134,7 @@ class SearchResultsView(ListView):
             if query_string.lower() in countries_dict.keys():
                 query_string = countries_dict[query_string.lower()]
             entry_query = get_query(query_string, ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__firstname', 'author__lastname', 'author__year_of_birth', \
-                  'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
+                  'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'country', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
                   'translator__lastname', 'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
                   'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments'])
