@@ -36,8 +36,11 @@ class PublicationModelTests(TestCase):
         response = client.login(username='admin', password='12345')
         response = client.get('/publication/show/', {'q': 'eindhoven'})
         #there should be one search result publication with the title 'eindhoven'
-        self.assertEqual(1, response.context[-1]['publications'].count())
+        self.assertEqual('eindhoven', response.context[-1]['publications'].first().title_original)
 
-    def test_author_creation(self):
-        pass
+    def test_publication_create(self):
+        client = Client('127.0.0.1')
+        response = client.login(username='admin', password='12345')
+        response = client.get('/publication/show/')
+        self.assertEqual(2, response.context[-1]['publications'].count())
     

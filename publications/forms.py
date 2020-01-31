@@ -33,7 +33,7 @@ class PublicationForm(forms.ModelForm):
         model=FormOfPublication,
         search_fields=['name__icontains',],
     ), queryset=FormOfPublication.objects.all(), required=False)
-    publication_country = forms.ModelChoiceField(
+    country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
         label=u"Publication Country",
         widget=ModelSelect2Widget(
@@ -73,7 +73,7 @@ class PublicationForm(forms.ModelForm):
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
-                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
+                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website','comments', 'uploadedfiles')
@@ -91,7 +91,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
-        self.fields['publication_country'].required = False
+        self.fields['country'].required = False
         #self.fields['publication_country'].initial = countries
       
         self.helper = FormHelper()
@@ -115,7 +115,7 @@ class PublicationForm(forms.ModelForm):
                     'printed_by',
                     'published_by',
                     'publication_date',
-                    'publication_country',
+                    'country',
                     'publication_city',
                     'publishing_organisation',
                ),
@@ -178,12 +178,13 @@ class NewCrispyForm(forms.ModelForm):
         widget=ModelSelect2Widget(
             model=Country,
             search_fields=['name__icontains'],
+            dependent_fields={'publication_city': 'cities'},
         )
     )
     publication_city = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=City,
         search_fields=['name__icontains',],
-        dependent_fields={'country': 'country'},
+        dependent_fields={'publication_country': 'country'},
     ), queryset=City.objects.all(), required=False)
     affiliated_church = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Church,
