@@ -6,7 +6,8 @@
 <script type="text/javascript" src="{% static 'js/search.js' %}">  </script>
 {% endblock headjavascript %}
 {% block content %}
-
+<h1>Search page</h1>
+<br/>
 <form action="{% url 'publication-show' %}" method="get" class="form">
     {% csrf_token %}
     {% crispy form form.helper %}

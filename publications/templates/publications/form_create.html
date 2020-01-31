@@ -6,7 +6,8 @@
 <script type="text/javascript" src="{% static 'js/create.js' %}">  </script>
 {% endblock headjavascript %}
 {% block content %}
-
+<h1>Create page</h1>
+<br/>
 <form method="post" class="form" enctype="multipart/form-data">
     {% csrf_token %}
     {% crispy form form.helper %}
