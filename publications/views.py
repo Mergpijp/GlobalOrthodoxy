@@ -19,6 +19,7 @@ from django_countries import countries
 from django.utils import timezone
 import json
 from django.core import serializers
+from countries_plus.models import Country
 
 countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 countries_list = [y for (x,y) in countries]
@@ -116,6 +117,10 @@ class SearchResultsView(ListView):
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
 
         city = self.request.GET.getlist('publication_city')
+        country = self.request.GET.getlist('publication_country')
+
+        if list(country) != ['']:
+            country = Country.objects.filter(pk__in=city).all()
 
         print('....', city)
         if list(city) != ['']:
@@ -126,7 +131,7 @@ class SearchResultsView(ListView):
         exclude = ['csrfmiddlewaretoken','search']
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by), \
-        ('uploadedfiles', uploadedfiles), ('publication_city', city)]
+        ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city)]
         special_case = ['copyrights']
        
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
@@ -134,7 +139,7 @@ class SearchResultsView(ListView):
             if query_string.lower() in countries_dict.keys():
                 query_string = countries_dict[query_string.lower()]
             entry_query = get_query(query_string, ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__firstname', 'author__lastname', 'author__year_of_birth', \
-                  'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'country', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
+                  'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'publicatioon_country', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
                   'translator__lastname', 'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
                   'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments'])

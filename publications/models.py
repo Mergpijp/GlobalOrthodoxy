@@ -127,7 +127,7 @@ class Country(models.Model):
 '''
 class City(models.Model):
     name = models.CharField(max_length=255, blank=True)
-    country = models.OneToOneField(Country, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, related_name='cities', on_delete=models.CASCADE)
     #country = models.CharField(max_length=2, choices=countries_list, blank=True)
         #models.ForeignKey('Country', related_name="cities", on_delete=models.CASCADE)
 
@@ -162,6 +162,7 @@ class Publication(models.Model):
     #publication_country = models.ManyToManyField(Country)
     #publication_country = models.CharField(max_length=2, choices=countries_list, blank=True)
     #publication_country = CountryField(blank=True, null=True)
+    publication_country = models.ForeignKey(Country, on_delete=models.CASCADE)
     publication_city = models.ManyToManyField(City)
     '''
     publication_city = ChainedForeignKey(
