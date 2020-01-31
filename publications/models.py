@@ -162,8 +162,8 @@ class Publication(models.Model):
     #publication_country = models.ManyToManyField(Country)
     #publication_country = models.CharField(max_length=2, choices=countries_list, blank=True)
     #publication_country = CountryField(blank=True, null=True)
-    publication_country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    publication_city = models.ManyToManyField(City)
+    publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
+    publication_city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
     '''
     publication_city = ChainedForeignKey(
         City,
