@@ -58,6 +58,10 @@ class PublicationCreate(CreateView):
     form_class = NewCrispyForm
     success_url = '/publication/show/'
 
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
 class PublicationDetailView(DetailView):
     '''
     Inherits DetailView
