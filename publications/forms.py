@@ -24,14 +24,17 @@ class PublicationForm(forms.ModelForm):
     author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
         search_fields=['firstname__icontains', 'lastname__icontains'],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Author.objects.all(), required=False)
     translator = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Translator,
         search_fields=['firstname__icontains', 'lastname__icontains'],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Translator.objects.all(), required=False)
     form_of_publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=FormOfPublication,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=FormOfPublication.objects.all(), required=False)
     publication_country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
@@ -39,6 +42,7 @@ class PublicationForm(forms.ModelForm):
         widget=ModelSelect2Widget(
             model=Country,
             search_fields=['name__icontains'],
+            attrs={'data-minimum-input-length': 0},
             dependent_fields={'publication_city': 'cities'},
         )
     )
@@ -46,30 +50,42 @@ class PublicationForm(forms.ModelForm):
         model=City,
         search_fields=['name__icontains',],
         dependent_fields={'publication_country': 'country'},
+        attrs={'data-minimum-input-length': 0},
     ), queryset=City.objects.all(), required=False)
     affiliated_church = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Church,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Church.objects.all(), required=False)
     language = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Language,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Language.objects.all(), required=False)    
     content_genre = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Genre,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Genre.objects.all(), required=False)        
     connected_to_special_occasion = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=SpecialOccasion,
         search_fields=['name__icontains',],
-    ), queryset=SpecialOccasion.objects.all(), required=False)   
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=SpecialOccasion.objects.all(), required=False)
+    collection_country = forms.ModelChoiceField(widget=ModelSelect2Widget(
+        model=Country,
+        search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=Country.objects.all(), required=False)
     currently_owned_by = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Owner,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Owner.objects.all(), required=False) 
     uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=UploadedFile,
         search_fields=['description__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False) 
     class Meta:
         model = Publication
@@ -93,6 +109,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
         self.fields['publication_country'].required = False
+        self.fields['collection_country'].required = False
         #self.fields['publication_country'].initial = countries
       
         self.helper = FormHelper()
@@ -164,14 +181,17 @@ class NewCrispyForm(forms.ModelForm):
     author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
         search_fields=['firstname__icontains', 'lastname__icontains'],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Author.objects.all(), required=False)
     translator = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Translator,
         search_fields=['firstname__icontains', 'lastname__icontains'],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Translator.objects.all(), required=False)
     form_of_publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=FormOfPublication,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=FormOfPublication.objects.all(), required=False)
     publication_country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
@@ -179,6 +199,7 @@ class NewCrispyForm(forms.ModelForm):
         widget=ModelSelect2Widget(
             model=Country,
             search_fields=['name__icontains'],
+            attrs={'data-minimum-input-length': 0},
             dependent_fields={'publication_city': 'cities'},
         )
     )
@@ -186,30 +207,42 @@ class NewCrispyForm(forms.ModelForm):
         model=City,
         search_fields=['name__icontains',],
         dependent_fields={'publication_country': 'country'},
+        attrs={'data-minimum-input-length': 0},
     ), queryset=City.objects.all(), required=False)
     affiliated_church = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Church,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Church.objects.all(), required=False)
     language = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Language,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Language.objects.all(), required=False)    
     content_genre = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Genre,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Genre.objects.all(), required=False)        
     connected_to_special_occasion = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=SpecialOccasion,
         search_fields=['name__icontains',],
-    ), queryset=SpecialOccasion.objects.all(), required=False)   
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=SpecialOccasion.objects.all(), required=False)
+    collection_country = forms.ModelChoiceField(widget=ModelSelect2Widget(
+        model=Country,
+        search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=Country.objects.all(), required=False)
     currently_owned_by = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Owner,
         search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=Owner.objects.all(), required=False) 
     uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=UploadedFile,
         search_fields=['description__icontains',],
+        attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False)    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -227,6 +260,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
         self.fields['publication_country'].required = False
+        self.fields['collection_country'].required = False
 
         self.helper.layout = Layout(
             TabHolder(
@@ -302,6 +336,7 @@ class AuthorForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Publication,
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
@@ -341,6 +376,7 @@ class TranslatorForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
@@ -379,6 +415,7 @@ class FormOfPublicationForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
@@ -386,7 +423,7 @@ class FormOfPublicationForm(forms.ModelForm):
         if self.instance.id:
             self.fields['publications'].initial = Publication.objects.filter(form_of_publication=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name',
+        self.helper.layout = Layout('name', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
     
     class Meta:
@@ -417,6 +454,7 @@ class CityForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     country = forms.ModelChoiceField(
@@ -424,6 +462,7 @@ class CityForm(forms.ModelForm):
         label=u"Country",
         widget=ModelSelect2Widget(
             model=Country,
+            attrs={'data-minimum-input-length': 0},
             search_fields=['name__icontains'],
         )
     )
@@ -467,6 +506,7 @@ class ChurchForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
@@ -508,6 +548,7 @@ class LanguageForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
@@ -550,6 +591,7 @@ class GenreForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
@@ -591,6 +633,7 @@ class SpecialOccasionForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
@@ -632,6 +675,7 @@ class OwnerForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
@@ -673,6 +717,7 @@ class UploadedFileForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
@@ -715,6 +760,7 @@ class IllustrationLayoutTypeForm(forms.ModelForm):
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains', 'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     
