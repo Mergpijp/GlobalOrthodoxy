@@ -20,6 +20,7 @@ from django.utils import timezone
 import json
 from django.core import serializers
 from countries_plus.models import Country
+from django.core.paginator import Paginator
 
 countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 countries_list = [y for (x,y) in countries]
@@ -81,7 +82,7 @@ def render_search(request):
     '''
     Initialize the home page with a form to search publications
     '''
-    form = PublicationForm(countries=countries_list)
+    form = PublicationForm()
     return render(request, 'publications/form_search.html', {'form': form})
 
 class SearchResultsView(ListView):
@@ -95,6 +96,9 @@ class SearchResultsView(ListView):
     model = Publication
     template_name = 'publications/show.html'
     context_object_name = 'publications'
+    publications = Publication.objects.all()
+    #paginator = Paginator(publications, 25)
+    paginate_by = 10
       
     def get_queryset(self): 
         
@@ -140,7 +144,7 @@ class SearchResultsView(ListView):
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by), \
         ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country)]
-        special_case = ['copyrights']
+        special_case = ['copyrights', 'page']
        
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
             query_string = self.request.GET['q']
@@ -201,6 +205,7 @@ class AuthorShow(ListView):
     model = Author
     template_name = 'publications/author_show.html'
     context_object_name = 'authors'
+    paginate_by = 10
 
 @login_required(login_url='/accounts/login/')
 def AuthorDelete(request, pk):
@@ -244,6 +249,7 @@ class TranslatorShow(ListView):
     model = Translator
     template_name = 'publications/translator_show.html'
     context_object_name = 'translators'
+    paginate_by = 10
 
 @login_required(login_url='/accounts/login/')
 def TranslatorDelete(request, pk):
@@ -287,6 +293,7 @@ class FormOfPublicationShow(ListView):
     model = FormOfPublication
     template_name = 'publications/form_of_publication_show.html'
     context_object_name = 'form_of_publications'
+    paginate_by = 10
 
 @login_required(login_url='/accounts/login/')
 def FormOfPublicationDelete(request, pk):
@@ -330,6 +337,7 @@ class CityShow(ListView):
     model = City
     template_name = 'publications/city_show.html'
     context_object_name = 'cities'
+    paginate_by = 10
 
 @login_required(login_url='/accounts/login/')
 def CityDelete(request, pk):
@@ -374,6 +382,7 @@ class GenreShow(ListView):
     model = Genre
     template_name = 'publications/genre_show.html'
     context_object_name = 'genres'
+    paginate_by = 10
 
 @login_required(login_url='/accounts/login/')
 def GenreDelete(request, pk):
@@ -417,6 +426,7 @@ class ChurchShow(ListView):
     model = Church
     template_name = 'publications/church_show.html'
     context_object_name = 'churches'
+    paginate_by = 10
 
 @login_required(login_url='/accounts/login/')
 def ChurchDelete(request, pk):
@@ -460,6 +470,7 @@ class LanguageShow(ListView):
     model = Language
     template_name = 'publications/language_show.html'
     context_object_name = 'languages'
+    paginate_by = 10
     
 @login_required(login_url='/accounts/login/')
 def LanguageDelete(request, pk):
@@ -504,6 +515,7 @@ class SpecialOccasionShow(ListView):
     model = SpecialOccasion
     template_name = 'publications/specialoccasion_show.html'
     context_object_name = 'specialoccasions'
+    paginate_by = 10
     
 @login_required(login_url='/accounts/login/')
 def SpecialOccasionDelete(request, pk):
@@ -547,6 +559,7 @@ class OwnerShow(ListView):
     model = Owner
     template_name = 'publications/owner_show.html'
     context_object_name = 'owners'
+    paginate_by = 10
     
 @login_required(login_url='/accounts/login/')
 def OwnerDelete(request, pk):
@@ -590,6 +603,7 @@ class UploadedFileShow(ListView):
     model = UploadedFile
     template_name = 'publications/uploadedfile_show.html'
     context_object_name = 'uploadedfiles'
+    paginate_by = 10
     
 @login_required(login_url='/accounts/login/')
 def UploadedFileDelete(request, pk):
@@ -633,6 +647,7 @@ class IllustrationLayoutTypeShow(ListView):
     model = IllustrationLayoutType
     template_name = 'publications/illustration_layout_type_show.html'
     context_object_name = 'IllustrationLayoutTypes'
+    paginate_by = 10
     
 @login_required(login_url='/accounts/login/')
 def IllustrationLayoutTypeDelete(request, pk):

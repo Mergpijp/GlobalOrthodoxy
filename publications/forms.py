@@ -95,7 +95,7 @@ class PublicationForm(forms.ModelForm):
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website','comments', 'uploadedfiles')
         
-    def __init__(self, countries=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
         self.fields['author'].required = False
         self.fields['translator'].required = False
