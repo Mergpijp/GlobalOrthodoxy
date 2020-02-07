@@ -26,8 +26,6 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-#ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
-
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', config('ALLOWED_HOSTS')]
 
 JQUERY_URL = False
@@ -35,7 +33,7 @@ USE_DJANGO_JQUERY = True
 
 SELECT2_USE_BUNDLED_JQUERY = False
 
-parent_dir = os.path.abspath(os.path.dirname(__file__) + '/../..')
+parent_dir = os.path.abspath(os.path.dirname(__file__) + '')
 MEDIA_ROOT = parent_dir + '/media'
 MEDIA_URL = '/media/'
 
