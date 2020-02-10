@@ -42,7 +42,6 @@ MEDIA_URL = '/media/'
 # Application definition
 
 INSTALLED_APPS = [
-    'smart_selects',
     'publications',
     'django.contrib.admin',
     'django.contrib.auth',
