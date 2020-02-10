@@ -123,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'#'Europe/Amsterdam'
+TIME_ZONE = 'Europe/Amsterdam'#'ÚTC'
 
 USE_I18N = True
 
