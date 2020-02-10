@@ -16,7 +16,7 @@
 {% for uploadedfile in uploadedfiles %}  
     <tr>  
         <td><a href="{% url 'publication-show' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.description }}</a></td>
-        <td>{{ uploadedfile.files }} </td>
+        <td>{{ uploadedfile.file }} </td>
         <td><a href="{% url 'publication-show' %}?q={{uploadedfile.uploaded_at}}">{{ uploadedfile.uploaded_at }}</a></td>
         <td>  
             <a href="/uploadedfile/{{ uploadedfile.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
