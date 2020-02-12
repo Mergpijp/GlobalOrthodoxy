@@ -445,11 +445,11 @@
     </tr>
     </thead>
     <tbody>
-{% for files in object.uploadedfiles.all %}
+{% for file in object.uploadedfiles.all %}
     <tr>
-        <td>{{files.description}}</td>
-        <td>{{files.files}}</td>
-        <td>{{files.uploaded_at}}</td>
+        <td>{{file.description}}</td>
+        <td><a href="/media/{{file.file}}">{{ file.file }}</a></td>
+        <td>{{file.uploaded_at}}</td>
     </tr>
 {% empty %}
     </br>
