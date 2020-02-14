@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('publication/new/', login_required(PublicationCreate.as_view()), name='publication-new'),
+    path('detect_language', views.view_input_update, name='view_input_update'),
     path('publication/show/', login_required(SearchResultsView.as_view()), name='publication-show'), 
     path('publication/<int:pk>/detail_view/', login_required(PublicationDetailView.as_view()), name='publication-detail'),
     path('publication/<int:pk>/edit/', login_required(PublicationUpdate.as_view()), name='publication-update'),

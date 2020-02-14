@@ -29,3 +29,18 @@ $(function() {
 });
 unsetInlineWidthOfSelect2($(document));
 
+function update(){
+    var data = {'input': $("#id_title_original").val()};
+    $.get(URL, data, function(data, status){
+        if(status === 'success') {
+            $('#language').html(data);
+        }
+    });
+}
+$(document).ready(function(){
+    $('#id_title_original').on('input',function(){
+        if ($("#id_title_original").val().length > 4) {
+            update();
+        }
+    });
+});

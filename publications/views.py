@@ -21,9 +21,22 @@ import json
 from django.core import serializers
 from countries_plus.models import Country
 from django.core.paginator import Paginator
+from googletrans import Translator as GTranslator
+from googletrans import LANGUAGES
 
 countries_dict = dict([(y.lower(), x) for (x,y) in countries])
+#languages_dict = dict([(x.lower(), y) for (x,y) in countries])
 countries_list = [y for (x,y) in countries]
+translator = GTranslator()
+
+
+def view_input_update(request):
+    if request.method == 'GET':
+        if 'input' in request.GET:
+            input = request.GET['input']
+            language = translator.detect(input).lang
+            return HttpResponse(LANGUAGES[language])
+    return HttpResponse('FAIL!!!!!')
 
 class PublicationUpdate(UpdateView):
     '''

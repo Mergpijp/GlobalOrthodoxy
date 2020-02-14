@@ -3,12 +3,18 @@
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 {% block headjavascript %}
-<script type="text/javascript" src="{% static 'js/search.js' %}">  </script>
+<script>
+    var URL = "{% url 'view_input_update' %}";
+</script>
+<script type="text/javascript" src="{% static 'js/search.js' %}"> </script>
 {% endblock headjavascript %}
 {% block content %}
 <h1>Search page</h1>
 <br/>
 <form action="{% url 'publication-show' %}" method="get" class="form">
+    Title original language: <span id="language">unknown</span>
+    <br />
+    <br />
     {% csrf_token %}
     {% crispy form form.helper %}
 </form>
