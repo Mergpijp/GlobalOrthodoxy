@@ -36,7 +36,7 @@ def view_input_update(request):
             input = request.GET['input']
             language = translator.detect(input).lang
             return HttpResponse(LANGUAGES[language])
-    return HttpResponse('FAIL!!!!!')
+    return HttpResponse('ERROR')
 
 class PublicationUpdate(UpdateView):
     '''
