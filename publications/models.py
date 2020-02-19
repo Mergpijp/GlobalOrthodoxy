@@ -24,6 +24,11 @@ class WritingDirection(Enum):
     L = "Left"
     R = "Right"
 
+class BookType(Enum):
+    O = "Original"
+    T = "Translated"
+
+
 class LocationType(Enum):
     '''
     Location enum with three different values.
@@ -78,8 +83,7 @@ class Author(models.Model):
     Manytomany field class with firstname and lastname as charfields.
     Year of birth as integer between 1850 and current year.
     '''
-    firstname = models.CharField(max_length=100, blank=True)
-    lastname = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100, blank=True)
     year_of_birth = models.IntegerField(('year_of_birth'), blank=True, null=True, validators=[MinValueValidator(MINIMUM_YEAR), max_value_current_year])
 	
     def __str__(self):
@@ -162,7 +166,14 @@ class City(models.Model):
 
     def __str__(self):
         return self.name  
-        
+
+class Keyword(models.Model):
+    name = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class UploadedFile(models.Model):
     '''
     Manytomany field class with three fields.
@@ -188,6 +199,8 @@ class Publication(models.Model):
     author = models.ManyToManyField(Author)
     translator = models.ManyToManyField(Translator)
     form_of_publication = models.ManyToManyField(FormOfPublication)
+    ISBN_number = models.CharField(max_length=100, blank=True)
+    type_of_collection = models.CharField(max_length=10, choices=[(tag.name, tag.value) for tag in BookType])
     printed_by = models.CharField(max_length=100, blank=True)
     published_by = models.CharField(max_length=100, blank=True)
     publication_date = models.CharField(max_length=100, blank=True)
@@ -197,6 +210,7 @@ class Publication(models.Model):
     possible_donor = models.CharField(max_length=100, blank=True)
     affiliated_church = models.ManyToManyField(Church)
     language = models.ManyToManyField(Language)
+    translated_from = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='translated_from', null=True, blank=True)
     content_description = models.CharField(max_length=300, blank=True)
     content_genre = models.ManyToManyField(Genre)
     connected_to_special_occasion = models.ManyToManyField(SpecialOccasion)
@@ -212,9 +226,12 @@ class Publication(models.Model):
     contact_email = models.CharField(max_length=100, blank=True)
     contact_website = models.CharField(max_length=100, blank=True)
     comments = models.CharField(max_length=200, blank=True)
-    
+    keywords = models.ManyToManyField(Keyword)
     uploadedfiles = models.ManyToManyField(UploadedFile, blank=True, null=True)
+
     created_by = models.ForeignKey('auth.User', related_name='publications', on_delete=models.CASCADE, blank=True, null=True)
+
+
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)
     illustration_and_layout_type = models.ManyToManyField(IllustrationLayoutType, blank=True, null=True)

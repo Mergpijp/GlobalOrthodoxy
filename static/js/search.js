@@ -33,7 +33,7 @@ function update(){
     var data = {'input': $("#id_title_original").val()};
     $.get(URL, data, function(data, status){
         if(status === 'success') {
-            $('#language').html(data);
+            $('#language_title').html(data);
         }
     });
 }

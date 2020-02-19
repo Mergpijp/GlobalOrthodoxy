@@ -2,12 +2,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
-from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
-from .forms import PublicationForm, NewCrispyForm, AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm
+from .forms import PublicationForm, NewCrispyForm, KeywordForm,\
+    AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -136,7 +137,10 @@ class SearchResultsView(ListView):
         publications = Publication.objects.all()
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
+        keywords = self.request.GET.getlist('keywords')
+        keywords = Keyword.objects.filter(pk__in=keywords).all()
 
+        translated_from = self.request.GET.getlist('translated_From')
         city = self.request.GET.getlist('publication_city')
         country = self.request.GET.getlist('publication_country')
         collection_country = self.request.GET.getlist('collection_country')
@@ -147,6 +151,9 @@ class SearchResultsView(ListView):
         if list(country) != ['']:
             country = Country.objects.filter(pk__in=city).all()
 
+        if list(translated_from) != ['']:
+            translated_from = Country.objects.filter(pk__in=translated_from).all()
+
         print('....', city)
         if list(city) != ['']:
             city = City.objects.filter(pk__in=city).all()
@@ -156,18 +163,18 @@ class SearchResultsView(ListView):
         exclude = ['csrfmiddlewaretoken','search']
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by), \
-        ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country)]
+        ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), ('keywords', keywords), ('translated_from',translated_from)]
         special_case = ['copyrights', 'page']
        
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
             query_string = self.request.GET['q']
             if query_string.lower() in countries_dict.keys():
                 query_string = countries_dict[query_string.lower()]
-            entry_query = get_query(query_string, ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__firstname', 'author__lastname', 'author__year_of_birth', \
+            entry_query = get_query(query_string, ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__name', 'author__year_of_birth', \
                   'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
                   'translator__lastname', 'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments'])
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'type_of_collection', 'ISBN_number', 'translated_from__name'])
 
             print('&&&&&&', query_string)
             publications = publications.filter(entry_query)
@@ -200,6 +207,48 @@ class SearchResultsView(ListView):
 
         publications = publications.distinct()
         return publications
+
+class KeywordCreate(CreateView):
+    '''
+    Inherits CreateView uses a standard form for keywords.
+    redirects to the author main page (show).
+    '''
+    template_name = 'publications/form.html'
+    form_class = KeywordForm
+    success_url = '/keyword/show/'
+
+class KeywordShow(ListView):
+    '''
+    Inherits ListView shows author mainpage (keyword_show)
+    Uses context_object_name authors for all keywords.
+    '''
+    model = Keyword
+    template_name = 'publications/keyword_show.html'
+    context_object_name = 'keywords'
+    paginate_by = 10
+
+@login_required(login_url='/accounts/login/')
+def KeywordDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects keyword object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
+    keyword = Keyword.objects.get(id=pk)
+    keyword.delete()
+    return redirect('/keyword/show')
+
+class KeywordUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses KeywordForm as layout. And model Keyword.
+    redirects to local main page. (show)
+    '''
+    template_name = 'publications/form.html'
+    form_class = KeywordForm
+    model = Keyword
+    success_url = '/keyword/show/'
 
 class AuthorCreate(CreateView):
     '''

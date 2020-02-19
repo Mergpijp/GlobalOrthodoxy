@@ -3,23 +3,20 @@
 <table class="table table-striped table-bordered table-sm">  
     <thead class="thead-light">  
     <tr>  
-        <th>Firstname </th>  
-        <th>Lastname</th>  
-        <th>Year of birth</th>  
+        <th>name </th>
         <th>Actions</th>  
     </tr>  
     </thead> 
 <br> 
-<center><a href="/author/new" class="btn btn-primary">Add New Author</a></center>   
+<center><a href="/keyword/new" class="btn btn-primary">Add New Keyword</a></center>
 <br>      
     <tbody>  
-{% for author in authors %}  
+{% for keyword in keywords %}
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{author.name}}">{{ author.name }}</a></td>
-        <td><a href="{% url 'publication-show' %}?q={{author.year_of_birth}}">{{ author.year_of_birth }}</a></td>  
+        <td><a href="{% url 'publication-show' %}?q={{keyword.name}}">{{ keyword.name }}</a></td>
         <td>  
-            <a href="/author/{{ author.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a class="confirm-delete" href="/author/{{ author.id }}/delete">Delete</a>
+            <a href="/keyword/{{ keyword.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
+            <a class="confirm-delete" href="/keyword/{{ keyword.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  

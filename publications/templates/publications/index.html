@@ -1,9 +1,0 @@
-{% if latest_publication_list %}
-    <ul>
-    {% for publication in latest_publication_list %}
-        <li><a href="{% url 'detail' publication.id %}">{{ publication.title_subtitle_transcription }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No publications are available.</p>
-{% endif %}

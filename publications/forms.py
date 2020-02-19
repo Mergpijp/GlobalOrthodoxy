@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field
 from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton, AppendedText
@@ -87,13 +87,18 @@ class PublicationForm(forms.ModelForm):
         search_fields=['description__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False) 
+    keywords = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Keyword,
+        search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=Keyword.objects.all(), required=False)
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
                   'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','comments', 'uploadedfiles')
+                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'type_of_collection', 'ISBN_number', 'translated_from')
         
     def __init__(self, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
@@ -110,6 +115,8 @@ class PublicationForm(forms.ModelForm):
         self.fields['uploadedfiles'].required = False
         self.fields['publication_country'].required = False
         self.fields['collection_country'].required = False
+        self.fields['type_of_collection'].required = False
+        self.fields['keywords'].required = False
         #self.fields['publication_country'].initial = countries
       
         self.helper = FormHelper()
@@ -127,9 +134,12 @@ class PublicationForm(forms.ModelForm):
                 Tab('Author',
                     'author',
                     'translator',
+                    'translated_from',
                 ),
                 Tab('Publishing information',
                     'form_of_publication',
+                    'ISBN_number',
+                    'type_of_collection',
                     'printed_by',
                     'published_by',
                     'publication_date',
@@ -151,6 +161,7 @@ class PublicationForm(forms.ModelForm):
                    'description_of_illustration',
                    'image_details',
                    'nr_of_pages',
+                   'keywords',
               ),
                Tab('Collection info',
                    'collection_date',
@@ -238,7 +249,12 @@ class NewCrispyForm(forms.ModelForm):
         model=Owner,
         search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0},
-    ), queryset=Owner.objects.all(), required=False) 
+    ), queryset=Owner.objects.all(), required=False)
+    keywords = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Keyword,
+        search_fields=['description__icontains',],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=Keyword.objects.all(), required=False)
     uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=UploadedFile,
         search_fields=['description__icontains',],
@@ -260,7 +276,8 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
         self.fields['publication_country'].required = False
-        self.fields['collection_country'].required = False
+        self.fields['type_of_collection'].required = False
+        self.fields['keywords'].required = False
 
         self.helper.layout = Layout(
             TabHolder(
@@ -273,9 +290,12 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Author',
                     FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    'translated_from',
                 ),
                 Tab('Publishing information',
                     FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    'ISBN_numer',
+                    'tyoe_of_collection',
                     'printed_by',
                     'published_by',
                     'publication_date',
@@ -297,6 +317,8 @@ class NewCrispyForm(forms.ModelForm):
                    'description_of_illustration',
                    'image_details',
                    'nr_of_pages',
+                   FieldWithButtons('keywords', StrictButton('+', type='button', css_class='btn-primary',
+                                                             onClick="window.open('/keyword/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
               ),
                Tab('Collection info',
                    'collection_date',
@@ -325,9 +347,51 @@ class NewCrispyForm(forms.ModelForm):
                   'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','comments', 'uploadedfiles')
+                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'type_of_collection', 'ISBN_number', 'translated_from')
         #publication_country = forms.ChoiceField(choices=list(countries))
-  
+
+
+class KeywordForm(forms.ModelForm):
+    '''
+        Form to create or edit an author. Can add Publications to the to be created author object.
+        If its a author edit load all linked publications.
+        If its a author create do not load any publications at start.
+    '''
+    publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=Publication,
+        attrs={'data-minimum-input-length': 0},
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
+                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
+    ), queryset=Publication.objects.all(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(keyword=self.instance)
+        self.helper = FormHelper()
+        self.helper.layout = Layout('name', 'publications',
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white')))
+
+    class Meta:
+        model = Keyword
+        fields = ('name',)
+
+    def save(self, commit=True):
+        instance = super().save(commit)
+        if self.cleaned_data['publications'].count() > instance.publication_set.count():
+            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
+            for pub in diff:
+                instance.publication_set.add(pub)
+
+        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
+            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
+            if not diff:
+                for pub in instance.publication_set:
+                    instance.publication_set.remove(pub)
+            for pub in diff:
+                instance.publication_set.remove(pub)
+        return instance
+
 class AuthorForm(forms.ModelForm):
     '''
         Form to create or edit an author. Can add Publications to the to be created author object.
@@ -345,12 +409,12 @@ class AuthorForm(forms.ModelForm):
         if self.instance.id:
             self.fields['publications'].initial = Publication.objects.filter(author=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('firstname', 'lastname', 'year_of_birth', 'publications',
+        self.helper.layout = Layout('name', 'year_of_birth', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
     
     class Meta:
         model = Author
-        fields = ('firstname', 'lastname', 'year_of_birth')
+        fields = ('name', 'year_of_birth')
         
     def save(self, commit=True):
         instance = super().save(commit)
