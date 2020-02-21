@@ -3,8 +3,7 @@
 <table class="table table-striped table-bordered table-sm">  
     <thead class="thead-light">  
     <tr>  
-        <th>Firstname </th>  
-        <th>Lastname</th>   
+        <th>Name </th>
         <th>Actions</th>  
     </tr>  
     </thead>
@@ -14,8 +13,7 @@
     <tbody>  
 {% for translator in translators %}  
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{translator.firstname}}">{{ translator.firstname }}</a></td>  
-        <td><a href="{% url 'publication-show' %}?q={{translator.lastname}}">{{ translator.lastname }}</a></td>  
+        <td><a href="{% url 'publication-show' %}?q={{translator.name}}">{{ translator.name }}</a></td>
         <td>  
             <a href="/translator/{{ translator.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a class="confirm-delete" href="/translator/{{ translator.id }}/delete">Delete</a>

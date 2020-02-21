@@ -88,17 +88,16 @@ class Author(models.Model):
     year_of_birth = models.IntegerField(('year_of_birth'), blank=True, null=True, validators=[MinValueValidator(MINIMUM_YEAR), max_value_current_year])
 	
     def __str__(self):
-        return 'firstname: ' + self.firstname + ' lastname: ' + self.lastname + ' date of birth: ' + str(self.year_of_birth)
+        return 'name: ' + self.name + ' date of birth: ' + str(self.year_of_birth)
 
 class Translator(models.Model):
     '''
     Manytomany field class with two fields firstname and lastname both charfields.
     '''
-    firstname = models.CharField(max_length=100, blank=True)
-    lastname = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100, blank=True)
    
     def __str__(self):
-        return 'firstname: ' + self.firstname + ' lastname: ' + self.lastname
+        return 'name: ' + self.name
 
 class Location(models.Model):
     '''

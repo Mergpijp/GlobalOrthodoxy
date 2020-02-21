@@ -23,12 +23,12 @@ class PublicationForm(forms.ModelForm):
     '''
     author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
-        search_fields=['firstname__icontains', 'lastname__icontains'],
+        search_fields=['name__icontains'],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Author.objects.all(), required=False)
     translator = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Translator,
-        search_fields=['firstname__icontains', 'lastname__icontains'],
+        search_fields=['name__icontains'],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Translator.objects.all(), required=False)
     form_of_publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
@@ -92,6 +92,11 @@ class PublicationForm(forms.ModelForm):
         search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Keyword.objects.all(), required=False)
+    translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
+        model=Country,
+        search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=Country.objects.all(), required=False)
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
@@ -191,12 +196,12 @@ class NewCrispyForm(forms.ModelForm):
     '''
     author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
-        search_fields=['firstname__icontains', 'lastname__icontains'],
+        search_fields=['name__icontains'],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Author.objects.all(), required=False)
     translator = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Translator,
-        search_fields=['firstname__icontains', 'lastname__icontains'],
+        search_fields=['name__icontains'],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Translator.objects.all(), required=False)
     form_of_publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
@@ -259,7 +264,12 @@ class NewCrispyForm(forms.ModelForm):
         model=UploadedFile,
         search_fields=['description__icontains',],
         attrs={'data-minimum-input-length': 0},
-    ), queryset=UploadedFile.objects.all(), required=False)    
+    ), queryset=UploadedFile.objects.all(), required=False)
+    translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
+        model=Country,
+        search_fields=['name__icontains',],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=Country.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -449,12 +459,12 @@ class TranslatorForm(forms.ModelForm):
         if self.instance.id:
             self.fields['publications'].initial = Publication.objects.filter(translator=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('firstname', 'lastname', 'publications',
+        self.helper.layout = Layout('name', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
     
     class Meta:
         model = Translator
-        fields = ('firstname', 'lastname') 
+        fields = ('name',)
         
     def save(self, commit=True):
         instance = super().save(commit)
