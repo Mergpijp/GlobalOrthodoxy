@@ -98,7 +98,7 @@ class PublicationForm(forms.ModelForm):
                   'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'type_of_collection', 'ISBN_number', 'translated_from')
+                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_translated', 'ISBN_number', 'translated_from')
         
     def __init__(self, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
@@ -115,7 +115,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['uploadedfiles'].required = False
         self.fields['publication_country'].required = False
         self.fields['collection_country'].required = False
-        self.fields['type_of_collection'].required = False
+        self.fields['is_translated'].required = False
         self.fields['keywords'].required = False
         #self.fields['publication_country'].initial = countries
       
@@ -134,12 +134,12 @@ class PublicationForm(forms.ModelForm):
                 Tab('Author',
                     'author',
                     'translator',
+                    'is_translated',
                     'translated_from',
                 ),
                 Tab('Publishing information',
                     'form_of_publication',
                     'ISBN_number',
-                    'type_of_collection',
                     'printed_by',
                     'published_by',
                     'publication_date',
@@ -276,7 +276,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
         self.fields['publication_country'].required = False
-        self.fields['type_of_collection'].required = False
+        self.fields['is_translated'].required = False
         self.fields['keywords'].required = False
 
         self.helper.layout = Layout(
@@ -290,6 +290,7 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Author',
                     FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    'is_translated',
                     'translated_from',
                 ),
                 Tab('Publishing information',
@@ -347,7 +348,7 @@ class NewCrispyForm(forms.ModelForm):
                   'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'possible_donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'type_of_collection', 'ISBN_number', 'translated_from')
+                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_translated', 'ISBN_number', 'translated_from')
         #publication_country = forms.ChoiceField(choices=list(countries))
 
 
@@ -367,7 +368,7 @@ class KeywordForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.id:
-            self.fields['publications'].initial = Publication.objects.filter(keyword=self.instance)
+            self.fields['publications'].initial = Publication.objects.filter(keywords=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white')))

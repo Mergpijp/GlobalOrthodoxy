@@ -26,7 +26,7 @@
         <div class="nav-link disabled">
             Hi {{ user.username }}!
         </div>
-        <a class="nav-link" href="{% url 'logout' %}">logout</a>
+        <a class="nav-link confirm-logout" href="{% url 'logout' %}">logout</a>
         {% else %}
         <div class="nav-link">
             You are not logged in:

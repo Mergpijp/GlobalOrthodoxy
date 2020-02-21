@@ -66,6 +66,20 @@
 </table>  
 </br>  
 {% endif %}
+{% if object.is_translated %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>Is translated?</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.is_translated}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
 {% if object.translated_From %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">
@@ -110,20 +124,6 @@
     <tbody>
     <tr>
         <td>{{object.ISBN_number}}</td>
-    </tr>
-    </tbody>
-</table>
-{% endif %}
-{% if object.tyoe_of_collection %}
-<table class="table table-striped table-bordered table-sm">
-    <thead class="thead-light">
-    <tr>
-        <th>Type of collection</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>{{object.tyoe_of_collection}}</td>
     </tr>
     </tbody>
 </table>

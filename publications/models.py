@@ -24,10 +24,11 @@ class WritingDirection(Enum):
     L = "Left"
     R = "Right"
 
+'''
 class BookType(Enum):
     O = "Original"
     T = "Translated"
-
+'''
 
 class LocationType(Enum):
     '''
@@ -200,7 +201,6 @@ class Publication(models.Model):
     translator = models.ManyToManyField(Translator)
     form_of_publication = models.ManyToManyField(FormOfPublication)
     ISBN_number = models.CharField(max_length=100, blank=True)
-    type_of_collection = models.CharField(max_length=10, choices=[(tag.name, tag.value) for tag in BookType])
     printed_by = models.CharField(max_length=100, blank=True)
     published_by = models.CharField(max_length=100, blank=True)
     publication_date = models.CharField(max_length=100, blank=True)
@@ -210,6 +210,7 @@ class Publication(models.Model):
     possible_donor = models.CharField(max_length=100, blank=True)
     affiliated_church = models.ManyToManyField(Church)
     language = models.ManyToManyField(Language)
+    is_translated = models.NullBooleanField()
     translated_from = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='translated_from', null=True, blank=True)
     content_description = models.CharField(max_length=300, blank=True)
     content_genre = models.ManyToManyField(Genre)

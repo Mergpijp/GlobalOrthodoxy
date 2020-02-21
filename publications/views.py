@@ -107,6 +107,18 @@ def isEnglish(s):
     else:
         return True
 
+def to_searchable(s):
+    s.replace('sh', 'š')
+    s.replace('s', 'ṣ')
+    s.replace('d', 'ḍ')
+    s.replace('th', 'ṯ')
+    s.replace('t', 'ṭ')
+    s.replace('ẓ', 'z')
+
+
+    return s
+
+
 class SearchResultsView(ListView):
     '''
     ListView of the initial search page.
@@ -182,7 +194,7 @@ class SearchResultsView(ListView):
                   'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
                   'translator__lastname', 'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'type_of_collection', 'ISBN_number', 'translated_from__name']
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'is_translated', 'ISBN_number', 'translated_from__name']
             entry_query = get_query(query_string, search_fields)
             arabic_query = translator.translate(query_string, dest='ar').text
             arabic_query = get_query(arabic_query, search_fields)
