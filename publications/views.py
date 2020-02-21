@@ -99,6 +99,14 @@ def render_search(request):
     form = PublicationForm()
     return render(request, 'publications/form_search.html', {'form': form})
 
+def isEnglish(s):
+    try:
+        s.encode(encoding='utf-8').decode('ascii')
+    except UnicodeDecodeError:
+        return False
+    else:
+        return True
+
 class SearchResultsView(ListView):
     '''
     ListView of the initial search page.
@@ -170,14 +178,17 @@ class SearchResultsView(ListView):
             query_string = self.request.GET['q']
             if query_string.lower() in countries_dict.keys():
                 query_string = countries_dict[query_string.lower()]
-            entry_query = get_query(query_string, ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__name', 'author__year_of_birth', \
+            search_fields = ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__name', 'author__year_of_birth', \
                   'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__firstname', \
                   'translator__lastname', 'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'type_of_collection', 'ISBN_number', 'translated_from__name'])
-
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'type_of_collection', 'ISBN_number', 'translated_from__name']
+            entry_query = get_query(query_string, search_fields)
+            arabic_query = translator.translate(query_string, dest='ar').text
+            arabic_query = get_query(arabic_query, search_fields)
             print('&&&&&&', query_string)
-            publications = publications.filter(entry_query)
+            #publications = publications.filter(entry_query)
+            publications = publications.filter(Q(entry_query) | Q(arabic_query))
             print(publications)
             publications = publications.distinct()
             return publications
@@ -187,7 +198,8 @@ class SearchResultsView(ListView):
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
                not field_name in special_case:
                 print('******', field_name)
-                publications = publications.filter(**{field_name+'__icontains':get_value})
+                arabic_query = translator.translate(get_value, dest='ar').text
+                publications = publications.filter(Q(**{field_name+'__icontains':get_value}) | Q(**{field_name+'__icontains':arabic_query}) )
         
         for field_name, list_object in in_variables:
             print('****', list_object)
