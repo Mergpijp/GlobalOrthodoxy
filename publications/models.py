@@ -210,7 +210,7 @@ class Publication(models.Model):
     affiliated_church = models.ManyToManyField(Church)
     language = models.ManyToManyField(Language)
     is_translated = models.NullBooleanField()
-    translated_from = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='translated_from', null=True, blank=True)
+    translated_from = models.ForeignKey(Language,  on_delete=models.CASCADE, related_name='translated_from', null=True, blank=True)
     content_description = models.CharField(max_length=300, blank=True)
     content_genre = models.ManyToManyField(Genre)
     connected_to_special_occasion = models.ManyToManyField(SpecialOccasion)

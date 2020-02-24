@@ -93,10 +93,10 @@ class PublicationForm(forms.ModelForm):
         attrs={'data-minimum-input-length': 0},
     ), queryset=Keyword.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
-        model=Country,
+        model=Language,
         search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0},
-    ), queryset=Country.objects.all(), required=False)
+    ), queryset=Language.objects.all(), required=False)
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
@@ -122,7 +122,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['collection_country'].required = False
         self.fields['is_translated'].required = False
         self.fields['keywords'].required = False
-        #self.fields['publication_country'].initial = countries
+        self.fields['translated_from'].required = False
       
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'  
@@ -266,10 +266,10 @@ class NewCrispyForm(forms.ModelForm):
         attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
-        model=Country,
+        model=Language,
         search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0},
-    ), queryset=Country.objects.all(), required=False)
+    ), queryset=Language.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -288,6 +288,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['publication_country'].required = False
         self.fields['is_translated'].required = False
         self.fields['keywords'].required = False
+        self.fields['translated_from'].required = False
 
         self.helper.layout = Layout(
             TabHolder(
@@ -301,7 +302,7 @@ class NewCrispyForm(forms.ModelForm):
                     FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'is_translated',
-                    'translated_from',
+                    FieldWithButtons('translated_from', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                 ),
                 Tab('Publishing information',
                     FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),

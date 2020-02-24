@@ -170,6 +170,7 @@ class SearchResultsView(ListView):
         keywords = Keyword.objects.filter(pk__in=keywords).all()
 
         translated_from = self.request.GET.getlist('translated_From')
+        translated_from = Language.objects.filter(pk__in=translated_from).all()
         city = self.request.GET.getlist('publication_city')
         country = self.request.GET.getlist('publication_country')
         collection_country = self.request.GET.getlist('collection_country')
@@ -179,9 +180,6 @@ class SearchResultsView(ListView):
 
         if list(country) != ['']:
             country = Country.objects.filter(pk__in=city).all()
-
-        if list(translated_from) != ['']:
-            translated_from = Country.objects.filter(pk__in=translated_from).all()
 
         print('....', city)
         if list(city) != ['']:
@@ -203,7 +201,7 @@ class SearchResultsView(ListView):
                   'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'is_translated', 'ISBN_number', 'translated_from__name']
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'is_translated', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
             arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)

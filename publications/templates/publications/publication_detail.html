@@ -80,16 +80,18 @@
     </tbody>
 </table>
 {% endif %}
-{% if object.translated_From %}
+{% if object.translated_from %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">
     <tr>
         <th>translated from</th>
+        <th>direction</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>{{object.translated_from}}</td>
+        <td>{{object.translated_from.name}}</td>
+        <td>{{object.translated_from.direction}}</td>
     </tr>
     </tbody>
 </table>
@@ -245,7 +247,29 @@
     </tbody>
 </table>   
 </br> 
-{% endif %} 
+{% endif %}
+{% if object.language.all %}
+<p><b>Languages</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>name</th>
+        <th>direction</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for language in object.language.all %}
+    <tr>
+        <td>{{language.name}}</td>
+        <td>{{language.direction}}</td>
+    </tr>
+{% empty %}
+    </br>
+{% endfor %}
+    </tbody>
+</table>
+</br>
+{% endif %}
 {% if object.content_description %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
@@ -341,6 +365,26 @@
     </tr>
     </tbody>
 </table>
+{% endif %}
+{% if object.keywords.all %}
+<p><b>Keywords</b></p>
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>name </th>
+    </tr>
+    </thead>
+    <tbody>
+{% for keyword in object.keywords.all %}
+    <tr>
+        <td>{{keyword.name}}</td>
+    </tr>
+{% empty %}
+    </br>
+{% endfor %}
+    </tbody>
+</table>
+</br>
 {% endif %}
 {% if object.collection_date %}
 <table class="table table-striped table-bordered table-sm">
@@ -473,26 +517,6 @@
     </tr>
     </tbody>
 </table>
-{% endif %}
-{% if object.keywords.all %}
-<p><b>Keywords</b></p>
-<table class="table table-striped table-bordered table-sm">
-    <thead class="thead-light">
-    <tr>
-        <th>name </th>
-    </tr>
-    </thead>
-    <tbody>
-{% for keyword in object.keywords.all %}
-    <tr>
-        <td>{{keyword.name}}</td>
-    </tr>
-{% empty %}
-    </br>
-{% endfor %}
-    </tbody>
-</table>
-</br>
 {% endif %}
 {% if object.uploadedfiles.all %}
 <p><b>Uploaded files</b></p>
