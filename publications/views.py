@@ -108,14 +108,22 @@ def isEnglish(s):
         return True
 
 def to_searchable(s):
-    s.replace('sh', 'š')
-    s.replace('s', 'ṣ')
-    s.replace('d', 'ḍ')
-    s.replace('th', 'ṯ')
-    s.replace('t', 'ṭ')
-    s.replace('ẓ', 'z')
-
-
+    s = re.sub('(sh|š)', '(sh|š)', s)
+    s = re.sub('(s|ṣ)', '(s|ṣ)', s)
+    s = re.sub('(d|ḍ)', '(d|ḍ)', s)
+    s = re.sub('(th|ṯ)', '(th|ṯ)', s)
+    s = re.sub('(t|ṭ)', '(t|ṭ)', s)
+    s = re.sub('(z|ẓ)', '(z|ẓ)', s)
+    s = re.sub('(g|h|ġ)', '(g|h|ġ)', s)
+    s = re.sub('(g|j)', '(g|j)', s)
+    s = re.sub('(kh|ḵ)', '(kh|ḵ)', s)
+    s = re.sub('(ā|aa|a)', '(ā|aa|a)', s)
+    s = re.sub('(á|a|aa|ae)', '(á|a|aa|ae)', s)
+    s = re.sub('(ī|ee|i|ie)', '(ī|ee|i|ie)', s)
+    s = re.sub('(ū|u|ou|oo|o|oe)', '(ū|u|ou|oo|o|oe)', s)
+    s = re.sub('(ah|a)', '(ah|a)', s)
+    s = re.sub('(dh|th|ḏ)', '(dh|th|ḏ)', s)
+    s = re.sub('(ḥ|h)', '(ḥ|h)', s)
     return s
 
 
@@ -154,6 +162,7 @@ class SearchResultsView(ListView):
         currently_owned_by = self.request.GET.getlist('currently_owned_by')
         currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
+        is_translated =  self.request.GET.get('is_translated')
         publications = Publication.objects.all()
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
@@ -184,7 +193,7 @@ class SearchResultsView(ListView):
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by), \
         ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), ('keywords', keywords), ('translated_from',translated_from)]
-        special_case = ['copyrights', 'page']
+        special_case = ['copyrights', 'page', 'is_translated']
        
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
             query_string = self.request.GET['q']
@@ -195,8 +204,11 @@ class SearchResultsView(ListView):
                   'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
                   'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'is_translated', 'ISBN_number', 'translated_from__name']
-            entry_query = get_query(query_string, search_fields)
             arabic_query = translator.translate(query_string, dest='ar').text
+            query_string = to_searchable(query_string)
+            #arabic_query = to_searchable(arabic_query)
+            entry_query = get_query(query_string, search_fields)
+
             arabic_query = get_query(arabic_query, search_fields)
             print('&&&&&&', query_string)
             #publications = publications.filter(entry_query)
@@ -211,7 +223,13 @@ class SearchResultsView(ListView):
                not field_name in special_case:
                 print('******', field_name)
                 arabic_query = translator.translate(get_value, dest='ar').text
-                publications = publications.filter(Q(**{field_name+'__icontains':get_value}) | Q(**{field_name+'__icontains':arabic_query}) )
+                get_value = to_searchable(get_value)
+                get_value = get_query(get_value, [field_name])
+                arabic_query = get_query(arabic_query, [field_name])
+                print('444444444', get_value)
+                publications = publications.filter(Q(get_value) | Q(arabic_query))
+                print('55555555555', publications)
+                #publications = publications.filter(Q(**{field_name+'__regex':get_value}) | Q(**{field_name+'__icontains':arabic_query}) )
         
         for field_name, list_object in in_variables:
             print('****', list_object)
@@ -221,15 +239,24 @@ class SearchResultsView(ListView):
                     
                     publications = publications.filter(**{field_name+'__in': list_object})
 
-
         if str(copyrights) != "unknown" and str(copyrights) != "None":
             val = False
-            if str(copyrights):
+            if str(copyrights) == "yes":
                 val = True
             print('11111', str(copyrights))
             publications = publications.filter(copyrights=val)
 
+        print('666666', publications)
+
+        if str(is_translated) != "unknown" and str(is_translated) != "None":
+            val = False
+            if str(is_translated) == "yes":
+                val = True
+            print('11111', str(is_translated))
+            publications = publications.filter(is_translated=val)
+
         publications = publications.distinct()
+
         return publications
 
 class KeywordCreate(CreateView):
@@ -783,7 +810,7 @@ def get_query(query_string, search_fields):
     for term in terms:
         or_query = None # Query to search for a given term in each field
         for field_name in search_fields:
-            q = Q(**{"%s__icontains" % field_name: term})
+            q = Q(**{"%s__regex" % field_name: term})
             if or_query is None:
                 or_query = q
             else:
