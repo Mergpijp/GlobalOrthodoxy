@@ -21,8 +21,8 @@ class WritingDirection(Enum):
     '''
     Enum class for lnaguage writing direction
     '''
-    L = "Left"
-    R = "Right"
+    Left = "Left"
+    Right = "Right"
 
 '''
 class BookType(Enum):

@@ -306,7 +306,7 @@ class NewCrispyForm(forms.ModelForm):
                 ),
                 Tab('Publishing information',
                     FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    'ISBN_numer',
+                    'ISBN_number',
                     'tyoe_of_collection',
                     'printed_by',
                     'published_by',
