@@ -49,15 +49,13 @@
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
     <tr>
-        <th>firstname </th>
-        <th>lastname </th> 
+        <th>name </th>
     </tr>
     </thead>
     <tbody>
 {% for translator in object.translator.all %}
     <tr>
-        <td>{{translator.firstname}}</td>
-        <td>{{translator.lastname}}</td>
+        <td>{{translator.name}}</td>
     </tr>
 {% empty %}
     </br>
