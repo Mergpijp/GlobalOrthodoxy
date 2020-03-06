@@ -10,22 +10,19 @@
         <th>Actions</th>  
     </tr>  
     </thead>
-<br>
-<center><a href="/publication/new" class="btn btn-primary">Add New Publication</a></center>    
-<br>      
-    <tbody>  
-{% for publication in publications %}  
+    <tbody>
+    <br />
+{% for publication in publications %}
     <tr>  
         <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>  
         <td>{{ publication.title_subtitle_transcription}}</td>  
         <td>{{ publication.title_subtitle_european }}</td>  
         <td>{{ publication.title_translation }}</td>  
-        <td> 
+        <td>
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
-            <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a class="confirm-delete-pub" href="/publication/{{ publication.id }}/delete">Delete</a>
+            <a href="/publication/{{ publication.id }}/restore">Restore</a>
         </td>  
-    </tr>  
+    </tr>
 {% endfor %}  
     </tbody>  
 </table>  

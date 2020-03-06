@@ -59,7 +59,9 @@ def PublicationDelete(request, pk):
     redirect to main publication page (Show)
     '''
     publication = Publication.objects.get(id=pk)
-    publication.delete()
+    #publication.delete()
+    publication.is_deleted = True
+    publication.save()
     return redirect('/publication/show')
 
 class PublicationCreate(CreateView):
@@ -139,7 +141,7 @@ class SearchResultsView(ListView):
     model = Publication
     template_name = 'publications/show.html'
     context_object_name = 'publications'
-    publications = Publication.objects.all()
+    publications = Publication.objects.filter(is_deleted=False)
     #paginator = Paginator(publications, 25)
     paginate_by = 10
       
@@ -164,7 +166,7 @@ class SearchResultsView(ListView):
         currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
         is_translated =  self.request.GET.get('is_translated')
-        publications = Publication.objects.all()
+        publications = Publication.objects.filter(is_deleted=False)
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
         keywords = self.request.GET.getlist('keywords')
@@ -258,10 +260,31 @@ class SearchResultsView(ListView):
 
         return publications
 
+class ThrashbinShow(ListView):
+    '''
+    Inherits ListView shows author mainpage (ThrashbinShow)
+    Uses context_object_name authors for all keywords.
+    '''
+    model = Publication
+    template_name = 'publications/thrashbin_show.html'
+    context_object_name = 'publications'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Publication.objects.filter(is_deleted=True)
+
+@login_required(login_url='/accounts/login/')
+def ThrashbinRestore(request, pk):
+    publication = Publication.objects.get(id=pk)
+    publication.is_deleted = False
+    publication.save()
+    return redirect('/thrashbin/show')
+
+
 class KeywordCreate(CreateView):
     '''
     Inherits CreateView uses a standard form for keywords.
-    redirects to the author main page (show).
+    redirects to the keyword main page (show).
     '''
     template_name = 'publications/form.html'
     form_class = KeywordForm
@@ -270,7 +293,7 @@ class KeywordCreate(CreateView):
 class KeywordShow(ListView):
     '''
     Inherits ListView shows author mainpage (keyword_show)
-    Uses context_object_name authors for all keywords.
+    Uses context_object_name keywords for all keywords.
     '''
     model = Keyword
     template_name = 'publications/keyword_show.html'

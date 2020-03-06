@@ -77,7 +77,7 @@ class Language(models.Model):
     name = models.CharField(max_length=100, blank=True)
     direction = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in WritingDirection])
     def __str__(self):
-        return 'name: ' + self.name + ' direction: ' + str(self.direction)
+        return 'name: ' + self.name
 
 class Author(models.Model):
     '''
@@ -228,6 +228,8 @@ class Publication(models.Model):
     comments = models.CharField(max_length=400, blank=True)
     keywords = models.ManyToManyField(Keyword)
     uploadedfiles = models.ManyToManyField(UploadedFile, blank=True, null=True)
+
+    is_deleted = models.BooleanField(default=False)
 
     created_by = models.ForeignKey('auth.User', related_name='publications', on_delete=models.CASCADE, blank=True, null=True)
 
