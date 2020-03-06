@@ -206,7 +206,7 @@ class Publication(models.Model):
     publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
     publication_city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
     publishing_organisation = models.CharField(max_length=100, blank=True)
-    possible_donor = models.CharField(max_length=100, blank=True)
+    donor = models.CharField(max_length=100, blank=True)
     affiliated_church = models.ManyToManyField(Church)
     language = models.ManyToManyField(Language)
     is_translated = models.NullBooleanField()

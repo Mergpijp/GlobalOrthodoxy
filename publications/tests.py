@@ -15,6 +15,8 @@ class PublicationModelTests(TestCase):
         user.save()
         Publication.objects.create(title_original='eindhoven')
         Publication.objects.create(title_original='لحضور المؤتمر الدولي العاشر ليونيكود')
+        Publication.objects.create(title_original='مزامير') #mazamir
+        #Publication.objects.create(title_original='صلوات') #salawat
         
     def test_title_publication(self):
         dutch = Publication.objects.get(title_original='eindhoven')
@@ -37,10 +39,14 @@ class PublicationModelTests(TestCase):
         response = client.get('/publication/show/', {'q': 'eindhoven'})
         #there should be one search result publication with the title 'eindhoven'
         self.assertEqual('eindhoven', response.context[-1]['publications'][0].title_original)
+        response = client.get('/publication/show/', {'q': 'mazamir'})
+        self.assertEqual('مزامير', response.context[-1]['publications'][0].title_original)
+        #response = client.get('/publication/show/', {'q': 'salawat'})
+        #self.assertEqual('صلوات', response.context[-1]['publications'][0].title_original)
 
     def test_publication_create(self):
         client = Client('127.0.0.1')
         response = client.login(username='admin', password='12345')
         response = client.get('/publication/show/')
-        self.assertEqual(2, response.context[-1]['publications'].count())
+        self.assertEqual(3, response.context[-1]['publications'].count())
     

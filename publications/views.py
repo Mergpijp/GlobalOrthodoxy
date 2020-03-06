@@ -121,6 +121,7 @@ def to_searchable(s):
     s = re.sub('(á|a|aa|ae)', '(á|a|aa|ae)', s)
     s = re.sub('(ī|ee|i|ie)', '(ī|ee|i|ie)', s)
     s = re.sub('(ū|u|ou|oo|o|oe)', '(ū|u|ou|oo|o|oe)', s)
+    s = re.sub("(3|')", "(3|')", s)
     s = re.sub('(ah|a)', '(ah|a)', s)
     s = re.sub('(dh|th|ḏ)', '(dh|th|ḏ)', s)
     s = re.sub('(ḥ|h)', '(ḥ|h)', s)
@@ -199,7 +200,7 @@ class SearchResultsView(ListView):
                 query_string = countries_dict[query_string.lower()]
             search_fields = ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__name', 'author__year_of_birth', \
                   'form_of_publication__name', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', \
-                  'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'possible_donor', 'content_description', 'description_of_illustration', \
+                  'language__name', 'language__direction', 'affiliated_church__name', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
                   'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'is_translated', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
             arabic_query = translator.translate(query_string, dest='ar').text
