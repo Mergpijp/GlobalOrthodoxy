@@ -225,7 +225,7 @@ class Publication(models.Model):
     contact_telephone_number = models.CharField(max_length=100, blank=True)
     contact_email = models.CharField(max_length=100, blank=True)
     contact_website = models.CharField(max_length=100, blank=True)
-    comments = models.CharField(max_length=200, blank=True)
+    comments = models.CharField(max_length=400, blank=True)
     keywords = models.ManyToManyField(Keyword)
     uploadedfiles = models.ManyToManyField(UploadedFile, blank=True, null=True)
 
