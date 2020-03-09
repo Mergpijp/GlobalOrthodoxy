@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword, ImageDetails
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field
 from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton, AppendedText
@@ -92,6 +92,11 @@ class PublicationForm(forms.ModelForm):
         search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Keyword.objects.all(), required=False)
+    image_details = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=ImageDetails,
+        search_fields=['name_of_source__icontains',],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=Keyword.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=Language,
         search_fields=['name__icontains',],
@@ -100,8 +105,8 @@ class PublicationForm(forms.ModelForm):
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
-                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
-                  'donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
+                  'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
+                  'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_translated', 'ISBN_number', 'translated_from')
         
@@ -123,6 +128,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['is_translated'].required = False
         self.fields['keywords'].required = False
         self.fields['translated_from'].required = False
+        self.fields['image_details'].required = False
       
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'  
@@ -144,6 +150,7 @@ class PublicationForm(forms.ModelForm):
                 ),
                 Tab('Publishing information',
                     'form_of_publication',
+                    'editor',
                     'ISBN_number',
                     'printed_by',
                     'published_by',
@@ -155,6 +162,7 @@ class PublicationForm(forms.ModelForm):
                Tab('Affiliation',
                    'donor',
                    'affiliated_church',
+                   'extra_info',
               ),
                Tab('Language',
                    'language',
@@ -257,7 +265,7 @@ class NewCrispyForm(forms.ModelForm):
     ), queryset=Owner.objects.all(), required=False)
     keywords = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Keyword,
-        search_fields=['description__icontains',],
+        search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Keyword.objects.all(), required=False)
     uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
@@ -265,6 +273,11 @@ class NewCrispyForm(forms.ModelForm):
         search_fields=['description__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False)
+    image_details = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=ImageDetails,
+        search_fields=['name_of_source__icontains',],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=ImageDetails.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=Language,
         search_fields=['name__icontains',],
@@ -289,6 +302,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['is_translated'].required = False
         self.fields['keywords'].required = False
         self.fields['translated_from'].required = False
+        self.fields['image_details'].required = False
 
         self.helper.layout = Layout(
             TabHolder(
@@ -306,6 +320,7 @@ class NewCrispyForm(forms.ModelForm):
                 ),
                 Tab('Publishing information',
                     FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    'editor',
                     'ISBN_number',
                     'tyoe_of_collection',
                     'printed_by',
@@ -318,6 +333,7 @@ class NewCrispyForm(forms.ModelForm):
                Tab('Affiliation',
                    'donor',
                    FieldWithButtons('affiliated_church', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/church/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                   'extra_info',
               ),
                Tab('Language',
                    FieldWithButtons('language', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
@@ -327,7 +343,7 @@ class NewCrispyForm(forms.ModelForm):
                    FieldWithButtons('content_genre', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/genre/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    FieldWithButtons('connected_to_special_occasion', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/special_occasion/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'description_of_illustration',
-                   'image_details',
+                   FieldWithButtons('image_details', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/image_detail/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'nr_of_pages',
                    FieldWithButtons('keywords', StrictButton('+', type='button', css_class='btn-primary',
                                                              onClick="window.open('/keyword/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
@@ -356,8 +372,8 @@ class NewCrispyForm(forms.ModelForm):
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
-                  'form_of_publication', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
-                  'donor', 'affiliated_church', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
+                  'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
+                  'donor', 'affiliated_church','extra_info', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_translated', 'ISBN_number', 'translated_from')
         #publication_country = forms.ChoiceField(choices=list(countries))
@@ -421,12 +437,12 @@ class AuthorForm(forms.ModelForm):
         if self.instance.id:
             self.fields['publications'].initial = Publication.objects.filter(author=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'year_of_birth', 'publications',
+        self.helper.layout = Layout('name', 'name_original_language', 'extra_info', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
     
     class Meta:
         model = Author
-        fields = ('name', 'year_of_birth')
+        fields = ('name', 'name_original_language', 'extra_info')
         
     def save(self, commit=True):
         instance = super().save(commit)
@@ -460,12 +476,12 @@ class TranslatorForm(forms.ModelForm):
         if self.instance.id:
             self.fields['publications'].initial = Publication.objects.filter(translator=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'publications',
+        self.helper.layout = Layout('name', 'name_original_language', 'extra_info', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
     
     class Meta:
         model = Translator
-        fields = ('name',)
+        fields = ('name', 'name_original_language', 'extra_info',)
         
     def save(self, commit=True):
         instance = super().save(commit)
@@ -825,8 +841,52 @@ class UploadedFileForm(forms.ModelForm):
             for pub in diff:
                instance.publication_set.remove(pub)
                
-        return instance 
-        
+        return instance
+
+
+class ImageDetailsForm(forms.ModelForm):
+    '''
+        Form to create or edit an uploaded file. Can add Publications to the to be created uploaded file object.
+        If its a uploaded file edit load all linked publications.
+        If its a uploaded file create do not load any publications at start.
+    '''
+    publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
+                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
+    ), queryset=Publication.objects.all(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(image_details=self.instance)
+        self.helper = FormHelper()
+        self.helper.layout = Layout('name_of_source', 'contact_of_source', 'copyright_issues', 'publications',
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white')))
+
+    class Meta:
+        model = ImageDetails
+        fields = ('name_of_source', 'contact_of_source', 'copyright_issues',)
+
+    def save(self, commit=True):
+        instance = super().save(commit)
+
+        if self.cleaned_data['publications'].count() > instance.publication_set.count():
+            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
+            for pub in diff:
+                instance.publication_set.add(pub)
+
+        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
+            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
+            if not diff:
+                for pub in instance.publication_set:
+                    instance.publication_set.remove(pub)
+            for pub in diff:
+                instance.publication_set.remove(pub)
+
+        return instance
+
 
 class IllustrationLayoutTypeForm(forms.ModelForm):
     '''

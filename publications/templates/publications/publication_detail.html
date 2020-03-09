@@ -50,12 +50,16 @@
     <thead class="thead-light"> 
     <tr>
         <th>name </th>
+        <th>name original language</th>
+        <th>extra info</th>
     </tr>
     </thead>
     <tbody>
 {% for translator in object.translator.all %}
     <tr>
         <td>{{translator.name}}</td>
+        <td>{{translator.name_original_language}}</td>
+        <td>{{translator.extra_info}}</td>
     </tr>
 {% empty %}
     </br>
@@ -64,7 +68,6 @@
 </table>  
 </br>  
 {% endif %}
-{% if object.is_translated %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">
     <tr>
@@ -73,11 +76,16 @@
     </thead>
     <tbody>
     <tr>
-        <td>{{object.is_translated}}</td>
+        {% if object.is_translated %}
+        <td>Yes</td>
+        {% elif object.is_translated == None %}
+        <td>Unknown</td>
+        {% else %}
+        <td>No</td>
+        {% endif %}
     </tr>
     </tbody>
 </table>
-{% endif %}
 {% if object.translated_from %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">
@@ -113,6 +121,20 @@
     </tbody>
 </table>   
 </br> 
+{% endif %}
+{% if object.editor %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>editor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.editor}}</td>
+    </tr>
+    </tbody>
+</table>
 {% endif %}
 {% if object.ISBN_number %}
 <table class="table table-striped table-bordered table-sm">
@@ -245,6 +267,20 @@
     </tbody>
 </table>   
 </br> 
+{% endif %}
+{% if object.extra_info %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>extra info</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.extra_info}}</td>
+    </tr>
+    </tbody>
+</table>
 {% endif %}
 {% if object.language.all %}
 <p><b>Languages</b></p>
@@ -426,7 +462,6 @@
     </tbody>
 </table>
 {% endif %}
-{% if object.copyrights %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
     <tr>
@@ -435,11 +470,16 @@
     </thead>
     <tbody>
     <tr>
-        <td>{{object.copyrights}}</td>
+        {% if object.copyrights %}
+        <td>Yes</td>
+        {% elif object.copyrights == None %}
+        <td>Unknown</td>
+        {% else %}
+        <td>No</td>
+        {% endif %}
     </tr>
     </tbody>
 </table>
-{% endif %}
 {% if object.currently_owned_by.all %}
 <p><b>Currently owned by</b></p>
 <table class="table table-striped table-bordered table-sm">

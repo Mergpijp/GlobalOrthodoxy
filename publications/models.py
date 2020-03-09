@@ -15,7 +15,7 @@ class FormOfPublication(models.Model):
     name = models.CharField(max_length=100, blank=True)
 	
     def __str__(self):
-        return 'Form of Publication: ' + self.name
+        return self.name
 
 class WritingDirection(Enum):
     '''
@@ -85,19 +85,22 @@ class Author(models.Model):
     Year of birth as integer between 1850 and current year.
     '''
     name = models.CharField(max_length=100, blank=True)
-    year_of_birth = models.IntegerField(('year_of_birth'), blank=True, null=True, validators=[MinValueValidator(MINIMUM_YEAR), max_value_current_year])
+    name_original_language = models.CharField(max_length=100, blank=True)
+    extra_info = models.CharField(max_length=400, blank=True)
 	
     def __str__(self):
-        return 'name: ' + self.name + ' date of birth: ' + str(self.year_of_birth)
+        return 'name: ' + self.name +  'name original language: ' + self.name_original_language
 
 class Translator(models.Model):
     '''
     Manytomany field class with two fields firstname and lastname both charfields.
     '''
     name = models.CharField(max_length=100, blank=True)
+    name_original_language = models.CharField(max_length=100, blank=True)
+    extra_info = models.CharField(max_length=400, blank=True)
    
     def __str__(self):
-        return 'name: ' + self.name
+        return 'name: ' + self.name +  'name original language: ' + self.name_original_language
 
 class Location(models.Model):
     '''
@@ -178,7 +181,7 @@ class UploadedFile(models.Model):
     '''
     Manytomany field class with three fields.
     A charfield, filefield and DateTimeField.
-    The DateTimeField will be automatically add.
+    The DateTimeField will be automatically added.
     '''
     description = models.CharField(max_length=255, blank=True)
     file = models.FileField(upload_to='files', blank=True, null=True)
@@ -186,6 +189,25 @@ class UploadedFile(models.Model):
 
     def __str__(self):
         return self.description
+
+CHOICES = (
+    (None, "Unknown"),
+    (True, "Yes"),
+    (False, "No")
+)
+
+class ImageDetails(models.Model):
+    '''
+    Manytomany field class with three fields.
+    three charfields.
+    '''
+    name_of_source = models.CharField(max_length=100, blank=True)
+    contact_of_source = models.CharField(max_length=100, blank=True)
+    copyright_issues = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.name_of_source
+
 
 class Publication(models.Model):
     '''
@@ -199,6 +221,7 @@ class Publication(models.Model):
     author = models.ManyToManyField(Author)
     translator = models.ManyToManyField(Translator)
     form_of_publication = models.ManyToManyField(FormOfPublication)
+    editor = models.CharField(max_length=100, blank=True)
     ISBN_number = models.CharField(max_length=100, blank=True)
     printed_by = models.CharField(max_length=100, blank=True)
     published_by = models.CharField(max_length=100, blank=True)
@@ -208,14 +231,15 @@ class Publication(models.Model):
     publishing_organisation = models.CharField(max_length=100, blank=True)
     donor = models.CharField(max_length=100, blank=True)
     affiliated_church = models.ManyToManyField(Church)
+    extra_info = models.CharField(max_length=400, blank=True)
     language = models.ManyToManyField(Language)
-    is_translated = models.NullBooleanField()
+    is_translated = models.NullBooleanField(choices=CHOICES)
     translated_from = models.ForeignKey(Language,  on_delete=models.CASCADE, related_name='translated_from', null=True, blank=True)
     content_description = models.CharField(max_length=300, blank=True)
     content_genre = models.ManyToManyField(Genre)
     connected_to_special_occasion = models.ManyToManyField(SpecialOccasion)
     description_of_illustration = models.CharField(max_length=300, blank=True)
-    image_details = models.CharField(max_length=300, blank=True)
+    image_details = models.ManyToManyField(ImageDetails)#models.CharField(max_length=300, blank=True)
     nr_of_pages = models.IntegerField(blank=True, null=True)
     collection_date = models.CharField(max_length=100, blank=True)
     collection_country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='collections', null=True, blank=True)

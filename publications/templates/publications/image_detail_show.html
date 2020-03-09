@@ -3,24 +3,24 @@
 <table class="table table-striped table-bordered table-sm">  
     <thead class="thead-light">  
     <tr>  
-        <th>Name </th>
-        <th>Name original language</th>
-        <th>Extra info</th>
+        <th>name of source </th>
+        <th>contact of source </th>
+        <th>copyright issues</th>
         <th>Actions</th>  
     </tr>  
-    </thead>
-<br>  
-<center><a href="/translator/new" class="btn btn-primary">Add New Translator</a></center>  
-<br>    
+    </thead> 
+<br>
+<center><a href="/image_detail/new" class="btn btn-primary">Add New Image detail</a></center>
+<br>      
     <tbody>  
-{% for translator in translators %}  
+{% for imagedetail in imagedetails %}
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{translator.name}}">{{ translator.name }}</a></td>
-        <td><a href="{% url 'publication-show' %}?q={{translator.name_original_language}}">{{ translator.name_original_language }}</a></td>
-        <td><a href="{% url 'publication-show' %}?q={{translator.extra_info}}">{{ translator.extra_info }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{imagedetail.name_of_source}}">{{ imagedetail.name_of_source }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{imagedetail.contact_of_source}}">{{ imagedetail.contact_of_source }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{imagedetail.copyright_issues}}">{{ imagedetail.copyright_issues }}</a></td>
         <td>  
-            <a href="/translator/{{ translator.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
-            <a class="confirm-delete" href="/translator/{{ translator.id }}/delete">Delete</a>
+            <a href="/image_detail/{{ imagedetail.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
+            <a class="confirm-delete" href="/image_detail/{{ imagedetail.id }}/delete">Delete</a>
         </td>  
     </tr>  
 {% endfor %}  

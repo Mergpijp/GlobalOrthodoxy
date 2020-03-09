@@ -4,7 +4,8 @@
     <thead class="thead-light">  
     <tr>  
         <th>Name </th>
-        <th>Year of birth</th>  
+        <th>Name original language</th>
+        <th>Extra info</th>
         <th>Actions</th>  
     </tr>  
     </thead> 
@@ -15,7 +16,8 @@
 {% for author in authors %}  
     <tr>  
         <td><a href="{% url 'publication-show' %}?q={{author.name}}">{{ author.name }}</a></td>
-        <td><a href="{% url 'publication-show' %}?q={{author.year_of_birth}}">{{ author.year_of_birth }}</a></td>  
+        <td><a href="{% url 'publication-show' %}?q={{author.name_original_language}}">{{ author.name_original_language }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{author.extra_info}}">{{ author.extra_info }}</a></td>
         <td>  
             <a href="/author/{{ author.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a class="confirm-delete" href="/author/{{ author.id }}/delete">Delete</a>
