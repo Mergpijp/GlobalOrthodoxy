@@ -372,19 +372,29 @@
     </tbody>
 </table>
 {% endif %}
-{% if object.image_details %}
+{% if object.image_details.all %}
+<p><b>Image Details</b></p>
 <table class="table table-striped table-bordered table-sm">
-    <thead class="thead-light"> 
+    <thead class="thead-light">
     <tr>
-        <th>image details</th> 
+        <th>Name of source</th>
+        <th>Contact of source</th>
+        <th>Copyright issues</th>
     </tr>
     </thead>
     <tbody>
+{% for image_detail in object.image_details.all %}
     <tr>
-        <td>{{object.image_details}}</td>
+        <td>{{image_detail.name_of_source}}</td>
+        <td>{{image_detail.contact_of_source}}</td>
+        <td>{{image_detail.copyright_issues}}</td>
     </tr>
+{% empty %}
+    </br>
+{% endfor %}
     </tbody>
 </table>
+</br>
 {% endif %}
 {% if object.nr_of_pages %}
 <table class="table table-striped table-bordered table-sm">
