@@ -3,9 +3,8 @@
 <table class="table table-striped table-bordered table-sm">  
     <thead class="thead-light">  
     <tr>  
-        <th>name of source </th>
-        <th>contact of source </th>
-        <th>copyright issues</th>
+        <th>source of photo/illustration </th>
+        <th>photographer</th>
         <th>Actions</th>  
     </tr>  
     </thead> 
@@ -15,9 +14,8 @@
     <tbody>  
 {% for imagedetail in imagedetails %}
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{imagedetail.name_of_source}}">{{ imagedetail.name_of_source }}</a></td>
-        <td><a href="{% url 'publication-show' %}?q={{imagedetail.contact_of_source}}">{{ imagedetail.contact_of_source }}</a></td>
-        <td><a href="{% url 'publication-show' %}?q={{imagedetail.copyright_issues}}">{{ imagedetail.copyright_issues }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{imagedetail.source_of_photo_or_illustration}}">{{ imagedetail.source_of_photo_or_illustration }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{imagedetail.photographer}}">{{ imagedetail.photographer }}</a></td>
         <td>  
             <a href="/image_detail/{{ imagedetail.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete" href="/image_detail/{{ imagedetail.id }}/delete">Delete</a>

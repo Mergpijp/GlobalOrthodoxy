@@ -201,12 +201,11 @@ class ImageDetails(models.Model):
     Manytomany field class with three fields.
     three charfields.
     '''
-    name_of_source = models.CharField(max_length=100, blank=True)
-    contact_of_source = models.CharField(max_length=100, blank=True)
-    copyright_issues = models.CharField(max_length=100, blank=True)
+    source_of_photo_or_illustration = models.CharField(max_length=100, blank=True)
+    photographer = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return self.name_of_source
+        return self.source_of_photo_or_illustration
 
 
 class Publication(models.Model):
@@ -233,7 +232,7 @@ class Publication(models.Model):
     affiliated_church = models.ManyToManyField(Church)
     extra_info = models.CharField(max_length=400, blank=True)
     language = models.ManyToManyField(Language)
-    is_translated = models.NullBooleanField(choices=CHOICES)
+    is_a_translation = models.NullBooleanField(choices=CHOICES)
     translated_from = models.ForeignKey(Language,  on_delete=models.CASCADE, related_name='translated_from', null=True, blank=True)
     content_description = models.CharField(max_length=300, blank=True)
     content_genre = models.ManyToManyField(Genre)

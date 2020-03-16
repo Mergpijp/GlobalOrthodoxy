@@ -94,7 +94,7 @@ class PublicationForm(forms.ModelForm):
     ), queryset=Keyword.objects.all(), required=False)
     image_details = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=ImageDetails,
-        search_fields=['name_of_source__icontains',],
+        search_fields=['source_of_photo_or_illustration',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Keyword.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
@@ -108,7 +108,7 @@ class PublicationForm(forms.ModelForm):
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_translated', 'ISBN_number', 'translated_from')
+                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_a_translation', 'ISBN_number', 'translated_from')
         
     def __init__(self, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
@@ -125,7 +125,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['uploadedfiles'].required = False
         self.fields['publication_country'].required = False
         self.fields['collection_country'].required = False
-        self.fields['is_translated'].required = False
+        self.fields['is_a_translation'].required = False
         self.fields['keywords'].required = False
         self.fields['translated_from'].required = False
         self.fields['image_details'].required = False
@@ -145,12 +145,15 @@ class PublicationForm(forms.ModelForm):
                 Tab('Author',
                     'author',
                     'translator',
-                    'is_translated',
+                    'is_a_translation',
                     'translated_from',
+                    'editor',
+                ),
+                Tab('Language',
+                    'language',
                 ),
                 Tab('Publishing information',
                     'form_of_publication',
-                    'editor',
                     'ISBN_number',
                     'printed_by',
                     'published_by',
@@ -163,9 +166,6 @@ class PublicationForm(forms.ModelForm):
                    'donor',
                    'affiliated_church',
                    'extra_info',
-              ),
-               Tab('Language',
-                   'language',
               ),
                Tab('Content',
                    'content_description',
@@ -275,7 +275,7 @@ class NewCrispyForm(forms.ModelForm):
     ), queryset=UploadedFile.objects.all(), required=False)
     image_details = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=ImageDetails,
-        search_fields=['name_of_source__icontains',],
+        search_fields=['source_of_photo_or_illustration__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=ImageDetails.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
@@ -299,7 +299,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
         self.fields['publication_country'].required = False
-        self.fields['is_translated'].required = False
+        self.fields['is_a_translation'].required = False
         self.fields['keywords'].required = False
         self.fields['translated_from'].required = False
         self.fields['image_details'].required = False
@@ -315,12 +315,16 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Author',
                     FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    'is_translated',
+                    'is_a_translation',
                     FieldWithButtons('translated_from', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    'editor',
+                ),
+                Tab('Language',
+                    FieldWithButtons('language', StrictButton('+', type='button', css_class='btn-primary',
+                                                              onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                 ),
                 Tab('Publishing information',
                     FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    'editor',
                     'ISBN_number',
                     'tyoe_of_collection',
                     'printed_by',
@@ -334,9 +338,6 @@ class NewCrispyForm(forms.ModelForm):
                    'donor',
                    FieldWithButtons('affiliated_church', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/church/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'extra_info',
-              ),
-               Tab('Language',
-                   FieldWithButtons('language', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
               ),
                Tab('Content',
                    'content_description',
@@ -375,7 +376,7 @@ class NewCrispyForm(forms.ModelForm):
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church','extra_info', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_translated', 'ISBN_number', 'translated_from')
+                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_a_translation', 'ISBN_number', 'translated_from')
         #publication_country = forms.ChoiceField(choices=list(countries))
 
 
@@ -862,12 +863,12 @@ class ImageDetailsForm(forms.ModelForm):
         if self.instance.id:
             self.fields['publications'].initial = Publication.objects.filter(image_details=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name_of_source', 'contact_of_source', 'copyright_issues', 'publications',
+        self.helper.layout = Layout('source_of_photo_or_illustration', 'photographer', 'publications',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='button white')))
 
     class Meta:
         model = ImageDetails
-        fields = ('name_of_source', 'contact_of_source', 'copyright_issues',)
+        fields = ('source_of_photo_or_illustration', 'photographer',)
 
     def save(self, commit=True):
         instance = super().save(commit)

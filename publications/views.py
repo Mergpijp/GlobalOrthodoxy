@@ -165,7 +165,7 @@ class SearchResultsView(ListView):
         currently_owned_by = self.request.GET.getlist('currently_owned_by')
         currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
-        is_translated =  self.request.GET.get('is_translated')
+        is_a_translation =  self.request.GET.get('is_a_translation')
         publications = Publication.objects.filter(is_deleted=False)
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
@@ -195,7 +195,7 @@ class SearchResultsView(ListView):
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by), ('image_details', image_details),\
         ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), ('keywords', keywords), ('translated_from',translated_from)]
-        special_case = ['copyrights', 'page', 'is_translated']
+        special_case = ['copyrights', 'page', 'is_a_translation']
        
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
             query_string = self.request.GET['q']
@@ -204,8 +204,8 @@ class SearchResultsView(ListView):
             search_fields = ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__name', 'author__name_original_language', 'author__extra_info', \
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'image_details__name_of_source', 'image_details__contact_of_source', 'image_details__copyright_issues', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'is_translated', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
+                  'image_details__source_of_photo_or_illustration', 'image_details__photographer', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
             arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)
@@ -250,12 +250,12 @@ class SearchResultsView(ListView):
 
         print('666666', publications)
 
-        if str(is_translated) != "unknown" and str(is_translated) != "None":
+        if str(is_a_translation) != "unknown" and str(is_a_translation) != "None":
             val = False
-            if str(is_translated) == "yes":
+            if str(is_a_translation) == "yes":
                 val = True
-            print('11111', str(is_translated))
-            publications = publications.filter(is_translated=val)
+            print('11111', str(is_a_translation))
+            publications = publications.filter(is_a_translation=val)
 
         publications = publications.distinct()
 
