@@ -94,7 +94,7 @@ class PublicationForm(forms.ModelForm):
     ), queryset=Keyword.objects.all(), required=False)
     image_details = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=ImageDetails,
-        search_fields=['source_of_photo_or_illustration',],
+        search_fields=['source_of_photo_or_illustration__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Keyword.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
