@@ -28,14 +28,16 @@
     <thead class="thead-light"> 
     <tr>
         <th>name </th>
-        <th>year of birth</th>
+        <th>name original language</th>
+        <th>extra info</th>
     </tr>
     </thead>
     <tbody>
 {% for author in object.author.all %}
     <tr>
         <td>{{author.name}}</td>
-        <td>{{author.year_of_birth}}</td>
+        <td>{{author.name_original_language}}</td>
+        <td>{{author.extra_info}}</td>
     </tr>
 {% empty %}
      </br>
