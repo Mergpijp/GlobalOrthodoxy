@@ -192,7 +192,7 @@ class PublicationForm(forms.ModelForm):
                  )
             ),
             ButtonHolder(
-                Submit('search', 'Search', css_class='button white')
+                Submit('search', 'Search', css_class='btn-danger')
             )
         )
 
@@ -365,7 +365,7 @@ class NewCrispyForm(forms.ModelForm):
                  )
             ),
             ButtonHolder(
-                Submit('Submit', 'Submit', css_class='button white')
+                Submit('Submit', 'Submit', css_class='btn-danger')
             )
         )
 
@@ -399,7 +399,7 @@ class KeywordForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(keywords=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white')))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
         model = Keyword
@@ -439,7 +439,7 @@ class AuthorForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(author=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'name_original_language', 'extra_info', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = Author
@@ -478,7 +478,7 @@ class TranslatorForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(translator=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'name_original_language', 'extra_info', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = Translator
@@ -517,7 +517,7 @@ class FormOfPublicationForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(form_of_publication=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = FormOfPublication
@@ -567,7 +567,7 @@ class CityForm(forms.ModelForm):
         self.fields['country'].required = False
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'country', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = City
@@ -609,7 +609,7 @@ class ChurchForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(affiliated_church=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = Church
@@ -652,7 +652,7 @@ class LanguageForm(forms.ModelForm):
         
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'direction', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = Language
@@ -694,7 +694,7 @@ class GenreForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(content_genre=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = Genre
@@ -736,7 +736,7 @@ class SpecialOccasionForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(connected_to_special_occasion=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = SpecialOccasion
@@ -778,7 +778,7 @@ class OwnerForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(currently_owned_by=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = Owner
@@ -820,7 +820,7 @@ class UploadedFileForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(uploadedfiles=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('description', 'file', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = UploadedFile
@@ -864,7 +864,7 @@ class ImageDetailsForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(image_details=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('source_of_photo_or_illustration', 'photographer', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white')))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
         model = ImageDetails
@@ -907,7 +907,7 @@ class IllustrationLayoutTypeForm(forms.ModelForm):
             self.fields['publications'].initial = Publication.objects.filter(illustration_and_layout_type=self.instance)        
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='button white') ))
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
     
     class Meta:
         model = IllustrationLayoutType
