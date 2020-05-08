@@ -40,9 +40,7 @@
               Navigate
         </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/">Publication Search</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="/publication/show/">Publication</a>
+          <a class="dropdown-item" href="/publication/show/">Titles</a>
           <a class="dropdown-item" href="/author/show/">Author</a>
           <a class="dropdown-item" href="/translator/show/">Translator</a>
           <a class="dropdown-item" href="/form_of_publication/show/">Form of Publication</a>
@@ -51,7 +49,6 @@
           <a class="dropdown-item" href="/language/show/">Language</a>
           <a class="dropdown-item" href="/genre/show/">Genre</a>
           <a class="dropdown-item" href="/special_occasion/show/">Special Occasion</a>
-          <a class="dropdown-item" href="/image_detail/show/">Image Detail</a>
           <a class="dropdown-item" href="/owner/show/">Owner</a>
           <a class="dropdown-item" href="/keyword/show/">Keyword</a>
           <a class="dropdown-item" href="/uploadedfile/show/">Uploaded File</a>
@@ -59,12 +56,18 @@
           <a class="dropdown-item" href="/thrashbin/show/">Thrashbin</a>
     </div>
     </ul>
+      <li class="nav-item">
+        <a class="nav-link" href="/publication/new/">New Publication</a>
+      </li>
     </ul>
     <ul class="navbar-nav mr-auto">
-                <a class="navbar-brand" href="/">
-      <img src="{% static 'logo/radboud2.png'%}" alt="">
-    </a>
+        <div class="'navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'logo/radboud2.png'%}" alt="">
+            </a>
+       </div>
     </ul>
+
     <form class="form-inline my-2 my-lg-0" action="{% url 'publication-show' %}" method="get">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" style="Text-align: start;unicode-bidi: plaintext;">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>

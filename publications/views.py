@@ -2,13 +2,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
-from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword, ImageDetails
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
 from .forms import PublicationForm, NewCrispyForm, KeywordForm,\
-    AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, ImageDetailsForm
+    AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -49,7 +49,13 @@ class PublicationUpdate(UpdateView):
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
     model = Publication
-    success_url = '/publication/show/'
+    #success_url = '/publication/show/'
+
+    def get_success_url(self):
+        """Detect the submit button used and act accordingly"""
+        if 'next' in self.request.POST:
+            return '/publication/show/'
+        return '/publication/' + str(self.object.id) + '/edit/'
 
 @login_required(login_url='/accounts/login/')
 def PublicationDelete(request, pk):
@@ -73,11 +79,17 @@ class PublicationCreate(CreateView):
     '''
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
-    success_url = '/publication/show/'
+    #success_url = '/publication/show/'
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
+
+    def get_success_url(self):
+        """Detect the submit button used and act accordingly"""
+        if 'next' in self.request.POST:
+            return '/publication/show/'
+        return '/publication/' + str(self.object.id) + '/edit/'
 
 class PublicationDetailView(DetailView):
     '''
@@ -109,6 +121,7 @@ def isEnglish(s):
     else:
         return True
 
+
 def to_searchable(s):
     s = re.sub('(sh|š)', '(sh|š)', s)
     s = re.sub('(s|ṣ)', '(s|ṣ)', s)
@@ -127,6 +140,9 @@ def to_searchable(s):
     s = re.sub('(ah|a)', '(ah|a)', s)
     s = re.sub('(dh|th|ḏ)', '(dh|th|ḏ)', s)
     s = re.sub('(ḥ|h)', '(ḥ|h)', s)
+    #s = re.match("G[a-b].*", s)
+    #x = re.compile(re.escape(s), re.IGNORECASE)
+    #s = re.sub(x, s, s)
     return s
 
 
@@ -171,8 +187,6 @@ class SearchResultsView(ListView):
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
         keywords = self.request.GET.getlist('keywords')
         keywords = Keyword.objects.filter(pk__in=keywords).all()
-        image_details = self.request.GET.getlist('image_details')
-        image_details = ImageDetails.objects.filter(pk__in=image_details).all()
         translated_from = self.request.GET.getlist('translated_From')
         translated_from = Language.objects.filter(pk__in=translated_from).all()
         city = self.request.GET.getlist('publication_city')
@@ -193,7 +207,7 @@ class SearchResultsView(ListView):
 
         exclude = ['csrfmiddlewaretoken','search']
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
-        , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by), ('image_details', image_details),\
+        , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by),\
         ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), ('keywords', keywords), ('translated_from',translated_from)]
         special_case = ['copyrights', 'page', 'is_a_translation']
        
@@ -204,8 +218,8 @@ class SearchResultsView(ListView):
             search_fields = ['title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author__name', 'author__name_original_language', 'author__extra_info', \
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'image_details__source_of_photo_or_illustration', 'image_details__photographer', 'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
+                  'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
             arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)
@@ -764,54 +778,6 @@ class UploadedFileUpdate(UpdateView):
     model = UploadedFile
     success_url = '/uploadedfile/show/'
 
-
-class ImageDetailCreate(CreateView):
-    '''
-    Inherits CreateView. Uses ImageDetailsform as layout.
-    redirects to main page (show)
-    '''
-    template_name = 'publications/form.html'
-    form_class = ImageDetailsForm
-    success_url = '/image_detail/show/'
-
-
-class ImageDetailShow(ListView):
-    '''
-    Inherits ListView.
-    Uses ImageDetail as model.
-    Uses image_detail_show.html as template_name.
-    Set context_object_name to imagedetails.
-    '''
-    model = ImageDetails
-    template_name = 'publications/image_detail_show.html'
-    context_object_name = 'imagedetails'
-    paginate_by = 10
-
-
-@login_required(login_url='/accounts/login/')
-def ImageDetailDelete(request, pk):
-    '''
-    Arguments: request, pk
-    Selects imagedetail object by id equals pk.
-    Deletes the object.
-    redirects to main page. (show)
-    '''
-    imagedetail = ImageDetails.objects.get(id=pk)
-    imagedetail.delete()
-    return redirect('/image_detail/show')
-
-
-class ImageDetailUpdate(UpdateView):
-    '''
-    Inherits UpdateView uses a standard form (crispy form)
-    Uses ImageDetailForm as layout. And model ImageDetail.
-    redirects to local main page. (show)
-    '''
-    template_name = 'publications/form.html'
-    form_class = ImageDetailsForm
-    model = ImageDetails
-    success_url = '/image_detail/show/'
-
 class IllustrationLayoutTypeCreate(CreateView):
     '''
     Inherits CreateView. Uses IllustrationLayoutTypeForm as layout.
@@ -881,7 +847,7 @@ def get_query(query_string, search_fields):
     for term in terms:
         or_query = None # Query to search for a given term in each field
         for field_name in search_fields:
-            q = Q(**{"%s__regex" % field_name: term})
+            q = Q(**{"%s__iregex" % field_name: term})
             if or_query is None:
                 or_query = q
             else:

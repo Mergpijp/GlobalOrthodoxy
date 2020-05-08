@@ -1,16 +1,16 @@
 from django import forms
 
-from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword, ImageDetails
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field, Button
 from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton, AppendedText
 from django.forms.models import inlineformset_factory
-from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, ModelSelect2TagWidget, Select2Widget, ModelSelect2Widget, HeavySelect2MultipleWidget
+from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, ModelSelect2TagWidget, Select2Widget, ModelSelect2Widget, HeavySelect2MultipleWidget, ModelSelect2TagWidget
 #from django_countries.fields import CountryField
 #from django_countries import countries
 from django_countries.widgets import CountrySelectWidget
 from countries_plus.models import Country
-
+from django.utils.encoding import force_text
 
 class PublicationForm(forms.ModelForm):
     '''
@@ -92,11 +92,6 @@ class PublicationForm(forms.ModelForm):
         search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Keyword.objects.all(), required=False)
-    image_details = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        model=ImageDetails,
-        search_fields=['source_of_photo_or_illustration__icontains',],
-        attrs={'data-minimum-input-length': 0},
-    ), queryset=Keyword.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=Language,
         search_fields=['name__icontains',],
@@ -107,8 +102,8 @@ class PublicationForm(forms.ModelForm):
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
-                  'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_a_translation', 'ISBN_number', 'translated_from')
+                  'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
+                  'contact_email', 'contact_website','general_comments', 'team_comments', 'uploadedfiles', 'keywords', 'is_a_translation', 'ISBN_number', 'translated_from')
         
     def __init__(self, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
@@ -128,7 +123,6 @@ class PublicationForm(forms.ModelForm):
         self.fields['is_a_translation'].required = False
         self.fields['keywords'].required = False
         self.fields['translated_from'].required = False
-        self.fields['image_details'].required = False
       
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'  
@@ -172,7 +166,6 @@ class PublicationForm(forms.ModelForm):
                    'content_genre',
                    'connected_to_special_occasion',
                    'description_of_illustration',
-                   'image_details',
                    'nr_of_pages',
                    'keywords',
               ),
@@ -185,16 +178,39 @@ class PublicationForm(forms.ModelForm):
                    'contact_telephone_number',
                    'contact_email',
                    'contact_website',
-                   'comments',
              ),
               Tab('Files',
                   'uploadedfiles',
+
+             ),
+             Tab('Comments',
+                 'general_comments',
+                 'team_comments',
                  )
             ),
             ButtonHolder(
                 Submit('search', 'Search', css_class='btn-danger')
             )
         )
+
+
+class KeywordSelect2TagWidget(ModelSelect2TagWidget):
+    queryset = Keyword.objects.all()
+
+    def value_from_datadict(self, data, files, name):
+        print(self)
+        print(data)
+        print(files)
+        print(name)
+        values = super().value_from_datadict(data, files, name)
+        queryset = self.get_queryset()
+        pks = queryset.filter(**{'pk__in': list(values)}).values_list('pk', flat=True)
+        cleaned_values = []
+        for val in values:
+            if force_text(val) not in pks:
+                val = queryset.create(name=val).pk
+            cleaned_values.append(val)
+        return cleaned_values
 
 class NewCrispyForm(forms.ModelForm):
     '''
@@ -264,20 +280,16 @@ class NewCrispyForm(forms.ModelForm):
         attrs={'data-minimum-input-length': 0},
     ), queryset=Owner.objects.all(), required=False)
     keywords = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+    #keywords = forms.ModelMultipleChoiceField(widget=KeywordSelect2TagWidget(
         model=Keyword,
         search_fields=['name__icontains',],
-        attrs={'data-minimum-input-length': 0},
-    ), queryset=Keyword.objects.all(), required=False)
+        attrs={'data-minimum-input-length': 0,},
+    ),queryset=Keyword.objects.all(), required=False)
     uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=UploadedFile,
         search_fields=['description__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False)
-    image_details = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        model=ImageDetails,
-        search_fields=['source_of_photo_or_illustration__icontains',],
-        attrs={'data-minimum-input-length': 0},
-    ), queryset=ImageDetails.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=Language,
         search_fields=['name__icontains',],
@@ -285,7 +297,6 @@ class NewCrispyForm(forms.ModelForm):
     ), queryset=Language.objects.all(), required=False)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.helper = FormHelper()
         self.fields['author'].required = False
         self.fields['translator'].required = False
@@ -302,7 +313,6 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['is_a_translation'].required = False
         self.fields['keywords'].required = False
         self.fields['translated_from'].required = False
-        self.fields['image_details'].required = False
 
         self.helper.layout = Layout(
             TabHolder(
@@ -313,40 +323,39 @@ class NewCrispyForm(forms.ModelForm):
                 'title_translation',
                 ),
                 Tab('Author',
-                    FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'is_a_translation',
-                    FieldWithButtons('translated_from', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    FieldWithButtons('translated_from', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'editor',
                 ),
                 Tab('Language',
-                    FieldWithButtons('language', StrictButton('+', type='button', css_class='btn-primary',
+                    FieldWithButtons('language', StrictButton('+', type='button', css_class='btn-danger',
                                                               onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                 ),
                 Tab('Publishing information',
-                    FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'ISBN_number',
                     'tyoe_of_collection',
                     'printed_by',
                     'published_by',
                     'publication_date',
                     'publication_country',
-                    FieldWithButtons('publication_city', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/city/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    FieldWithButtons('publication_city', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/city/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'publishing_organisation',
                ),
                Tab('Affiliation',
                    'donor',
-                   FieldWithButtons('affiliated_church', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/church/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                   FieldWithButtons('affiliated_church', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/church/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'extra_info',
               ),
                Tab('Content',
                    'content_description',
-                   FieldWithButtons('content_genre', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/genre/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                   FieldWithButtons('connected_to_special_occasion', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/special_occasion/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                   FieldWithButtons('content_genre', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/genre/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                   FieldWithButtons('connected_to_special_occasion', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/special_occasion/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'description_of_illustration',
-                   FieldWithButtons('image_details', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/image_detail/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'nr_of_pages',
-                   FieldWithButtons('keywords', StrictButton('+', type='button', css_class='btn-primary',
+                   FieldWithButtons('keywords', StrictButton('+', type='button', css_class='btn-danger',
                                                              onClick="window.open('/keyword/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
               ),
                Tab('Collection info',
@@ -354,29 +363,39 @@ class NewCrispyForm(forms.ModelForm):
                    'collection_country',
                    'collection_venue_and_city',
                    'copyrights',
-                   FieldWithButtons('currently_owned_by', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/owner/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                   FieldWithButtons('currently_owned_by', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/owner/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'contact_telephone_number',
                    'contact_email',
                    'contact_website',
-                   'comments',
              ),
               Tab('Files',
-                  FieldWithButtons('uploadedfiles', StrictButton('+', type='button', css_class='btn-primary', onClick="window.open('/uploadedfile/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                 )
+                  FieldWithButtons('uploadedfiles', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/uploadedfile/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+            ),
+            Tab('Comments',
+                'general_comments',
+                'team_comments',
+                )
             ),
             ButtonHolder(
-                Submit('Submit', 'Submit', css_class='btn-danger')
+                Button('cancel', 'Back', css_class='btn-back btn-danger', onclick="history.back()"),
+                Submit('next', 'Next', css_class='btn-danger'),
+                Submit('save', 'Save', css_class='btn-save btn-danger'),
             )
         )
 
+    def clean(self):
+        if 'Save' in self.data:
+            print('in')
+
+    # do unsubscribe
     class Meta:
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
         fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church','extra_info', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
-                  'image_details', 'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','comments', 'uploadedfiles', 'keywords', 'is_a_translation', 'ISBN_number', 'translated_from')
+                  'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
+                  'contact_email', 'contact_website','general_comments', 'team_comments', 'uploadedfiles', 'keywords', 'is_a_translation', 'ISBN_number', 'translated_from')
         #publication_country = forms.ChoiceField(choices=list(countries))
 
 
@@ -842,50 +861,6 @@ class UploadedFileForm(forms.ModelForm):
             for pub in diff:
                instance.publication_set.remove(pub)
                
-        return instance
-
-
-class ImageDetailsForm(forms.ModelForm):
-    '''
-        Form to create or edit an uploaded file. Can add Publications to the to be created uploaded file object.
-        If its a uploaded file edit load all linked publications.
-        If its a uploaded file create do not load any publications at start.
-    '''
-    publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publications'].initial = Publication.objects.filter(image_details=self.instance)
-        self.helper = FormHelper()
-        self.helper.layout = Layout('source_of_photo_or_illustration', 'photographer', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
-
-    class Meta:
-        model = ImageDetails
-        fields = ('source_of_photo_or_illustration', 'photographer',)
-
-    def save(self, commit=True):
-        instance = super().save(commit)
-
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
         return instance
 
 

@@ -4,6 +4,9 @@ from django import forms
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from countries_plus.models import Country
+from time import gmtime, strftime
+import datetime
+from django.utils import timezone
 
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
@@ -184,7 +187,7 @@ class UploadedFile(models.Model):
     The DateTimeField will be automatically added.
     '''
     description = models.CharField(max_length=255, blank=True)
-    file = models.FileField(upload_to='files', blank=True, null=True)
+    file = models.FileField(upload_to='files/%Y/%m/%d/%H/%M/%S/%f/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
@@ -238,7 +241,6 @@ class Publication(models.Model):
     content_genre = models.ManyToManyField(Genre)
     connected_to_special_occasion = models.ManyToManyField(SpecialOccasion)
     description_of_illustration = models.CharField(max_length=300, blank=True)
-    image_details = models.ManyToManyField(ImageDetails)#models.CharField(max_length=300, blank=True)
     nr_of_pages = models.IntegerField(blank=True, null=True)
     collection_date = models.CharField(max_length=100, blank=True)
     collection_country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='collections', null=True, blank=True)
@@ -248,10 +250,10 @@ class Publication(models.Model):
     contact_telephone_number = models.CharField(max_length=100, blank=True)
     contact_email = models.CharField(max_length=100, blank=True)
     contact_website = models.CharField(max_length=100, blank=True)
-    comments = models.CharField(max_length=400, blank=True)
     keywords = models.ManyToManyField(Keyword)
     uploadedfiles = models.ManyToManyField(UploadedFile, blank=True, null=True)
-
+    general_comments = models.TextField(max_length=800, blank=True)
+    team_comments = models.TextField(max_length=800, blank=True)
     is_deleted = models.BooleanField(default=False)
 
     created_by = models.ForeignKey('auth.User', related_name='publications', on_delete=models.CASCADE, blank=True, null=True)
