@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<table class="table table-striped table-bordered table-sm">  
+<table class="table table-striped table-bordered table-sm sortable">
     <thead class="thead-light">  
     <tr>  
-        <th>Title original</th>  
+        <th class="sort sort-control" data-target="list" data-sort="title_original" role="button">Title original</th>
         <th>Title subtitle transcription</th>  
         <th>Title subtitle european</th>  
         <th>Title translation</th>  
@@ -13,8 +13,8 @@
     <tbody>
     <br />
 {% for publication in publications %}  
-    <tr>  
-        <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>  
+    <tr id="publications">
+        <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>
         <td>{{ publication.title_subtitle_transcription}}</td>  
         <td>{{ publication.title_subtitle_European }}</td>
         <td>{{ publication.title_translation }}</td>  
@@ -26,7 +26,7 @@
     </tr>  
 {% endfor %}  
     </tbody>  
-</table>  
+</table>
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
@@ -44,4 +44,21 @@
         {% endif %}
     </span>
 </div>
+
+{% endblock %}
+{% block ending %}
+<script>
+
+var options = {
+  valueNames: [ 'title_original' ]
+};
+
+// Init list
+var publicationList = new List('publications', options);
+
+  publicationList.add(data, function(items) {
+    $('#publications').remove();
+    $('.list').addClass('loaded'); // i'll change the opacity from 0 to 1 if the data is loaded
+  });
+</script>
 {% endblock %}
