@@ -374,6 +374,7 @@ class NewCrispyForm(forms.ModelForm):
             Tab('Comments',
                 'general_comments',
                 'team_comments',
+                'other_comments',
                 )
             ),
             ButtonHolder(

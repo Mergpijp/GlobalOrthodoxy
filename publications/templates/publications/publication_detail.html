@@ -554,16 +554,44 @@
     </tbody>
 </table>
 {% endif %}
-{% if object.comments %}
+{% if object.general_comments %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
     <tr>
-        <th>comments</th> 
+        <th>general comments</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>{{object.comments}}</td>
+        <td>{{object.general_comments}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.team_comments %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>team comments</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.team_comments}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.general_comments %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>other comments</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.other_comments}}</td>
     </tr>
     </tbody>
 </table>

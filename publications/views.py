@@ -219,7 +219,7 @@ class SearchResultsView(ListView):
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
                   'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'other_comments' 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
             arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)
