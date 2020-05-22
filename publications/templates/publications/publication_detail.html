@@ -1,26 +1,100 @@
 {% extends "base.html" %}
 {% block content %}
 </br>
-<p><b> Titles</b></p>
+<p><b>Titles</b></p>
 
 <table class="table table-striped table-bordered table-sm">  
     <thead class="thead-light">  
     <tr>  
         <th>Title original</th>  
-        <th>Title subtitle transcription</th>  
-        <th>Title subtitle European</th>
+        <th>Title subtitle transcription</th>
         <th>Title translation</th>  
     </tr>
     </thead>
     <tbody>  
     <tr>  
         <td style="text-align: start;unicode-bidi: plaintext;">{{ object.title_original }}</td>  
-        <td>{{ object.title_subtitle_transcription}}</td>  
-        <td>{{ object.title_subtitle_European }}</td>
+        <td>{{ object.title_subtitle_transcription}}</td>
         <td>{{ object.title_translation }}</td>
     </tr>
     </tbody>
-</table>    
+</table>
+</br>
+{% if object.title_original2 %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>Title original2</th>
+        <th>Title subtitle transcription2</th>
+        <th>Title translation2</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align: start;unicode-bidi: plaintext;">{{ object.title_original2 }}</td>
+        <td>{{ object.title_subtitle_transcription2}}</td>
+        <td>{{ object.title_translation2 }}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+</br>
+{% if object.title_original3 %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>Title original3</th>
+        <th>Title subtitle transcription3</th>
+        <th>Title translation3</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align: start;unicode-bidi: plaintext;">{{ object.title_original3 }}</td>
+        <td>{{ object.title_subtitle_transcription3}}</td>
+        <td>{{ object.title_translation3 }}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+</br>
+{% if object.title_original4 %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>Title original4</th>
+        <th>Title subtitle transcription4</th>
+        <th>Title translation4</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align: start;unicode-bidi: plaintext;">{{ object.title_original4 }}</td>
+        <td>{{ object.title_subtitle_transcription4}}</td>
+        <td>{{ object.title_translation4 }}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+</br>
+{% if object.title_original5 %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>Title original5</th>
+        <th>Title subtitle transcription5</th>
+        <th>Title translation5</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align: start;unicode-bidi: plaintext;">{{ object.title_original5 }}</td>
+        <td>{{ object.title_subtitle_transcription5}}</td>
+        <td>{{ object.title_translation5 }}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
 </br>
 {% if object.author.all %}
 <p><b>Authors</b></p>

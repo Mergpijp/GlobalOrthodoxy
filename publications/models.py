@@ -218,8 +218,19 @@ class Publication(models.Model):
 
     title_original = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription = models.CharField(max_length=300, blank=True)
-    title_subtitle_European = models.CharField(max_length=300, blank=True)
     title_translation = models.CharField(max_length=300, blank=True)
+    title_original2 = models.CharField(max_length=300, blank=True)
+    title_subtitle_transcription2 = models.CharField(max_length=300, blank=True)
+    title_translation2 = models.CharField(max_length=300, blank=True)
+    title_original3 = models.CharField(max_length=300, blank=True)
+    title_subtitle_transcription3 = models.CharField(max_length=300, blank=True)
+    title_translation3 = models.CharField(max_length=300, blank=True)
+    title_original4 = models.CharField(max_length=300, blank=True)
+    title_subtitle_transcription4 = models.CharField(max_length=300, blank=True)
+    title_translation4 = models.CharField(max_length=300, blank=True)
+    title_original5 = models.CharField(max_length=300, blank=True)
+    title_subtitle_transcription5 = models.CharField(max_length=300, blank=True)
+    title_translation5 = models.CharField(max_length=300, blank=True)
     author = models.ManyToManyField(Author)
     translator = models.ManyToManyField(Translator)
     form_of_publication = models.ManyToManyField(FormOfPublication)
@@ -267,5 +278,5 @@ class Publication(models.Model):
    
     def __str__(self):
         return 'title_original: ' + self.title_original +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
-                + ', title_subtitle_European: ' + self.title_subtitle_European + ', title_translation: ' + self.title_translation
+                + ', title_translation: ' + self.title_translation
 

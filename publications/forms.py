@@ -99,7 +99,7 @@ class PublicationForm(forms.ModelForm):
     ), queryset=Language.objects.all(), required=False)
     class Meta:
         model = Publication
-        fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
+        fields = ('title_original', 'title_subtitle_transcription', 'title_translation', 'author', 'translator', \
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
@@ -132,7 +132,6 @@ class PublicationForm(forms.ModelForm):
                 Tab('Titles',
                 'title_original',
                 'title_subtitle_transcription',
-                'title_subtitle_European',
                 'title_translation',
                 
                 ),
@@ -325,8 +324,12 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Titles',
                 'title_original',
                 'title_subtitle_transcription',
-                'title_subtitle_European',
                 'title_translation',
+                Div('title_original2', 'title_subtitle_transcription2', 'title_translation2', css_class="hidden"),
+                Div('title_original3', 'title_subtitle_transcription3', 'title_translation3', css_class="hidden"),
+                Div('title_original4', 'title_subtitle_transcription4', 'title_translation4', css_class="hidden"),
+                Div('title_original5', 'title_subtitle_transcription5', 'title_translation5', css_class="hidden"),
+                Button('titles', 'Add more titles', css_class='btn-back btn-danger', onclick="$('.hidden:first').removeClass('hidden');"),
                 ),
                 Tab('Author',
                     FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
@@ -397,11 +400,13 @@ class NewCrispyForm(forms.ModelForm):
     class Meta:
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
-        fields = ('title_original', 'title_subtitle_transcription', 'title_subtitle_European', 'title_translation', 'author', 'translator', \
+        fields = ('title_original', 'title_subtitle_transcription', 'title_translation','title_original2', 'title_subtitle_transcription2', 'title_translation2', 'author', 'translator', \
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church','extra_info', 'language', 'content_description', 'content_genre', 'connected_to_special_occasion', 'description_of_illustration', \
                   'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights', 'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website','general_comments', 'team_comments', 'uploadedfiles', 'keywords', 'is_a_translation', 'ISBN_number', 'translated_from')
+                  'contact_email', 'contact_website','general_comments', 'team_comments', 'uploadedfiles', 'keywords', 'is_a_translation', 'ISBN_number', 'translated_from', \
+                  'title_original3', 'title_subtitle_transcription3', 'title_translation3', 'title_original4', 'title_subtitle_transcription4', 'title_translation4', \
+                  'title_original5', 'title_subtitle_transcription5', 'title_translation5')
         #publication_country = forms.ChoiceField(choices=list(countries))
 
 

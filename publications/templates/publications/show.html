@@ -5,7 +5,6 @@
     <tr>  
         <th>Title original  <a href="?q={{ q }}&order_by=title_original&direction=asc" class="arrow up"></a> <a href="?order_by=title_original&direction=desc" class="arrow down"></a></th>
         <th>Title subtitle transcription<a href="?q={{ q }}&order_by=title_subtitle_transcription&direction=asc" class="arrow up"></a> <a href="?order_by=title_subtitle_transcription&direction=desc" class="arrow down"></a></th>
-        <th>Title subtitle european</th>  
         <th>Title translation<a href="?q={{ q }}&order_by=title_translation&direction=asc" class="arrow up"></a> <a href="?order_by=title_translation&direction=desc" class="arrow down"></a></th></th>
         <th>Actions</th>  
     </tr>  
@@ -15,8 +14,7 @@
 {% for publication in publications %}  
     <tr id="publications">
         <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>
-        <td>{{ publication.title_subtitle_transcription}}</td>  
-        <td>{{ publication.title_subtitle_European }}</td>
+        <td>{{ publication.title_subtitle_transcription}}</td>
         <td>{{ publication.title_translation }}</td>  
         <td> 
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
