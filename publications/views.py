@@ -336,8 +336,18 @@ class SearchResultsView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(SearchResultsView, self).get_context_data(**kwargs)
-        context['order_by'] = self.request.GET.get('order_by')
-        context['direction'] = self.request.GET.get('direction')
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        q = self.request.GET.get('q')
+        if q is not None and q != "":
+            context['q'] = q
+        else:
+            context['q'] = ''
         return context
 
 class ThrashbinShow(ListView):
