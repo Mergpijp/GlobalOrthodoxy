@@ -24,6 +24,13 @@ from countries_plus.models import Country
 from django.core.paginator import Paginator
 from googletrans import Translator as GTranslator
 from googletrans import LANGUAGES
+from urllib.parse import urlencode
+from collections import OrderedDict
+from django import template
+from django.db.models.functions import Lower
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+register = template.Library()
 
 countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 #languages_dict = dict([(x.lower(), y) for (x,y) in countries])
@@ -38,6 +45,22 @@ def view_input_update(request):
             language = translator.detect(input).lang
             return HttpResponse(LANGUAGES[language])
     return HttpResponse('ERROR')
+
+@register.simple_tag
+def url_replace(request, field, value, direction=''):
+    dict_ = request.GET.copy()
+
+    if field == 'order_by' and field in dict_.keys():
+      if dict_[field].startswith('-') and dict_[field].lstrip('-') == value:
+        dict_[field] = value
+      elif dict_[field].lstrip('-') == value:
+        dict_[field] = "-" + value
+      else:
+        dict_[field] = direction + value
+    else:
+      dict_[field] = direction + value
+
+    return urlencode(OrderedDict(sorted(dict_.items())))
 
 class PublicationUpdate(UpdateView):
     '''
@@ -145,7 +168,28 @@ def to_searchable(s):
     #s = re.sub(x, s, s)
     return s
 
+'''
+def publication_index(request):
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    ordering = Lower(order_by)
+    if direction == 'desc':
+        ordering = '-{}'.format(ordering)
+    publications = Publication.objects.filter(is_deleted=False).order_by(ordering)
 
+    paginator = Paginator(publications, 10)
+    page = request.GET.get('page')
+    try:
+        all_publications = paginator.page(page)
+    except PageNotAnInteger:
+        all_publications = paginator.page(1)
+    except EmptyPage:
+        all_publications = paginator.page(paginator.num_pages)
+
+    return render(request, 'publications/show.html',
+                  {'all_publications': all_publications,
+                   'order_by': order_by, 'direction': direction})
+'''
 class SearchResultsView(ListView):
     '''
     ListView of the initial search page.
@@ -158,11 +202,19 @@ class SearchResultsView(ListView):
     template_name = 'publications/show.html'
     context_object_name = 'publications'
     publications = Publication.objects.filter(is_deleted=False)
-    #paginator = Paginator(publications, 25)
     paginate_by = 10
-      
-    def get_queryset(self): 
-        
+    ordering = 'title_original'
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            #ordering = Lower(ordering)
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_queryset(self):
         #form = PublicationForm(self.request.GET)
         authors = self.request.GET.getlist('author')
         translators = self.request.GET.getlist('translator')
@@ -205,12 +257,12 @@ class SearchResultsView(ListView):
 
         print(publications)
 
-        exclude = ['csrfmiddlewaretoken','search']
+        exclude = ['csrfmiddlewaretoken','search', 'order_by', 'direction']
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by),\
         ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), ('keywords', keywords), ('translated_from',translated_from)]
         special_case = ['copyrights', 'page', 'is_a_translation']
-       
+
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
             query_string = self.request.GET['q']
             if query_string.lower() in countries_dict.keys():
@@ -219,7 +271,7 @@ class SearchResultsView(ListView):
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
                   'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'other_comments' 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
+                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction']
             arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)
@@ -230,9 +282,14 @@ class SearchResultsView(ListView):
             #publications = publications.filter(entry_query)
             publications = publications.filter(Q(entry_query) | Q(arabic_query))
             print(publications)
+            ordering = self.get_ordering()
+            if ordering is not None and ordering != "":
+                publications = publications.order_by(ordering)
             publications = publications.distinct()
+
+            #context['publications'] = publications
             return publications
-       
+
         for field_name in self.request.GET:
             get_value = self.request.GET.get(field_name)
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
@@ -246,13 +303,13 @@ class SearchResultsView(ListView):
                 publications = publications.filter(Q(get_value) | Q(arabic_query))
                 print('55555555555', publications)
                 #publications = publications.filter(Q(**{field_name+'__regex':get_value}) | Q(**{field_name+'__icontains':arabic_query}) )
-        
+
         for field_name, list_object in in_variables:
             print('****', list_object)
             if list_object:
                 print('------', field_name)
                 if list(list_object) != ['']:
-                    
+
                     publications = publications.filter(**{field_name+'__in': list_object})
 
         if str(copyrights) != "unknown" and str(copyrights) != "None":
@@ -272,8 +329,16 @@ class SearchResultsView(ListView):
             publications = publications.filter(is_a_translation=val)
 
         publications = publications.distinct()
-
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            publications = publications.order_by(ordering)
         return publications
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchResultsView, self).get_context_data(**kwargs)
+        context['order_by'] = self.request.GET.get('order_by')
+        context['direction'] = self.request.GET.get('direction')
+        return context
 
 class ThrashbinShow(ListView):
     '''

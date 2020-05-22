@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<table class="table table-striped table-bordered table-sm sortable">
+<table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">  
     <tr>  
-        <th class="sort sort-control" data-target="list" data-sort="title_original" role="button">Title original</th>
-        <th>Title subtitle transcription</th>  
+        <th>Title original  <a href="?order_by=title_original&direction=asc" class="arrow up"></a> <a href="?order_by=title_original&direction=desc" class="arrow down"></a></th>
+        <th>Title subtitle transcription<a href="?order_by=title_subtitle_transcription&direction=asc" class="arrow up"></a> <a href="?order_by=title_subtitle_transcription&direction=desc" class="arrow down"></a></th>
         <th>Title subtitle european</th>  
-        <th>Title translation</th>  
+        <th>Title translation<a href="?order_by=title_translation&direction=asc" class="arrow up"></a> <a href="?order_by=title_translation&direction=desc" class="arrow down"></a></th></th>
         <th>Actions</th>  
     </tr>  
     </thead>
@@ -30,8 +30,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page=1&order_by={{order_by}}&direction={{ direction }}">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}&order_by={{order_by}}&direction={{ direction }}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -39,26 +39,10 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}&order_by={{order_by}}&direction={{ direction }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&order_by={{order_by}}&direction={{ direction }}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
 
-{% endblock %}
-{% block ending %}
-<script>
-
-var options = {
-  valueNames: [ 'title_original' ]
-};
-
-// Init list
-var publicationList = new List('publications', options);
-
-  publicationList.add(data, function(items) {
-    $('#publications').remove();
-    $('.list').addClass('loaded'); // i'll change the opacity from 0 to 1 if the data is loaded
-  });
-</script>
 {% endblock %}

@@ -194,29 +194,36 @@ class PublicationForm(forms.ModelForm):
         )
 
 
+def represent_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+
 class KeywordSelect2TagWidget(ModelSelect2TagWidget):
     queryset = Keyword.objects.all()
 
     def value_from_datadict(self, data, files, name):
-        print(self)
-        print(data)
-        print(files)
-        print(name)
         values = super().value_from_datadict(data, files, name)
+        print(values)
         queryset = self.get_queryset()
-        pks = queryset.filter(**{'pk__in': list(values)}).values_list('pk', flat=True)
+        pks = queryset.filter(**{'pk__in': [v for v in values if v.isdigit()]}).values_list('pk', flat=True)
         cleaned_values = []
         for val in values:
-            if force_text(val) not in pks:
+            if represent_int(val) and int(val) not in pks or not represent_int(val) and force_text(val) not in pks:
                 val = queryset.create(name=val).pk
             cleaned_values.append(val)
         return cleaned_values
+
+
 
 class NewCrispyForm(forms.ModelForm):
     '''
         Crispy form for publication create/update(edit).
         Added field with buttons for inline add. Is almost the same as PublicationForm but has a submit button.
-        
+
     '''
     author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
@@ -279,8 +286,7 @@ class NewCrispyForm(forms.ModelForm):
         search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Owner.objects.all(), required=False)
-    keywords = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-    #keywords = forms.ModelMultipleChoiceField(widget=KeywordSelect2TagWidget(
+    keywords = forms.ModelMultipleChoiceField(widget=KeywordSelect2TagWidget(
         model=Keyword,
         search_fields=['name__icontains',],
         attrs={'data-minimum-input-length': 0,},
@@ -355,8 +361,7 @@ class NewCrispyForm(forms.ModelForm):
                    FieldWithButtons('connected_to_special_occasion', StrictButton('+', type='button', css_class='btn-danger', onClick="window.open('/special_occasion/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                    'description_of_illustration',
                    'nr_of_pages',
-                   FieldWithButtons('keywords', StrictButton('+', type='button', css_class='btn-danger',
-                                                             onClick="window.open('/keyword/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                   Field('keywords', css_class='special_select2'),
               ),
                Tab('Collection info',
                    'collection_date',

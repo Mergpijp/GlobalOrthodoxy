@@ -42,6 +42,7 @@ MEDIA_URL = '/media/'
 # Application definition
 
 INSTALLED_APPS = [
+    'django_pdb',
     'publications',
     'django.contrib.admin',
     'django.contrib.auth',
