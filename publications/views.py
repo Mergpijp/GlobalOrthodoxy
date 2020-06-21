@@ -78,7 +78,8 @@ class PublicationUpdate(UpdateView):
         """Detect the submit button used and act accordingly"""
         if 'next' in self.request.POST:
             return '/publication/show/'
-        return '/publication/' + str(self.object.id) + '/edit/'
+        elif 'save' in self.request.POST:
+            return '/publication/' + str(self.object.id) + '/edit/'
 
 @login_required(login_url='/accounts/login/')
 def PublicationDelete(request, pk):
@@ -112,7 +113,8 @@ class PublicationCreate(CreateView):
         """Detect the submit button used and act accordingly"""
         if 'next' in self.request.POST:
             return '/publication/show/'
-        return '/publication/' + str(self.object.id) + '/edit/'
+        elif 'save' in self.request.POST:
+            return '/publication/' + str(self.object.id) + '/edit/'
 
 class PublicationDetailView(DetailView):
     '''
