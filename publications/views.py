@@ -247,13 +247,19 @@ class SearchResultsView(ListView):
             query_string = self.request.GET['q']
             if query_string.lower() in countries_dict.keys():
                 query_string = countries_dict[query_string.lower()]
+
+
             search_fields = ['title_original', 'title_subtitle_transcription', 'title_translation', 'author__name', 'author__name_original_language', 'author__extra_info', \
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'nr_of_pages', 'collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', \
-                  'currently_owned_by__name', 'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
+                  'nr_of_pages', \
+                  'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
                   'title_original2', 'title_subtitle_transcription2', 'title_translation2', 'title_original3', 'title_subtitle_transcription3', 'title_translation3', \
                   'title_original4', 'title_subtitle_transcription4', 'title_translation4', 'title_original5', 'title_subtitle_transcription5', 'title_translation5']
+
+            if self.request.user.is_authenticated:
+                search_fields.extend(['collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', 'currently_owned_by__name'])
+
             arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)
