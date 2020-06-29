@@ -263,6 +263,7 @@ class Publication(models.Model):
     contact_website = models.CharField(max_length=100, blank=True)
     keywords = models.ManyToManyField(Keyword)
     uploadedfiles = models.ManyToManyField(UploadedFile, blank=True, null=True)
+    coverfile = models.ForeignKey(UploadedFile, on_delete=models.CASCADE, related_name="cover", null=True, blank=True)
     general_comments = models.TextField(max_length=800, blank=True)
     team_comments = models.TextField(max_length=800, blank=True)
     other_comments = models.TextField(max_length=800, blank=True)

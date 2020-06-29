@@ -6,13 +6,15 @@
         <th>Title original  <a href="?q={{ q }}&order_by=title_original&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_original&direction=desc" class="arrow down"></a></th>
         <th>Title subtitle transcription <a href="?q={{ q }}&order_by=title_subtitle_transcription&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_subtitle_transcription&direction=desc" class="arrow down"></a></th>
         <th>Title translation <a href="?q={{ q }}&order_by=title_translation&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_translation&direction=desc" class="arrow down"></a></th></th>
-        <th>Actions</th>  
+        <th>Actions</th>
+        <th>Cover Image</th>
     </tr>  
     </thead>
     <tbody>
     <br />
 {% for publication in publications %}  
     <tr id="publications">
+
         <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>
         <td>{{ publication.title_subtitle_transcription}}</td>
         <td>{{ publication.title_translation }}</td>  
@@ -20,8 +22,11 @@
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
             <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
             <a class="confirm-delete-pub" href="/publication/{{ publication.id }}/delete">Delete</a>
-        </td>  
-    </tr>  
+        </td>
+        {% if publication.coverfile.file %}
+        <td style="text-align: center;"><img src="/media/{{publication.coverfile.file}}" width="200" height="200"></td>
+        {% endif %}
+    </tr>
 {% endfor %}  
     </tbody>  
 </table>
