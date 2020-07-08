@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
@@ -19,6 +19,7 @@ import re
 from django_countries import countries
 from django.utils import timezone
 import json
+from django.urls import reverse
 from django.core import serializers
 from countries_plus.models import Country
 from django.core.paginator import Paginator
@@ -37,6 +38,14 @@ countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 countries_list = [y for (x,y) in countries]
 translator = GTranslator()
 
+def process_file(request):
+    if request.method == 'POST':
+        desc = request.POST['description']
+        file = request.FILES['file']
+        publications = request.POST['publications']
+        uploadedfile = UploadedFile(description = desc, file = file)
+        uploadedfile.save()
+        return HttpResponse(status=200)
 
 def view_input_update(request):
     if request.method == 'GET':

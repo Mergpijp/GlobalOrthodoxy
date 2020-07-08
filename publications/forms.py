@@ -2,7 +2,7 @@ from django import forms
 
 from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field, Button
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field, Button, HTML
 from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton, AppendedText
 from django.forms.models import inlineformset_factory
 from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, ModelSelect2TagWidget, Select2Widget, ModelSelect2Widget, HeavySelect2MultipleWidget, ModelSelect2TagWidget
@@ -853,15 +853,87 @@ class UploadedFileForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publications'].initial = Publication.objects.filter(uploadedfiles=self.instance)
-        self.helper = FormHelper()
-        self.helper.layout = Layout('description', 'file', 'publications',
-                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger') ))
+        #super(UploadedFileForm, self).__init__(self, *args, **kwargs)
+        #if self.instance.id:
+        #    self.fields['publications'].initial = Publication.objects.filter(uploadedfiles=self.instance)
+
+
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'id-dropzoneform'
+        self.helper.form_class = 'dropzone-form'
+        self.helper.layout = Layout('description',
+                                    HTML("""
+                                        File
+                                        <div id='my-drop-zone' style="height:200px;text-align:center;background-color:#ff7f7f;">
+                                            Drop here or click
+                                        </div>
+                                        <br/>
+                                    """),
+                                    'publications',
+                                    ButtonHolder(
+                                    Submit('Submit', 'Submit', css_class='btn-danger', css_id='submit-btn')),
+                                    HTML("""
+                                        <script>
+                                            Dropzone.autoDiscover = false;
+                                            var myDropzone = new Dropzone("div#my-drop-zone", { 
+                                                url: "/uploadedfile/proces/",
+                                                method: "post",
+                                                autoProcessQueue: false,
+                                                maxFiles: 1,
+                                                addRemoveLinks: true,
+                                                maxfilesexceeded: function(file) {
+                                                    this.removeAllFiles();
+                                                    this.addFile(file);
+                                                },
+                                                init: function () {
+                                                    var myDropzone = this;
+                                                    var addButton = $("#submit-btn");
+                                                    addButton.click(function (e) {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                    if (myDropzone.getQueuedFiles().length > 0) {
+                                                            myDropzone.processQueue();
+                                                        } else {
+                                                            $(".dropzone-form").submit();
+                                                        }
+                                                    });
+                                                },
+                                                queuecomplete: function() {
+                                                    setTimeout(function () {
+                                                        $(".dropzone-form").submit();
+                                                        window.location.href='/uploadedfile/show/'
+                                                    }, 1000); 
+                                                },
+                                                sending: function (file, xhr, formData) {
+                                                    formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                                                    formData.append("description", $('#id_description').val());
+                                                    formData.append("publications", $('#id_publications').val());
+                                                }
+                                            });
+                                            function getCookie(name) {
+                                                var cookieValue = null;
+                                                if (document.cookie && document.cookie != '') {
+                                                    var cookies = document.cookie.split(';');
+                                                    for (var i = 0; i < cookies.length; i++) {
+                                                        var cookie = jQuery.trim(cookies[i]);
+                                                        // Does this cookie string begin with the name we want?
+                                                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                return cookieValue;
+                                            }
+                                        </script>
+                                        """),
+
+                                    )
     
     class Meta:
+        ordering = ['-description']
         model = UploadedFile
-        fields = ('description', 'file',) 
+        fields = ('description', 'file', 'publications',)
         
     def save(self, commit=True):
         instance = super().save(commit)

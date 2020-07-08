@@ -12,4 +12,14 @@ $(document).on('click', '.confirm-logout', function(){
     return confirm('Are you sure you want to logout?');
 })
 
-
+function toggleFileUpload() {
+  var x = document.getElementById("drop_zone");
+  var y = document.getElementById("div_id_file")
+  if (x.style.display === "none") {
+    x.style.display = "block";
+    y.style.display = "none";
+  } else {
+    x.style.display = "none";
+    y.style.display = "block";
+  }
+}

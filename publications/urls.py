@@ -8,6 +8,7 @@ urlpatterns = [
     path('publication/new/', login_required(PublicationCreate.as_view()), name='publication-new'),
     path('detect_language', views.view_input_update, name='view-input-update'),
     path('url_replace', views.url_replace, name='url_replace'),
+    path('uploadedfile/proces/', views.process_file, name='file-proces'),
     path('publication/show/', SearchResultsView.as_view(), name='publication-show'),
     path('publication/<int:pk>/detail_view/', PublicationDetailView.as_view(), name='publication-detail'),
     path('publication/<int:pk>/edit/', login_required(PublicationUpdate.as_view()), name='publication-update'),
