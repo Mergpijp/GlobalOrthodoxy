@@ -853,19 +853,21 @@ class UploadedFileForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #super(UploadedFileForm, self).__init__(self, *args, **kwargs)
-        #if self.instance.id:
-        #    self.fields['publications'].initial = Publication.objects.filter(uploadedfiles=self.instance)
+        if self.instance.id:
+            self.fields['publications'].initial = Publication.objects.filter(uploadedfiles=self.instance)
 
 
         self.helper = FormHelper(self)
         self.helper.form_id = 'id-dropzoneform'
         self.helper.form_class = 'dropzone-form'
-        self.helper.layout = Layout('description',
+        self.helper.layout = Layout(
+                                    'description',
                                     HTML("""
                                         File
-                                        <div id='my-drop-zone' style="height:200px;text-align:center;background-color:#ff7f7f;">
-                                            Drop here or click
+                                        <div id='my-drop-zone' class='needsclick'>
+                                            <div class="dz-message needsclick"> 
+                                                Drop file here or click to upload.
+                                            </div>
                                         </div>
                                         <br/>
                                     """),
@@ -878,7 +880,7 @@ class UploadedFileForm(forms.ModelForm):
                                             var myDropzone = new Dropzone("div#my-drop-zone", { 
                                                 url: "/uploadedfile/proces/",
                                                 method: "post",
-                                                autoProcessQueue: false,
+                                                autoProcessQueue: true,
                                                 maxFiles: 1,
                                                 addRemoveLinks: true,
                                                 maxfilesexceeded: function(file) {
@@ -890,19 +892,12 @@ class UploadedFileForm(forms.ModelForm):
                                                     var addButton = $("#submit-btn");
                                                     addButton.click(function (e) {
                                                         e.preventDefault();
-                                                        e.stopPropagation();
-                                                    if (myDropzone.getQueuedFiles().length > 0) {
-                                                            myDropzone.processQueue();
-                                                        } else {
+                                                        //e.stopPropagation();
+                                                        setTimeout(function () {
                                                             $(".dropzone-form").submit();
-                                                        }
+                                                            window.location.href='/uploadedfile/show/'
+                                                        }, 1000); 
                                                     });
-                                                },
-                                                queuecomplete: function() {
-                                                    setTimeout(function () {
-                                                        $(".dropzone-form").submit();
-                                                        window.location.href='/uploadedfile/show/'
-                                                    }, 1000); 
                                                 },
                                                 sending: function (file, xhr, formData) {
                                                     formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
@@ -925,6 +920,7 @@ class UploadedFileForm(forms.ModelForm):
                                                 }
                                                 return cookieValue;
                                             }
+                                            $("#my-drop-zone").addClass("dropzone");
                                         </script>
                                         """),
 

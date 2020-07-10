@@ -93,9 +93,13 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .hidden{
     display: none;
 }
-#drop_zone {
-  border: 5px solid orangered;
-  width:  1100px;
-  height: 100px;
-  display: none;
+#my-drop-zone {
+    background: white;
+    border-radius: 5px;
+    border: 2px dashed rgb(0, 135, 247);
+    border-image: none;
+
+    margin-left: auto;
+    margin-right: auto;
+    height:200px
 }

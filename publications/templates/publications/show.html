@@ -15,9 +15,10 @@
     <br />
 {% for publication in publications %}  
     <tr id="publications">
-
         {% if publication.coverfile.file %}
         <td style="text-align: center;"><img src="/media/{{publication.coverfile.file}}" width="200" height="200"></td>
+        {% else %}
+        <td></td>
         {% endif %}
         <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>
         <td>{{ publication.title_subtitle_transcription}}</td>
