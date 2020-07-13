@@ -876,11 +876,19 @@ class UploadedFileForm(forms.ModelForm):
                                     Submit('Submit', 'Submit', css_class='btn-danger', css_id='submit-btn')),
                                     HTML("""
                                         <script>
+                                            var string = location.href;
+                                            var numbers = string.match(/\d+/g).map(Number);
+                                            if(numbers.length == 5 || numbers.length == 0){
+                                                pk = "";
+                                            }
+                                            else {
+                                                var pk = numbers[numbers.length - 1].toString() + "/";
+                                            }
                                             Dropzone.autoDiscover = false;
                                             var myDropzone = new Dropzone("div#my-drop-zone", { 
-                                                url: "/uploadedfile/proces/",
+                                                url: "/uploadedfile/proces/" + pk,
                                                 method: "post",
-                                                autoProcessQueue: true,
+                                                autoProcessQueue: false,
                                                 maxFiles: 1,
                                                 addRemoveLinks: true,
                                                 maxfilesexceeded: function(file) {
@@ -893,8 +901,10 @@ class UploadedFileForm(forms.ModelForm):
                                                     addButton.click(function (e) {
                                                         e.preventDefault();
                                                         //e.stopPropagation();
+                                                        myDropzone.processQueue();
                                                         setTimeout(function () {
-                                                            $(".dropzone-form").submit();
+                                                            
+                                                            //$(".dropzone-form").submit();
                                                             window.location.href='/uploadedfile/show/'
                                                         }, 1000); 
                                                     });

@@ -38,14 +38,32 @@ countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 countries_list = [y for (x,y) in countries]
 translator = GTranslator()
 
-def process_file(request):
+'''
+class UploadedfileUpdateView(UpdateView):
+    model = UploadedFile
+    #template_name = 'locations/location_update.html'
+    form_class = UploadedFileForm
+    #success_url = ''
+'''
+
+def process_file(request, pk=None):
+    obj, created = UploadedFile.objects.get_or_create(pk=pk)
+    if(created):
+        print('created')
+    print(obj)
+    post_mutable = {'description': request.POST['description'], 'publications': request.POST['publications']}
+    if request.POST['publications'] == "":
+        post_mutable['publications'] = None
+
+    form = UploadedFileForm(post_mutable or None, request.FILES or None, instance=obj)
     if request.method == 'POST':
-        desc = request.POST['description']
-        file = request.FILES['file']
-        publications = request.POST['publications']
-        uploadedfile = UploadedFile(description = desc, file = file)
-        uploadedfile.save()
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+            return HttpResponse(status=500)
         return HttpResponse(status=200)
+    return HttpResponse(status=500)
 
 def view_input_update(request):
     if request.method == 'GET':
