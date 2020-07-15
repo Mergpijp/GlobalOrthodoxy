@@ -28,6 +28,7 @@ from googletrans import LANGUAGES
 from urllib.parse import urlencode
 from collections import OrderedDict
 from django import template
+from django.db.models import Count
 from django.db.models.functions import Lower
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -38,31 +39,21 @@ countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 countries_list = [y for (x,y) in countries]
 translator = GTranslator()
 
-'''
-class UploadedfileUpdateView(UpdateView):
-    model = UploadedFile
-    #template_name = 'locations/location_update.html'
-    form_class = UploadedFileForm
-    #success_url = ''
-'''
-
+@login_required(login_url='/accounts/login/')
 def process_file(request, pk=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
-    if(created):
-        print('created')
-    print(obj)
     post_mutable = {'description': request.POST['description'], 'publications': request.POST['publications']}
-    if request.POST['publications'] == "":
-        post_mutable['publications'] = None
+    my_filter_qs = Q()
+    for id in request.POST['publications'] :
+        my_filter_qs = my_filter_qs | Q(id=id)
+    post_mutable['publications'] = Publication.objects.filter(my_filter_qs)
 
     form = UploadedFileForm(post_mutable or None, request.FILES or None, instance=obj)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-        else:
-            print(form.errors)
-            return HttpResponse(status=500)
-        return HttpResponse(status=200)
+            return HttpResponse(status=200)
+
     return HttpResponse(status=500)
 
 def view_input_update(request):
