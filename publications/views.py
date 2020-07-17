@@ -273,7 +273,7 @@ class SearchResultsView(ListView):
             search_fields = ['title_original', 'title_subtitle_transcription', 'title_translation', 'author__name', 'author__name_original_language', 'author__extra_info', \
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'nr_of_pages', 'uploadedfiles__filecategory' \
+                  'nr_of_pages', 'uploadedfiles__filecategory', \
                   'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
                   'title_original2', 'title_subtitle_transcription2', 'title_translation2', 'title_original3', 'title_subtitle_transcription3', 'title_translation3', \
                   'title_original4', 'title_subtitle_transcription4', 'title_translation4', 'title_original5', 'title_subtitle_transcription5', 'title_translation5']
