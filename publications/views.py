@@ -2,13 +2,15 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
-from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, IllustrationLayoutType, UploadedFile, Keyword
+from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, \
+    IllustrationLayoutType, UploadedFile, Keyword, FileCategory
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
 from .forms import PublicationForm, NewCrispyForm, KeywordForm,\
-    AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm
+    AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, \
+    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -258,7 +260,8 @@ class SearchResultsView(ListView):
         exclude = ['csrfmiddlewaretoken','search', 'order_by', 'direction']
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by),\
-        ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), ('keywords', keywords), ('translated_from',translated_from)]
+        ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), ('keywords', keywords), ('translated_from',translated_from),
+                    ]
         special_case = ['copyrights', 'page', 'is_a_translation']
 
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
@@ -270,7 +273,7 @@ class SearchResultsView(ListView):
             search_fields = ['title_original', 'title_subtitle_transcription', 'title_translation', 'author__name', 'author__name_original_language', 'author__extra_info', \
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'nr_of_pages', \
+                  'nr_of_pages', 'uploadedfiles__filecategory' \
                   'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
                   'title_original2', 'title_subtitle_transcription2', 'title_translation2', 'title_original3', 'title_subtitle_transcription3', 'title_translation3', \
                   'title_original4', 'title_subtitle_transcription4', 'title_translation4', 'title_original5', 'title_subtitle_transcription5', 'title_translation5']
@@ -858,6 +861,54 @@ class UploadedFileUpdate(UpdateView):
     form_class = UploadedFileForm
     model = UploadedFile
     success_url = '/uploadedfile/show/'
+
+
+class FileCategoryCreate(CreateView):
+    '''
+    Inherits CreateView. Uses FileCategoryForm as layout.
+    redirects to main page (show)
+    '''
+    template_name = 'publications/form.html'
+    form_class = FileCategoryForm
+    success_url = '/filecategory/show/'
+
+
+class FileCategoryShow(ListView):
+    '''
+    Inherits ListView.
+    Uses Filecategory as model.
+    Uses filecategory_show.html as template_name.
+    Set context_object_name to filecategories.
+    '''
+    model = FileCategory
+    template_name = 'publications/filecategory_show.html'
+    context_object_name = 'filecategories'
+    paginate_by = 10
+
+
+@login_required(login_url='/accounts/login/')
+def FileCategoryDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects filecategory object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
+    filecategory = FileCategory.objects.get(id=pk)
+    filecategory.delete()
+    return redirect('/filecategory/show')
+
+
+class FileCategoryUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses FilecategoryForm as layout. And model FileCategory.
+    redirects to local main page. (show)
+    '''
+    template_name = 'publications/form.html'
+    form_class = FileCategoryForm
+    model = FileCategory
+    success_url = '/filecategory/show/'
 
 class IllustrationLayoutTypeCreate(CreateView):
     '''

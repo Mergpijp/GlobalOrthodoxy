@@ -3,7 +3,8 @@
 <table class="table table-striped table-bordered table-sm">  
     <thead class="thead-light">  
     <tr>  
-        <th>description </th>  
+        <th>description </th>
+        <th>filecategory</th>
         <th>file </th>
         <th>uploaded at</th>
         <th>Actions</th>  
@@ -16,6 +17,7 @@
 {% for uploadedfile in uploadedfiles %}  
     <tr>  
         <td><a href="{% url 'publication-show' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.description }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{uploadedfile.filecategory}}">{{ uploadedfile.filecategory }}</a></td>
         <td><a href="/media/{{uploadedfile.file}}">{{ uploadedfile.file }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{uploadedfile.uploaded_at}}">{{ uploadedfile.uploaded_at }}</a></td>
         <td>  

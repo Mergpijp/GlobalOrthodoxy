@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, \
-    Language, IllustrationLayoutType, UploadedFile, Keyword
+    Language, IllustrationLayoutType, UploadedFile, Keyword, FileCategory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field, Button, HTML
 from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton, AppendedText
@@ -442,12 +442,13 @@ class NewCrispyForm(forms.ModelForm):
                   'title_original5', 'title_subtitle_transcription5', 'title_translation5', 'coverfile')
         # publication_country = forms.ChoiceField(choices=list(countries))
 
+import pdb
 
 class KeywordForm(forms.ModelForm):
     '''
         Form to create or edit an author. Can add Publications to the to be created author object.
-        If its a author edit load all linked publications.
-        If its a author create do not load any publications at start.
+        If its a keyword edit load all linked publications.
+        If its a keyword create do not load any publications at start.
     '''
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Publication,
@@ -484,6 +485,52 @@ class KeywordForm(forms.ModelForm):
                 instance.publication_set.remove(pub)
         return instance
 
+
+
+
+class FileCategoryForm(forms.ModelForm):
+    '''
+        Form to create or edit an author. Can add Publications to the to be created author object.
+        If its a FileCategory edit load all linked uploadedfiles.
+        If its a FileCategory create do not load any uploadedfiles at start.
+    '''
+    '''
+    uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=UploadedFile,
+        attrs={'data-minimum-input-length': 0},
+        search_fields=['description__icontains'],
+    ), queryset=UploadedFile.objects.all(), required=False)
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.id:
+            self.fields['uploadedfiles'].initial = UploadedFile.objects.filter(filecategory=self.instance)
+        self.helper = FormHelper()
+        self.helper.layout = Layout('name', #'uploadedfiles',
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
+
+    class Meta:
+        model = FileCategory
+        fields = ('name',)
+
+    def save(self, commit=True):
+        instance = super().save(commit)
+        '''
+        #pdb.set_trace()
+        if self.cleaned_data['uploadedfiles'].count() > len(instance.get_deferred_fields()):
+            diff = set(self.cleaned_data['uploadedfiles'].all()) - instance.get_deferred_fields()
+            for file in diff:
+                instance.get_deferred_fields().add(file)
+
+        elif self.cleaned_data['uploadedfiles'].count() < len(instance.get_deferred_fields()):
+            diff = instance.get_deferred_fields() - set(self.cleaned_data['uploadedfiles'].all())
+            if not diff:
+                for file in instance.get_deferred_fields():
+                    instance.get_deferred_fields().remove(file)
+            for file in diff:
+                instance.get_deferred_fields().remove(file)
+        '''
+        return instance
 
 class AuthorForm(forms.ModelForm):
     '''
@@ -890,15 +937,17 @@ class UploadedFileForm(forms.ModelForm):
         If its a uploaded file edit load all linked publications.
         If its a uploaded file create do not load any publications at start.
     '''
+    filecategory = forms.ModelChoiceField(widget=ModelSelect2Widget(
+        model=FileCategory,
+        search_fields=['name__icontains', ],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=FileCategory.objects.all(), required=False)
     publications = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
                        'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
-
-    #publication = forms.ModelChoiceField(queryset=Publication.objects.all(),
-    #                                     widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -909,8 +958,9 @@ class UploadedFileForm(forms.ModelForm):
         self.helper.form_id = 'id-dropzoneform'
         self.helper.form_class = 'dropzone-form'
         self.helper.layout = Layout(
-            #'publication',
             'description',
+            FieldWithButtons('filecategory', StrictButton('+', type='button', css_class='btn-danger',
+                                                             onClick="window.open('/filecategory/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
             HTML("""
                                         File
                                         <div id='my-drop-zone' class='needsclick'>
@@ -982,7 +1032,7 @@ class UploadedFileForm(forms.ModelForm):
     class Meta:
         ordering = ['-description']
         model = UploadedFile
-        fields = ('description', 'file', 'publications',)
+        fields = ('description', 'filecategory', 'file', 'publications',)
 
     def save(self, commit=True):
         instance = super().save(commit)

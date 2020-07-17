@@ -677,7 +677,8 @@
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
     <tr>
-        <th>description</th> 
+        <th>description</th>
+        <th>filecategory</th>
         <th>files </th>
         <th>uploaded at</th>
     </tr>
@@ -686,6 +687,7 @@
 {% for file in object.uploadedfiles.all %}
     <tr>
         <td>{{file.description}}</td>
+        <td>{{ file.category }}</td>
         <td><a href="/media/{{file.file}}">{{ file.file }}</a></td>
         <td>{{file.uploaded_at}}</td>
     </tr>

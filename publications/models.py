@@ -179,6 +179,11 @@ class Keyword(models.Model):
     def __str__(self):
         return self.name
 
+class FileCategory(models.Model):
+    name = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class UploadedFile(models.Model):
     '''
@@ -187,6 +192,7 @@ class UploadedFile(models.Model):
     The DateTimeField will be automatically added.
     '''
     description = models.CharField(max_length=255, blank=True)
+    filecategory = models.ForeignKey(FileCategory, on_delete=models.CASCADE, related_name="filecategory", null=True, blank=True)
     file = models.FileField(upload_to='files/%Y/%m/%d/%H/%M/%S/%f/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
@@ -280,7 +286,4 @@ class Publication(models.Model):
     def __str__(self):
         return 'title_original: ' + self.title_original +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
                 + ', title_translation: ' + self.title_translation
-
-    def __unicode__(self):
-        return u'%d' % self.id
 
