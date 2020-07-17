@@ -503,8 +503,8 @@ class FileCategoryForm(forms.ModelForm):
     '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['uploadedfiles'].initial = UploadedFile.objects.filter(filecategory=self.instance)
+        #if self.instance.id:
+        #    self.fields['uploadedfiles'].initial = UploadedFile.objects.filter(filecategory=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', #'uploadedfiles',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
