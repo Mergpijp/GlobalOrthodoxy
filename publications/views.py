@@ -33,6 +33,7 @@ from django import template
 from django.db.models import Count
 from django.db.models.functions import Lower
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import pdb
 
 register = template.Library()
 
@@ -44,11 +45,15 @@ translator = GTranslator()
 @login_required(login_url='/accounts/login/')
 def process_file(request, pk=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
-    post_mutable = {'description': request.POST['description'], 'publications': request.POST['publications']}
+    post_mutable = {'description': request.POST['description'], 'filecategory': request.POST['filecategory'], \
+                    'publications': request.POST['publications']}
     my_filter_qs = Q()
     for id in request.POST['publications'] :
         my_filter_qs = my_filter_qs | Q(id=id)
-    post_mutable['publications'] = Publication.objects.filter(my_filter_qs)
+    if not my_filter_qs:
+        post_mutable['publications'] = None
+    else:
+        post_mutable['publications'] = Publication.objects.filter(my_filter_qs)
 
     form = UploadedFileForm(post_mutable or None, request.FILES or None, instance=obj)
     if request.method == 'POST':
@@ -273,8 +278,8 @@ class SearchResultsView(ListView):
             search_fields = ['title_original', 'title_subtitle_transcription', 'title_translation', 'author__name', 'author__name_original_language', 'author__extra_info', \
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'nr_of_pages', 'uploadedfiles__filecategory', \
-                  'uploadedfiles__description', 'uploadedfiles__uploaded_at', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
+                  'nr_of_pages', 'file_category__name'#'uploadedfiles__filecategory', 'uploadedfiles__uploaded_at' \
+                  'uploadedfiles__description', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
                   'title_original2', 'title_subtitle_transcription2', 'title_translation2', 'title_original3', 'title_subtitle_transcription3', 'title_translation3', \
                   'title_original4', 'title_subtitle_transcription4', 'title_translation4', 'title_original5', 'title_subtitle_transcription5', 'title_translation5']
 
@@ -289,6 +294,7 @@ class SearchResultsView(ListView):
             arabic_query = get_query(arabic_query, search_fields)
             print('&&&&&&', query_string)
             #publications = publications.filter(entry_query)
+            #pdb.set_trace()
             publications = publications.filter(Q(entry_query) | Q(arabic_query))
             print(publications)
             ordering = self.get_ordering()
@@ -979,6 +985,8 @@ def get_query(query_string, search_fields):
     for term in terms:
         or_query = None # Query to search for a given term in each field
         for field_name in search_fields:
+            if(field_name == None or field_name == ""):
+                continue
             q = Q(**{"%s__iregex" % field_name: term})
             if or_query is None:
                 or_query = q
@@ -988,5 +996,6 @@ def get_query(query_string, search_fields):
             query = or_query
         else:
             query = query & or_query
+    #pdb.set_trace()
     return query    
          

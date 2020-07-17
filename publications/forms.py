@@ -1005,6 +1005,7 @@ class UploadedFileForm(forms.ModelForm):
                                                 sending: function (file, xhr, formData) {
                                                     formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
                                                     formData.append("description", $('#id_description').val());
+                                                    formData.append('filecategory', $('#id_filecategory').val());
                                                     formData.append("publications", $('#id_publications').val());
                                                 }
                                             });
