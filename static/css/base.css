@@ -2,7 +2,9 @@
 .select2-container {
   width: 100%;
 }
-
+.filecategory {
+    width: 98%;
+}
 /* ViaCSS: We can, of course, define other widths for specific occasions */
 .shorter-selects2 .select2-container {
   width: 80%;

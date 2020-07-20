@@ -995,11 +995,7 @@ class UploadedFileForm(forms.ModelForm):
                                                     var myDropzone = this;
                                                     var addButton = $("#submit-btn");
                                                     addButton.click(function (e) {
-                                                        e.preventDefault();
                                                         myDropzone.processQueue();
-                                                        setTimeout(function () {
-                                                            window.location.href='/uploadedfile/show/'
-                                                        }, 1000); 
                                                     });
                                                 },
                                                 sending: function (file, xhr, formData) {
@@ -1007,6 +1003,9 @@ class UploadedFileForm(forms.ModelForm):
                                                     formData.append("description", $('#id_description').val());
                                                     formData.append('filecategory', $('#id_filecategory').val());
                                                     formData.append("publications", $('#id_publications').val());
+                                                     setTimeout(function () {
+                                                        window.location.href='/uploadedfile/show/'
+                                                    }, 1000);
                                                 }
                                             });
                                             function getCookie(name) {
