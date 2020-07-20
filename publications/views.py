@@ -3,14 +3,14 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
 from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, \
-    IllustrationLayoutType, UploadedFile, Keyword, FileCategory
+    IllustrationLayoutType, UploadedFile, Keyword, FileCategory, ImageContent
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
 from .forms import PublicationForm, NewCrispyForm, KeywordForm,\
     AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, \
-    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm
+    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm, ImageContentForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -46,7 +46,7 @@ translator = GTranslator()
 def process_file(request, pk=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
     post_mutable = {'description': request.POST['description'], 'filecategory': request.POST['filecategory'], \
-                    'publications': request.POST['publications']}
+                    'publications': request.POST['publications'], 'imagecontents': request.POST['imagecontents']}
     my_filter_qs = Q()
     for id in request.POST['publications'] :
         my_filter_qs = my_filter_qs | Q(id=id)
@@ -278,7 +278,7 @@ class SearchResultsView(ListView):
             search_fields = ['title_original', 'title_subtitle_transcription', 'title_translation', 'author__name', 'author__name_original_language', 'author__extra_info', \
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_date', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'nr_of_pages', 'uploadedfiles__filecategory__name', 'uploadedfiles__uploaded_at', \
+                  'nr_of_pages', 'uploadedfiles__filecategory__name', 'uploadedfiles__uploaded_at', 'uploadedfiles__imagecontents__name', \
                   'uploadedfiles__description', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
                   'title_original2', 'title_subtitle_transcription2', 'title_translation2', 'title_original3', 'title_subtitle_transcription3', 'title_translation3', \
                   'title_original4', 'title_subtitle_transcription4', 'title_translation4', 'title_original5', 'title_subtitle_transcription5', 'title_translation5']
@@ -915,6 +915,53 @@ class FileCategoryUpdate(UpdateView):
     form_class = FileCategoryForm
     model = FileCategory
     success_url = '/filecategory/show/'
+
+class ImageContentCreate(CreateView):
+    '''
+    Inherits CreateView. Uses ImageContentForm as layout.
+    redirects to main page (show)
+    '''
+    template_name = 'publications/form.html'
+    form_class = ImageContentForm
+    success_url = '/imagecontent/show/'
+
+
+class ImageContentShow(ListView):
+    '''
+    Inherits ListView.
+    Uses imagecontent as model.
+    Uses imagecontent_show.html as template_name.
+    Set context_object_name to imagecontents.
+    '''
+    model = FileCategory
+    template_name = 'publications/image_contentshow.html'
+    context_object_name = 'imagecontents'
+    paginate_by = 10
+
+
+@login_required(login_url='/accounts/login/')
+def ImageContentDelete(request, pk):
+    '''
+    Arguments: request, pk
+    Selects imagecontent object by id equals pk.
+    Deletes the object.
+    redirects to main page. (show)
+    '''
+    imagecontent = ImageContent.objects.get(id=pk)
+    imagecontent.delete()
+    return redirect('/imagecontent/show')
+
+
+class ImageContentUpdate(UpdateView):
+    '''
+    Inherits UpdateView uses a standard form (crispy form)
+    Uses ImageContentForm as layout. And model ImageContent.
+    redirects to local main page. (show)
+    '''
+    template_name = 'publications/form.html'
+    form_class = ImageContentForm
+    model = ImageContent
+    success_url = '/imagecontent/show/'
 
 class IllustrationLayoutTypeCreate(CreateView):
     '''

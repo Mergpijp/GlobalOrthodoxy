@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, \
-    Language, IllustrationLayoutType, UploadedFile, Keyword, FileCategory
+    Language, IllustrationLayoutType, UploadedFile, Keyword, FileCategory, ImageContent
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field, Button, HTML
 from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton, AppendedText
@@ -214,9 +214,24 @@ class KeywordSelect2TagWidget(ModelSelect2TagWidget):
 
     def value_from_datadict(self, data, files, name):
         values = super().value_from_datadict(data, files, name)
-        print(values)
         queryset = self.get_queryset()
         pks = queryset.filter(**{'pk__in': [v for v in values if v.isdigit()]}).values_list('pk', flat=True)
+        cleaned_values = []
+        for val in values:
+            if represent_int(val) and int(val) not in pks or not represent_int(val) and force_text(val) not in pks:
+                val = queryset.create(name=val).pk
+            cleaned_values.append(val)
+        return cleaned_values
+
+
+class ImageContentSelect2TagWidget(ModelSelect2TagWidget):
+    queryset = ImageContent.objects.all()
+
+    def value_from_datadict(self, data, files, name):
+        values = super().value_from_datadict(data, files, name)
+        queryset = self.get_queryset()
+        if values:
+            pks = queryset.filter(**{'pk__in': [v for v in values if v.isdigit()]}).values_list('pk', flat=True)
         cleaned_values = []
         for val in values:
             if represent_int(val) and int(val) not in pks or not represent_int(val) and force_text(val) not in pks:
@@ -486,27 +501,16 @@ class KeywordForm(forms.ModelForm):
         return instance
 
 
-
-
 class FileCategoryForm(forms.ModelForm):
     '''
-        Form to create or edit an author. Can add Publications to the to be created author object.
+        Form to create or edit an filecategory.
         If its a FileCategory edit load all linked uploadedfiles.
         If its a FileCategory create do not load any uploadedfiles at start.
     '''
-    '''
-    uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        model=UploadedFile,
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['description__icontains'],
-    ), queryset=UploadedFile.objects.all(), required=False)
-    '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #if self.instance.id:
-        #    self.fields['uploadedfiles'].initial = UploadedFile.objects.filter(filecategory=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', #'uploadedfiles',
+        self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -515,21 +519,24 @@ class FileCategoryForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        '''
-        #pdb.set_trace()
-        if self.cleaned_data['uploadedfiles'].count() > len(instance.get_deferred_fields()):
-            diff = set(self.cleaned_data['uploadedfiles'].all()) - instance.get_deferred_fields()
-            for file in diff:
-                instance.get_deferred_fields().add(file)
+        return instance
 
-        elif self.cleaned_data['uploadedfiles'].count() < len(instance.get_deferred_fields()):
-            diff = instance.get_deferred_fields() - set(self.cleaned_data['uploadedfiles'].all())
-            if not diff:
-                for file in instance.get_deferred_fields():
-                    instance.get_deferred_fields().remove(file)
-            for file in diff:
-                instance.get_deferred_fields().remove(file)
-        '''
+class ImageContentForm(forms.ModelForm):
+    '''
+        Form to create or edit an ImageContent.
+    '''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout('name',
+                                    ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
+
+    class Meta:
+        model = FileCategory
+        fields = ('name',)
+
+    def save(self, commit=True):
+        instance = super().save(commit)
         return instance
 
 class AuthorForm(forms.ModelForm):
@@ -937,6 +944,18 @@ class UploadedFileForm(forms.ModelForm):
         If its a uploaded file edit load all linked publications.
         If its a uploaded file create do not load any publications at start.
     '''
+    '''
+    imagecontents = forms.ModelMultipleChoiceField(widget=ImageContentSelect2TagWidget(
+        model=ImageContent,
+        search_fields=['name__icontains', ],
+        attrs={'data-minimum-input-length': 0, },
+    ), queryset=ImageContent.objects.all(), required=False)
+    '''
+    imagecontents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=ImageContent,
+        search_fields=['name__icontains', ],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=ImageContent.objects.all(), required=False)
     filecategory = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=FileCategory,
         search_fields=['name__icontains', ],
@@ -961,6 +980,8 @@ class UploadedFileForm(forms.ModelForm):
             'description',
             FieldWithButtons('filecategory', StrictButton('+', type='button', css_class='btn-danger',
                                                              onClick="window.open('/filecategory/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+            FieldWithButtons('imagecontents', StrictButton('+', type='button', css_class='btn-danger',
+                                                             onClick="window.open('/imagecontent/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
             HTML("""
                                         File
                                         <div id='my-drop-zone' class='needsclick'>
@@ -995,17 +1016,23 @@ class UploadedFileForm(forms.ModelForm):
                                                     var myDropzone = this;
                                                     var addButton = $("#submit-btn");
                                                     addButton.click(function (e) {
+                                                    if (myDropzone.getQueuedFiles().length > 0) {
+                                                        e.preventDefault();
                                                         myDropzone.processQueue();
+                                                    }
                                                     });
                                                 },
                                                 sending: function (file, xhr, formData) {
                                                     formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
                                                     formData.append("description", $('#id_description').val());
                                                     formData.append('filecategory', $('#id_filecategory').val());
+                                                    formData.append('imagecontents', $('#id_imagecontents').val());
                                                     formData.append("publications", $('#id_publications').val());
-                                                     setTimeout(function () {
-                                                        window.location.href='/uploadedfile/show/'
+                                                    
+                                                    setTimeout(function () {
+                                                            window.location.href='/uploadedfile/show/';
                                                     }, 1000);
+
                                                 }
                                             });
                                             function getCookie(name) {
@@ -1032,7 +1059,7 @@ class UploadedFileForm(forms.ModelForm):
     class Meta:
         ordering = ['-description']
         model = UploadedFile
-        fields = ('description', 'filecategory', 'file', 'publications',)
+        fields = ('description', 'filecategory', 'file', 'imagecontents', 'publications',)
 
     def save(self, commit=True):
         instance = super().save(commit)

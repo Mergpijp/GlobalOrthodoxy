@@ -5,6 +5,7 @@
     <tr>  
         <th>description </th>
         <th>filecategory</th>
+        <th>image contents</th>
         <th>file </th>
         <th>uploaded at</th>
         <th>Actions</th>  
@@ -18,6 +19,11 @@
     <tr>  
         <td><a href="{% url 'publication-show' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.description }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{uploadedfile.filecategory.name}}">{{ uploadedfile.filecategory.name }}</a></td>
+        <td>
+        {% for imagecontent in uploadedfile.imagecontents.all %}
+            <a href="{% url 'publication-show' %}?q={{imagecontent.name}}">{{ imagecontent.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        </td>
         <td><a href="/media/{{uploadedfile.file}}">{{ uploadedfile.file }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{uploadedfile.uploaded_at}}">{{ uploadedfile.uploaded_at }}</a></td>
         <td>  

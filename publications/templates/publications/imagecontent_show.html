@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<table class="table table-striped table-bordered table-sm">  
+    <thead class="thead-light">  
+    <tr>  
+        <th>name </th>
+        <th>Actions</th>  
+    </tr>  
+    </thead> 
+<br> 
+<center><a href="/imagecontent/new" class="btn btn-primary btn-danger">Add New imagecontent</a></center>
+<br>      
+    <tbody>  
+{% for imagecontent in imagecontents %}
+    <tr>  
+        <td><a href="{% url 'publication-show' %}?q={{imagecontent.name}}">{{ filecategory.name }}</a></td>
+        <td>  
+            <a href="/imagecontent/{{ imagecontent.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
+            <a class="confirm-delete" href="/imagecontent/{{ imagecontent.id }}/delete">Delete</a>
+        </td>  
+    </tr>  
+{% endfor %}  
+    </tbody>  
+</table>  
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
