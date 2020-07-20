@@ -933,8 +933,8 @@ class ImageContentShow(ListView):
     Uses imagecontent_show.html as template_name.
     Set context_object_name to imagecontents.
     '''
-    model = FileCategory
-    template_name = 'publications/image_contentshow.html'
+    model = ImageContent
+    template_name = 'publications/imagecontent_show.html'
     context_object_name = 'imagecontents'
     paginate_by = 10
 

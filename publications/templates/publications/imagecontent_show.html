@@ -13,7 +13,7 @@
     <tbody>  
 {% for imagecontent in imagecontents %}
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{imagecontent.name}}">{{ filecategory.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{imagecontent.name}}">{{ imagecontent.name }}</a></td>
         <td>  
             <a href="/imagecontent/{{ imagecontent.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete" href="/imagecontent/{{ imagecontent.id }}/delete">Delete</a>

@@ -532,7 +532,7 @@ class ImageContentForm(forms.ModelForm):
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
-        model = FileCategory
+        model = ImageContent
         fields = ('name',)
 
     def save(self, commit=True):
