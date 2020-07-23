@@ -679,6 +679,7 @@
     <tr>
         <th>description</th>
         <th>filecategory</th>
+        <th>imagecontents</th>
         <th>files </th>
         <th>uploaded at</th>
     </tr>
@@ -687,7 +688,12 @@
 {% for file in object.uploadedfiles.all %}
     <tr>
         <td>{{file.description}}</td>
-        <td>{{ file.category }}</td>
+        <td>{{ file.filecategory.name }}</td>
+        <td>
+        {% for imagecontent in file.imagecontents.all %}
+            {{ imagecontent.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        </td>
         <td><a href="/media/{{file.file}}">{{ file.file }}</a></td>
         <td>{{file.uploaded_at}}</td>
     </tr>

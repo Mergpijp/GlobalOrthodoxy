@@ -486,18 +486,10 @@ class KeywordForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -510,12 +502,12 @@ class FileCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name',
+        self.helper.layout = Layout('name', 'order_index',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
         model = FileCategory
-        fields = ('name',)
+        fields = ('name', 'order_index')
 
     def save(self, commit=True):
         instance = super().save(commit)
@@ -566,18 +558,10 @@ class AuthorForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -608,18 +592,10 @@ class TranslatorForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -650,18 +626,10 @@ class FormOfPublicationForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -702,19 +670,10 @@ class CityForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -745,19 +704,10 @@ class ChurchForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -789,19 +739,10 @@ class LanguageForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -832,20 +773,10 @@ class GenreForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -877,20 +808,10 @@ class SpecialOccasionForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -921,20 +842,10 @@ class OwnerForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
 
 
@@ -1057,28 +968,16 @@ class UploadedFileForm(forms.ModelForm):
         )
 
     class Meta:
-        ordering = ['-description']
         model = UploadedFile
         fields = ('description', 'filecategory', 'file', 'imagecontents', 'publications',)
 
     def save(self, commit=True):
         instance = super().save(commit)
-
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance
-
 
 class IllustrationLayoutTypeForm(forms.ModelForm):
     '''
@@ -1107,18 +1006,8 @@ class IllustrationLayoutTypeForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-
-        if self.cleaned_data['publications'].count() > instance.publication_set.count():
-            diff = set(self.cleaned_data['publications'].all()) - set(instance.publication_set.all())
-            for pub in diff:
-                instance.publication_set.add(pub)
-
-        elif self.cleaned_data['publications'].count() < instance.publication_set.count():
-            diff = set(instance.publication_set.all()) - set(self.cleaned_data['publications'].all())
-            if not diff:
-                for pub in instance.publication_set:
-                    instance.publication_set.remove(pub)
-            for pub in diff:
-                instance.publication_set.remove(pub)
-
+        for pub in instance.publication_set.all():
+            instance.publication_set.remove(pub)
+        for pub in self.cleaned_data['publications'].all():
+            instance.publication_set.add(pub)
         return instance

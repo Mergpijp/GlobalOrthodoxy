@@ -180,6 +180,7 @@ class Keyword(models.Model):
         return self.name
 
 class FileCategory(models.Model):
+    order_index = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
@@ -205,6 +206,9 @@ class UploadedFile(models.Model):
 
     def __str__(self):
         return self.description
+
+    class Meta:
+        ordering = ('filecategory__order_index',)
 
 CHOICES = (
     (None, "Unknown"),
