@@ -249,12 +249,14 @@ class SearchResultsView(ListView):
         city = self.request.GET.getlist('publication_city')
         country = self.request.GET.getlist('publication_country')
         collection_country = self.request.GET.getlist('collection_country')
+        filecategory = self.request.GET.getlist('filecategory')
+        filecategory = FileCategory.objects.filter(pk__in=filecategory).all()
 
         if list(collection_country) != ['']:
             collection_country = Country.objects.filter(pk__in=city).all()
 
         if list(country) != ['']:
-            country = Country.objects.filter(pk__in=city).all()
+            country = Country.objects.filter(pk__in=country).all()
 
         print('....', city)
         if list(city) != ['']:
@@ -265,7 +267,8 @@ class SearchResultsView(ListView):
         exclude = ['csrfmiddlewaretoken','search', 'order_by', 'direction']
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by),\
-        ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), ('keywords', keywords), ('translated_from',translated_from),
+        ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), \
+        ('keywords', keywords), ('translated_from',translated_from), ('filecategory', filecategory),
                     ]
         special_case = ['copyrights', 'page', 'is_a_translation']
 

@@ -14,7 +14,7 @@
     <tbody>  
 {% for language in languages %}  
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{language.name}}">{{ language.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?language={{language.id}}">{{ language.name }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{language.direction}}">{{ language.direction }}</a></td>
         <td>  
             <a href="/language/{{ language.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  

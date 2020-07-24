@@ -13,7 +13,7 @@
     <tbody>  
 {% for keyword in keywords %}
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{keyword.name}}">{{ keyword.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?keywords={{keyword.id}}">{{ keyword.name }}</a></td>
         <td>  
             <a href="/keyword/{{ keyword.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete" href="/keyword/{{ keyword.id }}/delete">Delete</a>
