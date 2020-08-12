@@ -15,7 +15,7 @@
     <tbody>  
 {% for translator in translators %}  
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{translator.name}}">{{ translator.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?translator={{translator.id}}">{{ translator.name }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{translator.name_original_language}}">{{ translator.name_original_language }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{translator.extra_info}}">{{ translator.extra_info }}</a></td>
         <td>  

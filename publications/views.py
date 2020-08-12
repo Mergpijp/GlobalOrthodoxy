@@ -268,7 +268,7 @@ class SearchResultsView(ListView):
         in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by),\
         ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), \
-        ('keywords', keywords), ('translated_from',translated_from), ('filecategory', filecategory),
+        ('keywords', keywords), ('translated_from',translated_from), ('uploadedfiles__filecategory', filecategory),
                     ]
         special_case = ['copyrights', 'page', 'is_a_translation']
 
