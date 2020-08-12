@@ -16,7 +16,7 @@
 {% for publication in publications %}  
     <tr id="publications">
         {% if publication.coverfile.file %}
-        <td style="text-align: center;"><img src="/media/{{publication.coverfile.file}}" width="200" height="200"></td>
+            <td style="text-align: center;"><a href="/publication/{{ publication.id }}/detail_view"><img src="/media/{{publication.coverfile.file}}" width="200" height="200"></a></td>
         {% else %}
         <td></td>
         {% endif %}
