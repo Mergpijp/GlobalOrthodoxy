@@ -317,11 +317,6 @@ class NewCrispyForm(forms.ModelForm):
         search_fields=['description__icontains', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False)
-    coverfile = forms.ModelChoiceField(widget=ModelSelect2Widget(
-        model=UploadedFile,
-        search_fields=['description__icontains', ],
-        attrs={'data-minimum-input-length': 0},
-    ), queryset=UploadedFile.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=Language,
         search_fields=['name__icontains', ],
@@ -342,7 +337,6 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['currently_owned_by'].required = False
         self.fields['form_of_publication'].required = False
         self.fields['uploadedfiles'].required = False
-        self.fields['coverfile'].required = False
         self.fields['publication_country'].required = False
         self.fields['is_a_translation'].required = False
         self.fields['keywords'].required = False
@@ -419,7 +413,6 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Files',
                     FieldWithButtons('uploadedfiles', StrictButton('+', type='button', css_class='btn-danger',
                                                                    onClick="window.open('/uploadedfile/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    'coverfile',
                     ),
                 Tab('Comments',
                     'general_comments',
@@ -454,7 +447,7 @@ class NewCrispyForm(forms.ModelForm):
                   'is_a_translation', 'ISBN_number', 'translated_from', \
                   'title_original3', 'title_subtitle_transcription3', 'title_translation3', 'title_original4',
                   'title_subtitle_transcription4', 'title_translation4', \
-                  'title_original5', 'title_subtitle_transcription5', 'title_translation5', 'coverfile')
+                  'title_original5', 'title_subtitle_transcription5', 'title_translation5')
         # publication_country = forms.ChoiceField(choices=list(countries))
 
 import pdb

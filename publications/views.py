@@ -366,6 +366,33 @@ class SearchResultsView(ListView):
             context['q'] = q
         else:
             context['q'] = ''
+
+        cover_images = []
+        for pub in context['publications']:
+            min = 9
+            length = len(cover_images)
+            for uploadedfile in pub.uploadedfiles.all():
+                if str(uploadedfile.filecategory) == 'Cover image' and min > 1:
+                    if min == 4 or min == 3 or min == 2:
+                        cover_images = cover_images[:-1]
+                    cover_images.append(uploadedfile.file)
+                    break
+                elif str(uploadedfile.filecategory) == 'Frontispiece' and min > 2:
+                    if min == 4 or min == 3:
+                        cover_images = cover_images[:-1]
+                    min = 2
+                    cover_images.append(uploadedfile.file)
+                elif str(uploadedfile.filecategory) == 'Title page' and min > 3:
+                    if min == 4:
+                        cover_images = cover_images[:-1]
+                    min = 3
+                    cover_images.append(uploadedfile.file)
+                elif str(uploadedfile.filecategory) == 'Illustration' and min > 4:
+                    min = 4
+                    cover_images.append(uploadedfile.file)
+            if length == len(cover_images):
+                cover_images.append(None)
+        context['publications'] = zip(context['publications'], cover_images)
         return context
 
 class ThrashbinShow(ListView):

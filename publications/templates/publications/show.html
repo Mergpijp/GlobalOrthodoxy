@@ -13,10 +13,10 @@
     </thead>
     <tbody>
     <br />
-{% for publication in publications %}  
+{% for publication, cover_image in publications %}
     <tr id="publications">
-        {% if publication.coverfile.file %}
-            <td style="text-align: center;"><a href="/publication/{{ publication.id }}/detail_view"><img src="/media/{{publication.coverfile.file}}" width="200" height="200"></a></td>
+        {% if cover_image %}
+            <td style="text-align: center;"><a href="/publication/{{ publication.id }}/detail_view"><img src="/media/{{ cover_image }}" width="200" height="200"></a></td>
         {% else %}
         <td></td>
         {% endif %}
