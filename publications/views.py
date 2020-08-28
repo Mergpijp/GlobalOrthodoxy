@@ -379,7 +379,7 @@ class SearchResultsView(ListView):
             length = len(cover_images)
             inside = False
             for uploadedfile in pub.uploadedfiles.all():
-                if uploadedfile.filecategory.list_view_priority:
+                if uploadedfile.filecategory and uploadedfile.filecategory.list_view_priority:
                     compare = int(uploadedfile.filecategory.list_view_priority)
                     if compare < min:
                         min = compare
