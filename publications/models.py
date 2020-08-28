@@ -182,6 +182,7 @@ class Keyword(models.Model):
 class FileCategory(models.Model):
     order_index = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=255, blank=True)
+    list_view_priority = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.name

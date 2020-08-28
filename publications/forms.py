@@ -495,12 +495,12 @@ class FileCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'order_index',
+        self.helper.layout = Layout('name', 'order_index', 'list_view_priority',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
         model = FileCategory
-        fields = ('name', 'order_index')
+        fields = ('name', 'order_index', 'list_view_priority')
 
     def save(self, commit=True):
         instance = super().save(commit)

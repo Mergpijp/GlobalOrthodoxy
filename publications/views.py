@@ -20,6 +20,7 @@ from django.shortcuts import redirect
 import re
 from django_countries import countries
 from django.utils import timezone
+import datetime
 import json
 from django.urls import reverse
 from django.core import serializers
@@ -34,6 +35,11 @@ from django.db.models import Count
 from django.db.models.functions import Lower
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import pdb
+import pytz
+from PIL import Image
+
+utc=pytz.UTC
+
 
 register = template.Library()
 
@@ -371,25 +377,31 @@ class SearchResultsView(ListView):
         for pub in context['publications']:
             min = 9
             length = len(cover_images)
+            inside = False
             for uploadedfile in pub.uploadedfiles.all():
-                if str(uploadedfile.filecategory) == 'Cover image' and min > 1:
-                    if min == 4 or min == 3 or min == 2:
-                        cover_images = cover_images[:-1]
-                    cover_images.append(uploadedfile.file)
-                    break
-                elif str(uploadedfile.filecategory) == 'Frontispiece' and min > 2:
-                    if min == 4 or min == 3:
-                        cover_images = cover_images[:-1]
-                    min = 2
-                    cover_images.append(uploadedfile.file)
-                elif str(uploadedfile.filecategory) == 'Title page' and min > 3:
-                    if min == 4:
-                        cover_images = cover_images[:-1]
-                    min = 3
-                    cover_images.append(uploadedfile.file)
-                elif str(uploadedfile.filecategory) == 'Illustration' and min > 4:
-                    min = 4
-                    cover_images.append(uploadedfile.file)
+                if uploadedfile.filecategory.list_view_priority:
+                    compare = int(uploadedfile.filecategory.list_view_priority)
+                    if compare < min:
+                        min = compare
+                        if inside:
+                            cover_images = cover_images[:-1]
+                        inside = True
+                        cover_images.append(uploadedfile.file)
+            if length == len(cover_images):
+                date = datetime.datetime.now()
+                date = date.replace(tzinfo=utc)
+                inside = False
+                for uploadedfile in pub.uploadedfiles.all():
+                    if uploadedfile.uploaded_at and uploadedfile.uploaded_at < date:
+                        try:
+                            im = Image.open(uploadedfile.file)
+                            date = uploadedfile.uploaded_at
+                            if inside:
+                                cover_images = cover_images[:-1]
+                            cover_images.append(uploadedfile.file)
+                            inside = True
+                        except IOError:
+                            continue
             if length == len(cover_images):
                 cover_images.append(None)
         context['publications'] = zip(context['publications'], cover_images)
