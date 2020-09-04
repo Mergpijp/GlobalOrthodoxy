@@ -421,8 +421,8 @@ class NewCrispyForm(forms.ModelForm):
                     )
             ),
             ButtonHolder(
-                Button('cancel', 'Back', css_class='btn-back btn-danger', onclick="history.back()"),
-                Submit('next', 'Next', css_class='btn-danger'),
+                #Button('cancel', 'Back', css_class='btn-back btn-danger', onclick="history.back()"),
+                #Submit('next', 'Next', css_class='btn-danger'),
                 Submit('save', 'Save', css_class='btn-save btn-danger'),
             )
         )
