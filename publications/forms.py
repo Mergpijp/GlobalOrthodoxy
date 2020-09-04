@@ -233,10 +233,11 @@ class ImageContentSelect2TagWidget(ModelSelect2TagWidget):
         if values:
             pks = queryset.filter(**{'pk__in': [v for v in values if v.isdigit()]}).values_list('pk', flat=True)
         cleaned_values = []
-        for val in values:
-            if represent_int(val) and int(val) not in pks or not represent_int(val) and force_text(val) not in pks:
-                val = queryset.create(name=val).pk
-            cleaned_values.append(val)
+        if values:
+            for val in values:
+                if represent_int(val) and int(val) not in pks or not represent_int(val) and force_text(val) not in pks:
+                    val = queryset.create(name=val).pk
+                cleaned_values.append(val)
         return cleaned_values
 
 
@@ -930,9 +931,9 @@ class UploadedFileForm(forms.ModelForm):
                                                 },
                                                 sending: function (file, xhr, formData) {
                                                     formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
-                                                    formData.append("description", $('#id_description').val());
+                                                    formData.append("image_title", $('#id_image_title').val());
                                                     formData.append('filecategory', $('#id_filecategory').val());
-                                                    formData.append('imagecontents', $('#id_imagecontents').val());
+                                                    formData.append('image_contents', $('#id_image_contents').val());
                                                     formData.append("publication", $('#id_publication').val());
                                                     
                                                     setTimeout(function () {

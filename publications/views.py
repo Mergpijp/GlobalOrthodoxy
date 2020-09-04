@@ -51,8 +51,8 @@ translator = GTranslator()
 @login_required(login_url='/accounts/login/')
 def process_file(request, pk=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
-    post_mutable = {'description': request.POST['description'], 'filecategory': request.POST['filecategory'], \
-                    'publication': request.POST['publication'], 'imagecontents': request.POST['imagecontents']}
+    post_mutable = {'image_title': request.POST['image_title'], 'filecategory': request.POST['filecategory'], \
+                    'publication': request.POST['publication'], 'imagecontents': request.POST['image_contents']}
     my_filter_qs = Q()
     for id in request.POST['publication'] :
         my_filter_qs = my_filter_qs | Q(id=id)
