@@ -105,3 +105,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     margin-right: auto;
     height:200px
 }
+#crop_image {
+    object-fit: cover;
+}
