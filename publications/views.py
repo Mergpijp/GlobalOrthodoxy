@@ -69,6 +69,7 @@ def process_file(request, pk=None):
 
     return HttpResponse(status=500)
 
+@login_required(login_url='/accounts/login/')
 def view_input_update(request):
     if request.method == 'GET':
         if 'input' in request.GET:
@@ -78,6 +79,7 @@ def view_input_update(request):
     return HttpResponse('ERROR')
 
 @register.simple_tag
+@login_required(login_url='/accounts/login/')
 def url_replace(request, field, value, direction=''):
     dict_ = request.GET.copy()
 
