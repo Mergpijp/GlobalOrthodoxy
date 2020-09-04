@@ -848,11 +848,11 @@ class UploadedFileForm(forms.ModelForm):
         If its a uploaded file edit load all linked publications.
         If its a uploaded file create do not load any publications at start.
     '''
-    '''
+
     imagecontents = forms.ModelMultipleChoiceField(widget=ImageContentSelect2TagWidget(
         model=ImageContent,
         search_fields=['name__icontains', ],
-        attrs={'data-minimum-input-length': 0, },
+        attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]',},
     ), queryset=ImageContent.objects.all(), required=False)
     '''
     imagecontents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
@@ -860,6 +860,7 @@ class UploadedFileForm(forms.ModelForm):
         search_fields=['name__icontains', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=ImageContent.objects.all(), required=False)
+    '''
     filecategory = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=FileCategory,
         search_fields=['name__icontains', ],
@@ -884,8 +885,9 @@ class UploadedFileForm(forms.ModelForm):
             'description',
             FieldWithButtons('filecategory', StrictButton('+', type='button', css_class='btn-danger',
                                                              onClick="window.open('/filecategory/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-            FieldWithButtons('imagecontents', StrictButton('+', type='button', css_class='btn-danger',
-                                                             onClick="window.open('/imagecontent/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+            'imagecontents',
+            #FieldWithButtons('imagecontents', StrictButton('+', type='button', css_class='btn-danger',
+            #                                                 onClick="window.open('/imagecontent/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
             HTML("""
                                         File
                                         <div id='my-drop-zone' class='needsclick'>
