@@ -310,7 +310,7 @@ class NewCrispyForm(forms.ModelForm):
     keywords = forms.ModelMultipleChoiceField(widget=KeywordSelect2TagWidget(
         model=Keyword,
         search_fields=['name__icontains', ],
-        attrs={'data-minimum-input-length': 0, },
+        attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]', },
     ), queryset=Keyword.objects.all(), required=False)
     uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=UploadedFile,
