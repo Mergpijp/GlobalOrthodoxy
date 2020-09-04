@@ -677,9 +677,9 @@
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
     <tr>
-        <th>description</th>
+        <th>image title</th>
         <th>filecategory</th>
-        <th>imagecontents</th>
+        <th>image contents</th>
         <th>files </th>
         <th>uploaded at</th>
     </tr>
@@ -687,10 +687,10 @@
     <tbody>
 {% for file in object.uploadedfiles.all %}
     <tr>
-        <td>{{file.description}}</td>
+        <td>{{file.image_title}}</td>
         <td>{{ file.filecategory.name }}</td>
         <td>
-        {% for imagecontent in file.imagecontents.all %}
+        {% for imagecontent in file.image_contents.all %}
             {{ imagecontent.name }}{% if not forloop.last %}, {% endif %}
         {% endfor %}
         </td>

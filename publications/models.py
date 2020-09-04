@@ -199,9 +199,9 @@ class UploadedFile(models.Model):
     A charfield, filefield and DateTimeField.
     The DateTimeField will be automatically added.
     '''
-    description = models.CharField(max_length=255, blank=True)
+    image_title = models.CharField(max_length=255, blank=True)
     filecategory = models.ForeignKey(FileCategory, on_delete=models.CASCADE, related_name="filecategory", null=True, blank=True)
-    imagecontents = models.ManyToManyField(ImageContent)
+    image_contents = models.ManyToManyField(ImageContent)
     file = models.FileField(upload_to='files/%Y/%m/%d/%H/%M/%S/%f/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 

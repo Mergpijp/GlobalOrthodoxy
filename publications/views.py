@@ -52,14 +52,14 @@ translator = GTranslator()
 def process_file(request, pk=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
     post_mutable = {'description': request.POST['description'], 'filecategory': request.POST['filecategory'], \
-                    'publications': request.POST['publications'], 'imagecontents': request.POST['imagecontents']}
+                    'publication': request.POST['publication'], 'imagecontents': request.POST['imagecontents']}
     my_filter_qs = Q()
-    for id in request.POST['publications'] :
+    for id in request.POST['publication'] :
         my_filter_qs = my_filter_qs | Q(id=id)
     if not my_filter_qs:
-        post_mutable['publications'] = None
+        post_mutable['publication'] = None
     else:
-        post_mutable['publications'] = Publication.objects.filter(my_filter_qs)
+        post_mutable['publication'] = Publication.objects.filter(my_filter_qs)
 
     form = UploadedFileForm(post_mutable or None, request.FILES or None, instance=obj)
     if request.method == 'POST':
