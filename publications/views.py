@@ -78,6 +78,8 @@ def view_input_update(request):
             return HttpResponse(LANGUAGES[language])
     return HttpResponse('ERROR')
 
+
+'''
 @register.simple_tag
 @login_required(login_url='/accounts/login/')
 def url_replace(request, field, value, direction=''):
@@ -94,6 +96,7 @@ def url_replace(request, field, value, direction=''):
       dict_[field] = direction + value
 
     return urlencode(OrderedDict(sorted(dict_.items())))
+'''
 
 class PublicationUpdate(UpdateView):
     '''
@@ -216,13 +219,12 @@ class SearchResultsView(ListView):
     context_object_name = 'publications'
     publications = Publication.objects.filter(is_deleted=False)
     paginate_by = 10
-    ordering = 'title_original'
+    #ordering = 'title_original'
 
     def get_ordering(self):
         ordering = self.request.GET.get('order_by')
         direction = self.request.GET.get('direction')
         if ordering is not None and ordering != "" and direction is not None and direction != "":
-            #ordering = Lower(ordering)
             if direction == 'desc':
                 ordering = '-{}'.format(ordering)
         return ordering
@@ -394,7 +396,7 @@ class SearchResultsView(ListView):
                 date = date.replace(tzinfo=utc)
                 inside = False
                 for uploadedfile in pub.uploadedfiles.all():
-                    if uploadedfile.uploaded_at and uploadedfile.uploaded_at < date:
+                    if uploadedfile.uploaded_at and uploadedfile.uploaded_at < date and uploadedfile.file:
                         try:
                             im = Image.open(uploadedfile.file)
                             date = uploadedfile.uploaded_at
@@ -420,7 +422,30 @@ class ThrashbinShow(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Publication.objects.filter(is_deleted=True)
+        publications = Publication.objects.filter(is_deleted=True)
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            publications = publications.order_by(ordering)
+        return publications
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(ThrashbinShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
 
 @login_required(login_url='/accounts/login/')
 def ThrashbinRestore(request, pk):
@@ -448,6 +473,33 @@ class KeywordShow(ListView):
     template_name = 'publications/keyword_show.html'
     context_object_name = 'keywords'
     paginate_by = 10
+
+    def get_queryset(self):
+        keywords = Keyword.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            keywords = keywords.order_by(ordering)
+        return keywords
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(KeywordShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 
 @login_required(login_url='/accounts/login/')
 def KeywordDelete(request, pk):
@@ -490,6 +542,32 @@ class AuthorShow(ListView):
     template_name = 'publications/author_show.html'
     context_object_name = 'authors'
     paginate_by = 10
+
+    def get_queryset(self):
+        authors = Author.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            authors = authors.order_by(ordering)
+        return authors
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
 
 @login_required(login_url='/accounts/login/')
 def AuthorDelete(request, pk):
@@ -535,6 +613,32 @@ class TranslatorShow(ListView):
     context_object_name = 'translators'
     paginate_by = 10
 
+    def get_queryset(self):
+        translators = Translator.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            translators = translators.order_by(ordering)
+        return translators
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(TranslatorShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 @login_required(login_url='/accounts/login/')
 def TranslatorDelete(request, pk):
     '''
@@ -579,6 +683,32 @@ class FormOfPublicationShow(ListView):
     context_object_name = 'form_of_publications'
     paginate_by = 10
 
+    def get_queryset(self):
+        form_of_publications = FormOfPublication.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            form_of_publications = form_of_publications.order_by(ordering)
+        return form_of_publications
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(FormOfPublicationShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 @login_required(login_url='/accounts/login/')
 def FormOfPublicationDelete(request, pk):
     '''
@@ -622,6 +752,33 @@ class CityShow(ListView):
     template_name = 'publications/city_show.html'
     context_object_name = 'cities'
     paginate_by = 10
+
+    def get_queryset(self):
+        cities = City.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            cities = cities.order_by(ordering)
+        return cities
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(CityShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 
 @login_required(login_url='/accounts/login/')
 def CityDelete(request, pk):
@@ -668,6 +825,32 @@ class GenreShow(ListView):
     context_object_name = 'genres'
     paginate_by = 10
 
+    def get_queryset(self):
+        genres = Genre.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            genres = genres.order_by(ordering)
+        return genres
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(GenreShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 @login_required(login_url='/accounts/login/')
 def GenreDelete(request, pk):
     '''
@@ -712,6 +895,32 @@ class ChurchShow(ListView):
     context_object_name = 'churches'
     paginate_by = 10
 
+    def get_queryset(self):
+        churches = Church.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            churches = churches.order_by(ordering)
+        return churches
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(ChurchShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 @login_required(login_url='/accounts/login/')
 def ChurchDelete(request, pk):
     '''
@@ -755,7 +964,33 @@ class LanguageShow(ListView):
     template_name = 'publications/language_show.html'
     context_object_name = 'languages'
     paginate_by = 10
-    
+
+    def get_queryset(self):
+        languages = Language.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            languages = languages.order_by(ordering)
+        return languages
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(LanguageShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 @login_required(login_url='/accounts/login/')
 def LanguageDelete(request, pk):
     '''
@@ -800,7 +1035,33 @@ class SpecialOccasionShow(ListView):
     template_name = 'publications/specialoccasion_show.html'
     context_object_name = 'specialoccasions'
     paginate_by = 10
-    
+
+    def get_queryset(self):
+        specialoccasions = SpecialOccasion.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            specialoccasions = specialoccasions.order_by(ordering)
+        return specialoccasions
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(SpecialOccasionShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 @login_required(login_url='/accounts/login/')
 def SpecialOccasionDelete(request, pk):
     '''
@@ -844,7 +1105,33 @@ class OwnerShow(ListView):
     template_name = 'publications/owner_show.html'
     context_object_name = 'owners'
     paginate_by = 10
-    
+
+    def get_queryset(self):
+        owners = Owner.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            owners = owners.order_by(ordering)
+        return owners
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(OwnerShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 @login_required(login_url='/accounts/login/')
 def OwnerDelete(request, pk):
     '''
@@ -888,7 +1175,33 @@ class UploadedFileShow(ListView):
     template_name = 'publications/uploadedfile_show.html'
     context_object_name = 'uploadedfiles'
     paginate_by = 10
-    
+
+    def get_queryset(self):
+        uploadedfiles = UploadedFile.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            uploadedfiles = uploadedfiles.order_by(ordering)
+        return uploadedfiles
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(UploadedFileShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 @login_required(login_url='/accounts/login/')
 def UploadedFileDelete(request, pk):
     '''
@@ -934,6 +1247,32 @@ class FileCategoryShow(ListView):
     template_name = 'publications/filecategory_show.html'
     context_object_name = 'filecategories'
     paginate_by = 10
+
+    def get_queryset(self):
+        filecategories = FileCategory.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            filecategories = filecategories.order_by(ordering)
+        return filecategories
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(FileCategoryShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
 
 
 @login_required(login_url='/accounts/login/')
@@ -981,6 +1320,32 @@ class ImageContentShow(ListView):
     template_name = 'publications/imagecontent_show.html'
     context_object_name = 'imagecontents'
     paginate_by = 10
+
+    def get_queryset(self):
+        imagecontents = ImageContent.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            imagecontents = imagecontents.order_by(ordering)
+        return imagecontents
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageContentShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
 
 
 @login_required(login_url='/accounts/login/')

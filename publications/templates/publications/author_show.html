@@ -3,9 +3,9 @@
 <table class="table table-striped table-bordered table-sm">  
     <thead class="thead-light">  
     <tr>  
-        <th>Name </th>
-        <th>Name original language</th>
-        <th>Extra info</th>
+        <th>Name <a href="?order_by=name&direction=asc" class="arrow up"></a> <a href="?order_by=name&direction=desc" class="arrow down"></a> </th>
+        <th>Name original language <a href="?order_by=name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=name_original_language&direction=desc" class="arrow down"></a> </th>
+        <th>Extra info <a href=?order_by=extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=extra_info&direction=desc" class="arrow down"></a> </th>
         <th>Actions</th>  
     </tr>  
     </thead> 
@@ -29,8 +29,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page=1&order_by={{order_by}}&direction={{ direction }}">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}&order_by={{order_by}}&direction={{ direction }}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -38,8 +38,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}&order_by={{order_by}}&direction={{ direction }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&order_by={{order_by}}&direction={{ direction }}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
