@@ -5,8 +5,11 @@
     <tr>
         <th>Cover Image</th>
         <th>Title original  <a href="?q={{ q }}&order_by=title_original&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_original&direction=desc" class="arrow down"></a></th>
-        <th>Title subtitle transcription <a href="?q={{ q }}&order_by=title_subtitle_transcription&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_subtitle_transcription&direction=desc" class="arrow down"></a></th>
-        <th>Title translation <a href="?q={{ q }}&order_by=title_translation&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_translation&direction=desc" class="arrow down"></a></th></th>
+        <th>Author name <a href="?order_by=author__name&direction=asc" class="arrow up"></a> <a href="?order_by=author__name&direction=desc" class="arrow down"></a> </th>
+        <th>Author name original language <a href="?order_by=name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=name_original_language&direction=desc" class="arrow down"></a> </th>
+        <th>Author extra info <a href="?order_by=extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=extra_info&direction=desc" class="arrow down"></a> </th>
+        <th>Translator name</th>
+        <th>Publication date <a href="?order_by=publication_date&direction=asc" class="arrow up"></a> <a href="?order_by=publication_date&direction=desc" class="arrow down"></a></th>
         <th>Actions</th>
 
     </tr>  
@@ -21,8 +24,16 @@
         <td></td>
         {% endif %}
         <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>
-        <td>{{ publication.title_subtitle_transcription}}</td>
-        <td>{{ publication.title_translation }}</td>  
+        <td>
+            {% for author in publication.author.all %}
+                {% if forloop.last %}
+                    {{ author.name }}
+                {% else %}
+                    {{ author.name }},
+                {% endif %}
+            {% endfor %}
+        </td>
+
         <td> 
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
             <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  

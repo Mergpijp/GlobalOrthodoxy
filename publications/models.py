@@ -206,7 +206,7 @@ class UploadedFile(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
-        return self.description
+        return self.image_title
 
     class Meta:
         ordering = ('filecategory__order_index',)

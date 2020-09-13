@@ -52,7 +52,7 @@ translator = GTranslator()
 def process_file(request, pk=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
     post_mutable = {'image_title': request.POST['image_title'], 'filecategory': request.POST['filecategory'], \
-                    'publication': request.POST['publication'], 'imagecontents': request.POST['image_contents']}
+                    'publication': request.POST['publication'], 'image_contents': request.POST['image_contents']}
     my_filter_qs = Q()
     for id in request.POST['publication'] :
         my_filter_qs = my_filter_qs | Q(id=id)
@@ -357,6 +357,11 @@ class SearchResultsView(ListView):
             publications = publications.filter(is_a_translation=val)
 
         publications = publications.distinct()
+        print('777777', publications)
+        publications = Publication.objects.values_list('id', flat=True).distinct()
+        print(list(publications))
+        publications = Publication.objects.filter(id__in=publications)
+        print('8888', list(publications))
         ordering = self.get_ordering()
         if ordering is not None and ordering != "":
             publications = publications.order_by(ordering)
@@ -408,6 +413,10 @@ class SearchResultsView(ListView):
                             continue
             if length == len(cover_images):
                 cover_images.append(None)
+        #context['publications'] = context['publications'].distinct()
+        #publications = context['publications']
+        #publications = publications.distinct()
+        print(context['publications'])
         context['publications'] = zip(context['publications'], cover_images)
         return context
 

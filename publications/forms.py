@@ -87,7 +87,7 @@ class PublicationForm(forms.ModelForm):
     ), queryset=Owner.objects.all(), required=False)
     uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=UploadedFile,
-        search_fields=['description__icontains', ],
+        search_fields=['image_title__icontains', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False)
     keywords = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
