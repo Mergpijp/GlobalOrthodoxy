@@ -249,7 +249,10 @@ class SearchResultsView(ListView):
         currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
         is_a_translation =  self.request.GET.get('is_a_translation')
-        publications = Publication.objects.filter(is_deleted=False)
+
+        #publications = Publication.objects.filter(is_deleted=False)
+        publications = Publication.objects.filter(is_deleted=False).values('id').distinct()
+        #publications = publications.filter(is_deleted=False)
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
         keywords = self.request.GET.getlist('keywords')
@@ -356,11 +359,11 @@ class SearchResultsView(ListView):
             print('11111', str(is_a_translation))
             publications = publications.filter(is_a_translation=val)
 
-        publications = publications.distinct()
+        #publications = publications.distinct('id')
         print('777777', publications)
-        publications = Publication.objects.values_list('id', flat=True).distinct()
-        print(list(publications))
-        publications = Publication.objects.filter(id__in=publications)
+        #publications = Publication.objects.values_list('id', flat=True).distinct()
+        #print(list(publications))
+        #publications = Publication.objects.filter(id__in=publications)
         print('8888', list(publications))
         ordering = self.get_ordering()
         if ordering is not None and ordering != "":
@@ -387,7 +390,7 @@ class SearchResultsView(ListView):
             min = 9
             length = len(cover_images)
             inside = False
-            for uploadedfile in pub.uploadedfiles.all():
+            for uploadedfile in pub['uploadedfiles']:#pub.uploadedfiles.all():
                 if uploadedfile.filecategory and uploadedfile.filecategory.list_view_priority:
                     compare = int(uploadedfile.filecategory.list_view_priority)
                     if compare < min:
