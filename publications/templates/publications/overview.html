@@ -5,15 +5,15 @@
     <tr>
         <th>Cover Image</th>
         <th>Title original <br/><a href="?q={{ q }}&order_by=title_original&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_original&direction=desc" class="arrow down"></a></th>
+        <th>Title translation <br/><a href="?q={{ q }}&order_by=title_translation&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_translation&direction=desc" class="arrow down"></a></th>
         <th>Author name <br/><a href="?order_by=author_name&direction=asc" class="arrow up"></a> <a href="?order_by=author_name&direction=desc" class="arrow down"></a> </th>
         <th>Author name original language <br/><a href="?order_by=author_name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=author_name_original_language&direction=desc" class="arrow down"></a> </th>
         <th>Author extra info <br/><a href="?order_by=author_extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=author_extra_info&direction=desc" class="arrow down"></a> </th>
-        <th>translator name <br/><a href="?order_by=translator_name&direction=asc" class="arrow up"></a> <a href="?order_by=translator_name&direction=desc" class="arrow down"></a> </th>
-        <th>translator name original language <br/><a href="?order_by=translator_name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=translator_name_original_language&direction=desc" class="arrow down"></a> </th>
-        <th>translator extra info <br/><a href="?order_by=translator_extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=translator_extra_info&direction=desc" class="arrow down"></a> </th>
         <th>Publication date</th>
+        <th>Publication place <br/><a href="?order_by=publication_city__name&direction=asc" class="arrow up"></a> <a href="?order_by=publication_city__name&direction=desc" class="arrow down"></a></th>
+        <th>Language <br/><a href="?order_by=language_name&direction=asc" class="arrow up"></a> <a href="?order_by=language_name&direction=desc" class="arrow down"></a></th>
+        <th>Genre <br/><a href="?order_by=content_genre_name&direction=asc" class="arrow up"></a> <a href="?order_by=content_genre_name&direction=desc" class="arrow down"></a></th>
         <th>Actions</th>
-
     </tr>  
     </thead>
     <tbody>
@@ -26,6 +26,7 @@
         <td></td>
         {% endif %}
         <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>
+        <td>{{ publication.title_translation }}</td>
         <td>
             {% for author in publication.author.all %}
                 {% if forloop.last %}
@@ -55,42 +56,36 @@
                 {% endif %}
             {% endfor %}
         </td>
+        <td>{{ publication.publication_date }}</td>
         <td>
-            {% for translator in publication.translator.all %}
-                {% if forloop.last %}
-                    {{ translator.name }}
-                {% else %}
-                    {{ translator.name }},
-                {% endif %}
-            {% endfor %}
+        {% if publication.publication_country %}
+            {{ publication.publication_country }}, {{ publication.publication_city.name }}
+        {% endif %}
         </td>
 
         <td>
-            {% for translator in publication.translator.all %}
+            {% for language in publication.language.all %}
                 {% if forloop.last %}
-                    {{ translator.name_original_language }}
+                    {{ language.name }}
                 {% else %}
-                    {{ translator.name_original_language }},
+                    {{ language.name }},
                 {% endif %}
             {% endfor %}
         </td>
-
         <td>
-            {% for translator in publication.translator.all %}
+            {% for genre in publication.content_genre.all %}
                 {% if forloop.last %}
-                    {{ translator.extra_info }}
+                    {{ genre.name }}
                 {% else %}
-                    {{ translator.extra_info }},
+                    {{ genre.name }},
                 {% endif %}
             {% endfor %}
         </td>
-        <td>{{ publication.publication_date }}</td></td>
-        <td> 
+        <td>
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
-            <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
+            <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete-pub" href="/publication/{{ publication.id }}/delete">Delete</a>
         </td>
-
     </tr>
 {% endfor %}  
     </tbody>  

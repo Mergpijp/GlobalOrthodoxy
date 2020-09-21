@@ -11,6 +11,7 @@ urlpatterns = [
     path('uploadedfile/proces/<int:pk>/', views.process_file, name='uploadedfile-proces'),
     path('uploadedfile/proces/', views.process_file, name='uploadedfile-proces'),
     path('publication/show/', login_required(SearchResultsView.as_view()), name='publication-show'),
+    path('publication/overview/', login_required(SearchResultsView.as_view()), name='publication-overview'),
     path('publication/<int:pk>/detail_view/', PublicationDetailView.as_view(), name='publication-detail'),
     path('publication/<int:pk>/edit/', login_required(PublicationUpdate.as_view()), name='publication-update'),
     path('publication/<int:pk>/delete/', PublicationDelete, name='publication-delete'),

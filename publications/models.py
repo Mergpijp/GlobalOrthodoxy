@@ -298,3 +298,5 @@ class Publication(models.Model):
         return 'title_original: ' + self.title_original +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
                 + ', title_translation: ' + self.title_translation
 
+    #@property
+    #def order-

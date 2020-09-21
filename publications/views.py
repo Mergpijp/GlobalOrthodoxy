@@ -37,6 +37,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import pdb
 import pytz
 from PIL import Image
+from django.db.models import OuterRef, Subquery
 
 utc=pytz.UTC
 
@@ -215,11 +216,17 @@ class SearchResultsView(ListView):
     If a normal field is searched use __icontains if a list element is searched use: __in.
     '''
     model = Publication
-    template_name = 'publications/show.html'
+    #template_name = 'publications/show.html'
     context_object_name = 'publications'
     publications = Publication.objects.filter(is_deleted=False)
     paginate_by = 10
     #ordering = 'title_original'
+
+    def get_template_names(self):
+        if self.request.path == '/publication/overview/':
+            return ['publications/overview.html']
+        return ['publications/show.html']
+
 
     def get_ordering(self):
         ordering = self.request.GET.get('order_by')
@@ -250,8 +257,8 @@ class SearchResultsView(ListView):
         copyrights = self.request.GET.get('copyrights')
         is_a_translation =  self.request.GET.get('is_a_translation')
 
-        #publications = Publication.objects.filter(is_deleted=False)
-        publications = Publication.objects.filter(is_deleted=False).values('id').distinct()
+        publications = Publication.objects.filter(is_deleted=False)
+        #publications = Publication.objects.filter(is_deleted=False).values('id').distinct()
         #publications = publications.filter(is_deleted=False)
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
@@ -364,10 +371,68 @@ class SearchResultsView(ListView):
         #publications = Publication.objects.values_list('id', flat=True).distinct()
         #print(list(publications))
         #publications = Publication.objects.filter(id__in=publications)
-        print('8888', list(publications))
         ordering = self.get_ordering()
         if ordering is not None and ordering != "":
-            publications = publications.order_by(ordering)
+            if ordering == "author_name" or ordering == "-author_name":
+                if ordering == "author_name":
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('name').values('name')
+                else:
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('-name').values('name')
+                publications = Publication.objects.annotate(author_name=Subquery(author_subquery)).order_by(ordering)
+            elif ordering == "author_name_original_langauge" or ordering == "-author_name_original_langauge":
+                if ordering == "author_name_original_langauge":
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('name_original_language').values('name_original_langauge')
+                else:
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('-name_original_language').values('name_original_language')
+                publications = Publication.objects.annotate(author_name_original_language=Subquery(author_subquery)).order_by(ordering)
+            elif ordering == "author_extra_info" or ordering == "-author_extra_info":
+                if ordering == "author_extra_info":
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('extra_info').values('extra_info')
+                else:
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('-extra_info').values('extra_info')
+                publications = Publication.objects.annotate(author_extra_info=Subquery(author_subquery)).order_by(ordering)
+            elif ordering == "translator_name" or ordering == "-translator_name":
+                if ordering == "translator_name":
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('name').values(
+                        'name')
+                else:
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('-name').values(
+                        'name')
+                publications = Publication.objects.annotate(translator_name=Subquery(translator_subquery)).order_by(ordering)
+            elif ordering == "translator_name_original_language" or ordering == "-translator_name_original_language":
+                if ordering == "translator_name_original_langauge":
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('name_original_language').values(
+                        'name_original_language')
+                else:
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('-name_original_language').values(
+                        'name_original_language')
+                publications = Publication.objects.annotate(translator_original_language=Subquery(translator_subquery)).order_by(ordering)
+            elif ordering == "translator_extra_info" or ordering == "-translator_extra_info":
+                if ordering == "translator_extra_info":
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('extra_info').values(
+                        'extra_info')
+                else:
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('-extra_info').values(
+                        'extra_info')
+                publications = Publication.objects.annotate(translator_extra_info=Subquery(translator_subquery)).order_by(ordering)
+            elif ordering == "language_name" or ordering == "-language_name":
+                if ordering == "language_name":
+                    language_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('language_name').values(
+                        'language_name')
+                else:
+                    Language_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('-language_name').values(
+                        'language_name')
+                publications = Publication.objects.annotate(language_name=Subquery(Language_subquery)).order_by(ordering)
+            elif ordering == "content_genre_name" or ordering == "-content_genre_name":
+                if ordering == "content_genre_name":
+                    content_genre_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('content_genre_name').values(
+                        'content_genre_name')
+                else:
+                    content_genre_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('-content_genre_name').values(
+                        'content_genre_name')
+                publications = Publication.objects.annotate(content_genre_name=Subquery(content_genre_subquery)).order_by(ordering)
+            else:
+                publications = publications.order_by(ordering)
         return publications
 
     def get_context_data(self, **kwargs):
@@ -390,7 +455,7 @@ class SearchResultsView(ListView):
             min = 9
             length = len(cover_images)
             inside = False
-            for uploadedfile in pub['uploadedfiles']:#pub.uploadedfiles.all():
+            for uploadedfile in pub.uploadedfiles.all():
                 if uploadedfile.filecategory and uploadedfile.filecategory.list_view_priority:
                     compare = int(uploadedfile.filecategory.list_view_priority)
                     if compare < min:
@@ -416,9 +481,6 @@ class SearchResultsView(ListView):
                             continue
             if length == len(cover_images):
                 cover_images.append(None)
-        #context['publications'] = context['publications'].distinct()
-        #publications = context['publications']
-        #publications = publications.distinct()
         print(context['publications'])
         context['publications'] = zip(context['publications'], cover_images)
         return context
