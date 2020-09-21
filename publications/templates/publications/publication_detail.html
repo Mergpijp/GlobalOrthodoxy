@@ -310,6 +310,20 @@
     </tbody>
 </table>
 {% endif %}
+{% if object.price %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.price}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
 {% if object.donor %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
@@ -545,6 +559,20 @@
     <tbody>
     <tr>
         <td>{{object.collection_venue_and_city}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.collection_context %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>Collection context</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.collection_context}}</td>
     </tr>
     </tbody>
 </table>
