@@ -418,19 +418,19 @@ class SearchResultsView(ListView):
                 publications = Publication.objects.annotate(translator_extra_info=Subquery(translator_subquery)).order_by(ordering)
             elif ordering == "language_name" or ordering == "-language_name":
                 if ordering == "language_name":
-                    language_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('language_name').values(
-                        'language_name')
+                    language_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('name').values(
+                        'name')
                 else:
-                    Language_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('-language_name').values(
-                        'language_name')
-                publications = Publication.objects.annotate(language_name=Subquery(Language_subquery)).order_by(ordering)
+                    language_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('-name').values(
+                        'name')
+                publications = Publication.objects.annotate(language_name=Subquery(language_subquery)).order_by(ordering)
             elif ordering == "content_genre_name" or ordering == "-content_genre_name":
                 if ordering == "content_genre_name":
-                    content_genre_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('content_genre_name').values(
-                        'content_genre_name')
+                    content_genre_subquery = Genre.objects.filter(publication=OuterRef('pk')).order_by('name').values(
+                        'name')
                 else:
-                    content_genre_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('-content_genre_name').values(
-                        'content_genre_name')
+                    content_genre_subquery = Genre.objects.filter(publication=OuterRef('pk')).order_by('-name').values(
+                        'name')
                 publications = Publication.objects.annotate(content_genre_name=Subquery(content_genre_subquery)).order_by(ordering)
             else:
                 publications = publications.order_by(ordering)
