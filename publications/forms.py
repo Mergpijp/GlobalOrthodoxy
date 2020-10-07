@@ -104,7 +104,7 @@ class PublicationForm(forms.ModelForm):
     class Meta:
         model = Publication
         fields = ('title_original', 'title_subtitle_transcription', 'title_translation', 'author', 'translator', \
-                  'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date',
+                  'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_date',
                   'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre',
                   'connected_to_special_occasion', 'description_of_illustration', \
@@ -158,6 +158,7 @@ class PublicationForm(forms.ModelForm):
                     'ISBN_number',
                     'printed_by',
                     'published_by',
+                    'publication_year',
                     'publication_date',
                     'publication_country',
                     'publication_city',
@@ -377,6 +378,7 @@ class NewCrispyForm(forms.ModelForm):
                     'tyoe_of_collection',
                     'printed_by',
                     'published_by',
+                    'publication_year',
                     'publication_date',
                     'publication_country',
                     FieldWithButtons('publication_city', StrictButton('+', type='button', css_class='btn-danger',
@@ -440,7 +442,7 @@ class NewCrispyForm(forms.ModelForm):
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
         fields = ('title_original', 'title_subtitle_transcription', 'title_translation', 'title_original2',
                   'title_subtitle_transcription2', 'title_translation2', 'author', 'translator', \
-                  'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_date',
+                  'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_date',
                   'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre',
                   'connected_to_special_occasion', 'description_of_illustration', \
