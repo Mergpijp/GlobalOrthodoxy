@@ -9,7 +9,7 @@
         <th>Author name <br/><a href="?order_by=author_name&direction=asc" class="arrow up"></a> <a href="?order_by=author_name&direction=desc" class="arrow down"></a> </th>
         <th>Author name original language <br/><a href="?order_by=author_name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=author_name_original_language&direction=desc" class="arrow down"></a> </th>
         <th>Author extra info <br/><a href="?order_by=author_extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=author_extra_info&direction=desc" class="arrow down"></a> </th>
-        <th>Publication date</th>
+        <th>Publication year<br/><a href="?order_by=publication_year&direction=asc" class="arrow up"></a> <a href="?order_by=publication_year&direction=desc" class="arrow down"></a></th>
         <th>Publication place <br/><a href="?order_by=publication_city__name&direction=asc" class="arrow up"></a> <a href="?order_by=publication_city__name&direction=desc" class="arrow down"></a></th>
         <th>Language <br/><a href="?order_by=language_name&direction=asc" class="arrow up"></a> <a href="?order_by=language_name&direction=desc" class="arrow down"></a></th>
         <th>Genre <br/><a href="?order_by=content_genre_name&direction=asc" class="arrow up"></a> <a href="?order_by=content_genre_name&direction=desc" class="arrow down"></a></th>
@@ -56,7 +56,11 @@
                 {% endif %}
             {% endfor %}
         </td>
-        <td>{{ publication.publication_date }}</td>
+        <td>
+            {% if publication.publication_year %}
+                {{ publication.publication_year }}
+            {% endif %}
+        </td>
         <td>
         {% if publication.publication_country %}
             {{ publication.publication_country }}, {{ publication.publication_city.name }}

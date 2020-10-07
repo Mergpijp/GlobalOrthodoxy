@@ -11,7 +11,7 @@
         <th>translator name <br/><a href="?order_by=translator_name&direction=asc" class="arrow up"></a> <a href="?order_by=translator_name&direction=desc" class="arrow down"></a> </th>
         <th>translator name original language <br/><a href="?order_by=translator_name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=translator_name_original_language&direction=desc" class="arrow down"></a> </th>
         <th>translator extra info <br/><a href="?order_by=translator_extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=translator_extra_info&direction=desc" class="arrow down"></a> </th>
-        <th>Publication date</th>
+        <th>Publication year<br/><a href="?order_by=publication_year&direction=asc" class="arrow up"></a> <a href="?order_by=publication_year&direction=desc" class="arrow down"></a></th>
         <th>Actions</th>
 
     </tr>  
@@ -84,7 +84,11 @@
                 {% endif %}
             {% endfor %}
         </td>
-        <td>{{ publication.publication_date }}</td></td>
+        <td>
+            {% if publication.publication_year %}
+                {{ publication.publication_year }}
+            {% endif %}
+        </td>
         <td> 
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
             <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  

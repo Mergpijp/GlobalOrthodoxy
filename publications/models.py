@@ -256,7 +256,6 @@ class Publication(models.Model):
     ISBN_number = models.CharField(max_length=100, blank=True)
     printed_by = models.CharField(max_length=100, blank=True)
     published_by = models.CharField(max_length=100, blank=True)
-    publication_date = models.CharField(max_length=100, blank=True)
     publication_year = models.IntegerField(blank=True, null=True)
     publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
     publication_city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
