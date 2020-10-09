@@ -461,19 +461,11 @@ class KeywordForm(forms.ModelForm):
         If its a keyword edit load all linked publications.
         If its a keyword create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        model=Publication,
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(keywords=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'publication',
+        self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -482,10 +474,6 @@ class KeywordForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -533,17 +521,8 @@ class AuthorForm(forms.ModelForm):
         If its a author edit load all linked publications.
         If its a author create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        model=Publication,
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(author=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'name_original_language', 'extra_info', 'publication',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
@@ -554,10 +533,6 @@ class AuthorForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -567,17 +542,9 @@ class TranslatorForm(forms.ModelForm):
         If its a translator edit load all linked publications.
         If its a translator create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(translator=self.instance)
         self.helper = FormHelper()
         self.helper.layout = Layout('name', 'name_original_language', 'extra_info', 'publication',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
@@ -588,10 +555,6 @@ class TranslatorForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -601,19 +564,11 @@ class FormOfPublicationForm(forms.ModelForm):
         If its a form of publication edit load all linked publications.
         If its a form of publication create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(form_of_publication=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'publication',
+        self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -622,10 +577,6 @@ class FormOfPublicationForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -635,12 +586,6 @@ class CityForm(forms.ModelForm):
         If its a city edit load all linked publications.
         If its a city create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
     country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
         label=u"Country",
@@ -653,11 +598,9 @@ class CityForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(publication_city=self.instance)
         self.fields['country'].required = False
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'country', 'publication',
+        self.helper.layout = Layout('name', 'country',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -666,10 +609,6 @@ class CityForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -679,19 +618,11 @@ class ChurchForm(forms.ModelForm):
         If its a church edit load all linked publications.
         If its a church create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(affiliated_church=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'publication',
+        self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -700,10 +631,6 @@ class ChurchForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -713,20 +640,12 @@ class LanguageForm(forms.ModelForm):
         If its a language edit load all linked publications.
         If its a language create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(language=self.instance)
 
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'direction', 'publication',
+        self.helper.layout = Layout('name', 'direction',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -735,10 +654,6 @@ class LanguageForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -748,19 +663,11 @@ class GenreForm(forms.ModelForm):
         If its a genre edit load all linked publications.
         If its a genre create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(content_genre=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'publication',
+        self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -769,10 +676,6 @@ class GenreForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -782,20 +685,11 @@ class SpecialOccasionForm(forms.ModelForm):
         If its a special occasion edit load all linked publications.
         If its a special occasion create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(
-                connected_to_special_occasion=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'publication',
+        self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -804,10 +698,6 @@ class SpecialOccasionForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -817,19 +707,11 @@ class OwnerForm(forms.ModelForm):
         If its a owner edit load all linked publications.
         If its a owner create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(currently_owned_by=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'publication',
+        self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -838,10 +720,6 @@ class OwnerForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
 
 
@@ -869,18 +747,21 @@ class UploadedFileForm(forms.ModelForm):
         search_fields=['name__icontains', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=FileCategory.objects.all(), required=False)
+    '''
     publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         attrs={'data-minimum-input-length': 0},
         search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
                        'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
+    '''
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        '''
         if self.instance.id:
             self.fields['publication'].initial = Publication.objects.filter(uploadedfiles=self.instance)
-
+        '''
         self.helper = FormHelper(self)
         self.helper.form_id = 'id-dropzoneform'
         self.helper.form_class = 'dropzone-form'
@@ -900,7 +781,6 @@ class UploadedFileForm(forms.ModelForm):
                                         </div>
                                         <br/>
                                     """),
-            'publication',
             ButtonHolder(
                 Submit('Submit', 'Submit', css_class='btn-danger', css_id='submit-btn')),
             HTML("""
@@ -936,7 +816,6 @@ class UploadedFileForm(forms.ModelForm):
                                                     formData.append("image_title", $('#id_image_title').val());
                                                     formData.append('filecategory', $('#id_filecategory').val());
                                                     formData.append('image_contents', $('#id_image_contents').val());
-                                                    formData.append("publication", $('#id_publication').val());
                                                     
                                                     setTimeout(function () {
                                                             window.location.href='/uploadedfile/show/';
@@ -967,14 +846,16 @@ class UploadedFileForm(forms.ModelForm):
 
     class Meta:
         model = UploadedFile
-        fields = ('image_title', 'filecategory', 'file', 'image_contents', 'publication',)
+        fields = ('image_title', 'filecategory', 'file', 'image_contents',)
 
     def save(self, commit=True):
         instance = super().save(commit)
+        '''
         for pub in instance.publication_set.all():
             instance.publication_set.remove(pub)
         for pub in self.cleaned_data['publication'].all():
             instance.publication_set.add(pub)
+        '''
         return instance
 
 class IllustrationLayoutTypeForm(forms.ModelForm):
@@ -983,19 +864,11 @@ class IllustrationLayoutTypeForm(forms.ModelForm):
         If its a illustration layout type edit load all linked publications.
         If its a illustration layout type create do not load any publications at start.
     '''
-    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
-        queryset=Publication.objects.all(),
-        attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
-                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
-    ), queryset=Publication.objects.all(), required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance.id:
-            self.fields['publication'].initial = Publication.objects.filter(illustration_and_layout_type=self.instance)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'publication',
+        self.helper.layout = Layout('name',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -1004,8 +877,4 @@ class IllustrationLayoutTypeForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit)
-        for pub in instance.publication_set.all():
-            instance.publication_set.remove(pub)
-        for pub in self.cleaned_data['publication'].all():
-            instance.publication_set.add(pub)
         return instance
