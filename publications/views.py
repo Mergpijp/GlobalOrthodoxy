@@ -308,7 +308,7 @@ class SearchResultsView(ListView):
                   'uploadedfiles__image_title', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
                   'title_original2', 'title_subtitle_transcription2', 'title_translation2', 'title_original3', 'title_subtitle_transcription3', 'title_translation3', \
                   'title_original4', 'title_subtitle_transcription4', 'title_translation4', 'title_original5', 'title_subtitle_transcription5', 'title_translation5', \
-                             'price', 'collection_context']
+                  'currency', 'price', 'collection_context']
 
             if self.request.user.is_authenticated:
                 search_fields.extend(['collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', 'currently_owned_by__name'])

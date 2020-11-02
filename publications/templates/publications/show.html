@@ -25,7 +25,7 @@
         {% else %}
         <td></td>
         {% endif %}
-        <td style="text-align: start;unicode-bidi: plaintext;">{{ publication.title_original }}</td>
+        <td id="test">{{ publication.title_original }}</td>
         <td>
             {% for author in publication.author.all %}
                 {% if forloop.last %}

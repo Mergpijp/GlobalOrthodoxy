@@ -217,6 +217,13 @@ CHOICES = (
     (False, "No")
 )
 
+CURRENCIES = ['USD: United States Dollar', 'CAD: Canadian Dollar', 'AUD: Australian Dollar', 'EUR: Euro', 'GBP: Pound sterling', \
+              'SEK: Swedish krona', 'EGP: Egyptian pound', 'LBP: Libanese pound', 'ETB: Ethopian birr', 'ERN: Eritrean nakfa', \
+              'ILS: Israeli shekel', 'AMD: Armenian dram']
+
+CURRENCY_CHOICES = [(str(i), CURRENCIES[i]) for i in range(0,12)]
+
+
 class ImageDetails(models.Model):
     '''
     Manytomany field class with three fields.
@@ -260,6 +267,7 @@ class Publication(models.Model):
     publication_country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
     publication_city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
     publishing_organisation = models.CharField(max_length=100, blank=True)
+    currency = models.CharField(max_length=25, choices=CURRENCY_CHOICES, default='0')
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     donor = models.CharField(max_length=100, blank=True)
     affiliated_church = models.ManyToManyField(Church)

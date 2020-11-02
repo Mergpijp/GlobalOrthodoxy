@@ -108,3 +108,14 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 #crop_image {
     object-fit: contain;
 }
+#test {
+    text-align: start;
+    unicode-bidi: plaintext;
+    /*
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    */
+}

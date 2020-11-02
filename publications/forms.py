@@ -382,6 +382,7 @@ class NewCrispyForm(forms.ModelForm):
                     FieldWithButtons('publication_city', StrictButton('+', type='button', css_class='btn-danger',
                                                                       onClick="window.open('/city/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'publishing_organisation',
+                    'currency',
                     'price',
                     ),
                 Tab('Affiliation',
@@ -450,7 +451,8 @@ class NewCrispyForm(forms.ModelForm):
                   'is_a_translation', 'ISBN_number', 'translated_from', \
                   'title_original3', 'title_subtitle_transcription3', 'title_translation3', 'title_original4',
                   'title_subtitle_transcription4', 'title_translation4', \
-                  'title_original5', 'title_subtitle_transcription5', 'title_translation5', 'price', 'collection_context')
+                  'title_original5', 'title_subtitle_transcription5', 'title_translation5', 'price', 'collection_context', \
+                  'currency')
         # publication_country = forms.ChoiceField(choices=list(countries))
 
 import pdb
