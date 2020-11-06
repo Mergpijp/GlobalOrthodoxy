@@ -21,8 +21,8 @@
         {% else %}
         <td></td>
         {% endif %}
-        <td id="test">{{ publication.title_original }}</td>
-        <td>{{ publication.title_translation }}</td>
+        <td id="test">{{ publication.get_truncated_title_original }}</td>
+        <td>{{ publication.get_truncated_title_translation }}</td>
         <td>
             {% for author in publication.author.all %}
                 {% if forloop.last %}

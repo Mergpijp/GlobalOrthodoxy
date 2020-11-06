@@ -308,5 +308,16 @@ class Publication(models.Model):
         return 'title_original: ' + self.title_original +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
                 + ', title_translation: ' + self.title_translation
 
-    #@property
-    #def order-
+    @property
+    def get_truncated_title_original(self):
+        x = self.title_original
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
+
+    @property
+    def get_truncated_title_translation(self):
+        x = self.title_translation
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
