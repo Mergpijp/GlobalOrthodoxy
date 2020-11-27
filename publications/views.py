@@ -38,6 +38,16 @@ import pdb
 import pytz
 from PIL import Image
 from django.db.models import OuterRef, Subquery
+from bootstrap_modal_forms.generic import BSModalCreateView
+from django.urls import reverse_lazy
+from .forms import UploadedFileModelForm
+from bootstrap_modal_forms.generic import (
+  BSModalCreateView,
+  BSModalUpdateView,
+  BSModalReadView,
+  BSModalDeleteView
+)
+
 
 utc=pytz.UTC
 
@@ -82,7 +92,14 @@ def view_input_update(request):
             return HttpResponse(LANGUAGES[language])
     return HttpResponse('ERROR')
 
-
+@login_required(login_url='/accounts/login/')
+def search_files(request):
+    if request.method == 'GET':
+        if 'file' in request.GET:
+            file = request.GET['file']
+            files = UploadedFile.objects.filter(image_title__icontains=file)
+            return HttpResponse(files)
+    return HttpResponse('ERROR')
 '''
 @register.simple_tag
 @login_required(login_url='/accounts/login/')
@@ -101,6 +118,18 @@ def url_replace(request, field, value, direction=''):
 
     return urlencode(OrderedDict(sorted(dict_.items())))
 '''
+
+class UploadedFileCreateView(BSModalCreateView):
+    template_name = 'uploadedfiles/uploadedfile_new.html'
+    form_class = UploadedFileModelForm
+    success_message = 'Success: uploadedfile was created.'
+    #success_url = reverse_lazy('publication-new')
+
+class UploadedFileUnlinkView(BSModalDeleteView):
+    template_name = 'uploadedfiles/uploadedfile_unlink.html'
+    model = UploadedFile
+    success_message = 'Success: uploadedfile was unlinked.'
+    #success_url = reverse_lazy('publication-new')
 
 class PublicationUpdate(UpdateView):
     '''

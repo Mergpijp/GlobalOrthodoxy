@@ -11,3 +11,7 @@ googletrans==2.4.0
 django-smart-selects==1.5.4
 django-pdb==0.6.2
 Pillow==7.2.0
+djangorestframwork==3.12.2
+markdown==3.3.3
+django-filter==2.4.0
+django-bootstrap-modal-forms==2.0.1

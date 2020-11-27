@@ -13,6 +13,7 @@ from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidg
 from django_countries.widgets import CountrySelectWidget
 from countries_plus.models import Country
 from django.utils.encoding import force_text
+from bootstrap_modal_forms.forms import BSModalModelForm
 
 
 class PublicationForm(forms.ModelForm):
@@ -415,14 +416,41 @@ class NewCrispyForm(forms.ModelForm):
                     'contact_website',
                     ),
                 Tab('Files',
-                    FieldWithButtons('uploadedfiles', StrictButton('+', type='button', css_class='btn-danger',
-                                                                   onClick="window.open('/uploadedfile/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    ),
+                    HTML("""
+                        <script type="text/javascript">
+                        $(document).ready(function() {
+                        
+                            $("#upload-file").modalForm({
+                                formURL: "{% url 'uploadedfile_new' %}"
+                            });
+                        
+                        });
+                        </script>
+                          <div id="linkeddocuments">
+                            <div>Document A <button>Remove</button></div>
+                            <div>Document B <button>Remove</button></div>
+                          </div>
+                            <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content"></div>
+                              </div>
+                            </div>                        
+                            <div id="searchdocumentpanel">
+                              <input type="text" id='id_search_files'></input>
+                              <button type="button" class='btn btn-primary btn-danger' id='upload-file'>upload new file</button>
+                            </div>
+                            <div id="unlinkeddocuments">
+                              <div>Document X <button>Add</button></div>
+                              <div>Document Y<button>Add</button></div>
+                            </div>
+        
+                        """),
+                ),
                 Tab('Comments',
                     'general_comments',
                     'team_comments',
                     'other_comments',
-                    )
+                    ),
             ),
             ButtonHolder(
                 #Button('cancel', 'Back', css_class='btn-back btn-danger', onclick="history.back()"),
@@ -859,6 +887,131 @@ class UploadedFileForm(forms.ModelForm):
             instance.publication_set.add(pub)
         '''
         return instance
+
+class UploadedFileModelForm2(BSModalModelForm):
+    class Meta:
+        model = UploadedFile
+        fields = ('image_title', 'filecategory', 'file', 'image_contents',)
+
+class UploadedFileModelForm(BSModalModelForm):
+
+    image_contents = forms.ModelMultipleChoiceField(widget=ImageContentSelect2TagWidget(
+        model=ImageContent,
+        search_fields=['name__icontains', ],
+        attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]', },
+    ), queryset=ImageContent.objects.all(), required=False)
+    '''
+    imagecontents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        model=ImageContent,
+        search_fields=['name__icontains', ],
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=ImageContent.objects.all(), required=False)
+    '''
+    filecategory = forms.ModelChoiceField(widget=ModelSelect2Widget(
+        model=FileCategory,
+        search_fields=['name__icontains', ],
+        attrs={'data-minimum-input-length': 0  },
+    ), queryset=FileCategory.objects.all(), required=False)
+    '''
+    publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+        queryset=Publication.objects.all(),
+        attrs={'data-minimum-input-length': 0},
+        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
+                       'title_subtitle_transcription__icontains', 'title_translation__icontains'],
+    ), queryset=Publication.objects.all(), required=False)
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        '''
+        if self.instance.id:
+            self.fields['publication'].initial = Publication.objects.filter(uploadedfiles=self.instance)
+        '''
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'id-dropzoneform'
+        self.helper.form_class = 'dropzone-form'
+        self.helper.layout = Layout(
+            'image_title',
+            FieldWithButtons('filecategory', StrictButton('+', type='button', css_class='btn-danger',
+                                                          onClick="window.open('/filecategory/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+            'image_contents',
+            # FieldWithButtons('imagecontents', StrictButton('+', type='button', css_class='btn-danger',
+            #                                                 onClick="window.open('/imagecontent/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+            HTML("""
+                                        File
+                                        <div id='my-drop-zone' class='needsclick'>
+                                            <div class="dz-message needsclick"> 
+                                                Drop file here or click to upload.
+                                            </div>
+                                        </div>
+                                        <br/>
+                                    """),
+            #ButtonHolder(
+            #    Submit('Submit', 'Submit', css_class='btn-danger', css_id='submit-btn')),
+            HTML("""
+                                        <script>
+                                            {% if object %}
+                                            var pk = {{object.id}} + "/";
+                                            {% else %}
+                                            var pk = ""
+                                            {% endif %}
+                                            Dropzone.autoDiscover = false;
+                                            var myDropzone = new Dropzone("div#my-drop-zone", { 
+                                                url: "/uploadedfile/proces/" + pk,
+                                                method: "post",
+                                                autoProcessQueue: false,
+                                                maxFiles: 1,
+                                                addRemoveLinks: true,
+                                                maxfilesexceeded: function(file) {
+                                                    this.removeAllFiles();
+                                                    this.addFile(file);
+                                                },
+                                                init: function () {
+                                                    var myDropzone = this;
+                                                    var addButton = $("#submit-btn");
+                                                    addButton.click(function (e) {
+                                                    if (myDropzone.getQueuedFiles().length > 0) {
+                                                        e.preventDefault();
+                                                        myDropzone.processQueue();
+                                                    }
+                                                    });
+                                                },
+                                                sending: function (file, xhr, formData) {
+                                                    formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+                                                    formData.append("image_title", $('#id_image_title').val());
+                                                    formData.append('filecategory', $('#id_filecategory').val());
+                                                    formData.append('image_contents', $('#id_image_contents').val());
+
+                                                    setTimeout(function () {
+                                                            window.location.href='/uploadedfile/show/';
+                                                    }, 1000);
+
+                                                }
+                                            });
+                                            function getCookie(name) {
+                                                var cookieValue = null;
+                                                if (document.cookie && document.cookie != '') {
+                                                    var cookies = document.cookie.split(';');
+                                                    for (var i = 0; i < cookies.length; i++) {
+                                                        var cookie = jQuery.trim(cookies[i]);
+                                                        // Does this cookie string begin with the name we want?
+                                                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                return cookieValue;
+                                            }
+                                            $("#my-drop-zone").addClass("dropzone");
+                                        </script>
+                                        """),
+
+        )
+
+    class Meta:
+        model = UploadedFile
+        fields = ('image_title', 'filecategory', 'file', 'image_contents',)
 
 class IllustrationLayoutTypeForm(forms.ModelForm):
     '''

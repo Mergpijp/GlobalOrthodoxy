@@ -44,3 +44,10 @@ $(document).ready(function(){
         }
     });
 });
+$(document).ready(function(){
+    $('#id_search_files').on('input',function(){
+        if ($("#id_search_files").val().length > 1) {
+            update();
+        }
+    });
+});
