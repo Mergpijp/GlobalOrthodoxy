@@ -65,15 +65,15 @@ def process_file(request, pk=None):
     post_mutable = {'image_title': request.POST['image_title'], 'filecategory': request.POST['filecategory'], \
                     'image_contents': request.POST['image_contents']}
 
-    '''
-    my_filter_qs = Q()
-    for id in request.POST['publication'] :
-        my_filter_qs = my_filter_qs | Q(id=id)
-    if not my_filter_qs:
-        post_mutable['publication'] = None
-    else:
-        post_mutable['publication'] = Publication.objects.filter(my_filter_qs)
-    '''
+    # '''
+    # my_filter_qs = Q()
+    # for id in request.POST['publication'] :
+    #     my_filter_qs = my_filter_qs | Q(id=id)
+    # if not my_filter_qs:
+    #     post_mutable['publication'] = None
+    # else:
+    #     post_mutable['publication'] = Publication.objects.filter(my_filter_qs)
+    # '''
 
     form = UploadedFileForm(post_mutable or None, request.FILES or None, instance=obj)
     if request.method == 'POST':
@@ -125,6 +125,29 @@ class UploadedFileCreateView(BSModalCreateView):
     success_message = 'Success: uploadedfile was created.'
     success_url = reverse_lazy('publication-new')
 
+    def form_valid(self, form):
+        try:
+            obj, created = UploadedFile.objects.get_or_create(pk=self.kwargs['pk'])
+        except Exception as e:
+            obj, created = UploadedFile.objects.get_or_create(pk=None)
+        try:
+            post_mutable = {'image_title': self.request.POST['image_title'],
+                            'filecategory': self.request.POST['filecategory'], \
+                            'image_contents': self.request.POST['image_contents']}
+        except Exception as e:
+            post_mutable = {'image_title': self.request.POST['image_title'],
+                            'filecategory': self.request.POST['filecategory'], \
+                            'image_contents': None}
+
+
+        form = UploadedFileForm(post_mutable or None, self.request.FILES or None, instance=obj)
+        if self.request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(self.success_url)
+
+        return HttpResponse(status=500)
+
 class UploadedFileUnlinkView(BSModalDeleteView):
     template_name = 'uploadedfiles/uploadedfile_unlink.html'
     model = UploadedFile
@@ -172,7 +195,7 @@ class PublicationCreate(CreateView):
     '''
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
-    context_object_name = 'publication'
+    context_object_name = 'uploadedfiles'
     #success_url = '/publication/show/'
 
     def form_valid(self, form):

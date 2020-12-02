@@ -437,9 +437,9 @@ class NewCrispyForm(forms.ModelForm):
                               <input type="text" id='id_search_files'></input>
                               <button type="button" class='btn btn-primary btn-danger' id='upload-file'>upload new file</button>
                             </div>
-                            {% for file in publication.uploadedfile %}
+                            {% for file in uploadedfiles %}
                                 <div class="text-center">
-                                  <!-- Delete book buttons -->
+                                  <!-- Delete uploadedfile buttons -->
                                   <button type="button" id="unlink-file" class="bs-modal btn btn-sm btn-danger" data-form-url="{% url 'uploadedfile_unlink' file.pk %}">
                                     <span class="fa fa-trash"></span>
                                   </button>
@@ -977,7 +977,7 @@ class UploadedFileModelForm(BSModalModelForm):
                                             {% endif %}
                                             Dropzone.autoDiscover = false;
                                             var myDropzone = new Dropzone("div#my-drop-zone", { 
-                                                url: "/uploadedfile/proces/" + pk,
+                                                url: "/uploadedfile_new/" + pk,
                                                 method: "post",
                                                 autoProcessQueue: false,
                                                 maxFiles: 1,
@@ -990,10 +990,12 @@ class UploadedFileModelForm(BSModalModelForm):
                                                     var myDropzone = this;
                                                     var addButton = $("#submit-btn");
                                                     addButton.click(function (e) {
+                                                        
                                                     if (myDropzone.getQueuedFiles().length > 0) {
-                                                        e.preventDefault();
+                                                        
                                                         myDropzone.processQueue();
                                                     }
+                                                    e.stopPropagation();
                                                     });
                                                 },
                                                 sending: function (file, xhr, formData) {
