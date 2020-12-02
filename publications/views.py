@@ -123,13 +123,13 @@ class UploadedFileCreateView(BSModalCreateView):
     template_name = 'uploadedfiles/uploadedfile_new.html'
     form_class = UploadedFileModelForm
     success_message = 'Success: uploadedfile was created.'
-    #success_url = reverse_lazy('publication-new')
+    success_url = reverse_lazy('publication-new')
 
 class UploadedFileUnlinkView(BSModalDeleteView):
     template_name = 'uploadedfiles/uploadedfile_unlink.html'
     model = UploadedFile
     success_message = 'Success: uploadedfile was unlinked.'
-    #success_url = reverse_lazy('publication-new')
+    success_url = reverse_lazy('publication-new')
 
 class PublicationUpdate(UpdateView):
     '''
@@ -172,6 +172,7 @@ class PublicationCreate(CreateView):
     '''
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
+    context_object_name = 'publication'
     #success_url = '/publication/show/'
 
     def form_valid(self, form):
@@ -183,6 +184,8 @@ class PublicationCreate(CreateView):
         if 'next' in self.request.POST:
             return '/publication/show/'
         elif 'save' in self.request.POST:
+            return '/publication/' + str(self.object.id) + '/edit/'
+        elif self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
             return '/publication/' + str(self.object.id) + '/edit/'
 
 class PublicationDetailView(DetailView):
@@ -257,6 +260,8 @@ class SearchResultsView(ListView):
     def get_template_names(self):
         if self.request.path == '/publication/overview/':
             return ['publications/overview.html']
+        elif self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
+            return ['publications/form_create.html']
         return ['publications/show.html']
 
 

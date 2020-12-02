@@ -417,32 +417,52 @@ class NewCrispyForm(forms.ModelForm):
                     ),
                 Tab('Files',
                     HTML("""
-                        <script type="text/javascript">
-                        $(document).ready(function() {
-                        
-                            $("#upload-file").modalForm({
-                                formURL: "{% url 'uploadedfile_new' %}"
-                            });
-                        
-                        });
-                        </script>
                           <div id="linkeddocuments">
                             <div>Document A <button>Remove</button></div>
                             <div>Document B <button>Remove</button></div>
                           </div>
+                          <!-- Modal 1 with id="create-uploadedfile"-->
+                            <div class="modal fade" tabindex="-1" role="dialog" id="create-modal">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content"></div>
+                              </div>
+                            </div>  
+                           <!-- Modal 2 with id="modal" -->
                             <div class="modal fade" tabindex="-1" role="dialog" id="modal">
                               <div class="modal-dialog" role="document">
                                 <div class="modal-content"></div>
                               </div>
-                            </div>                        
+                            </div>                       
                             <div id="searchdocumentpanel">
                               <input type="text" id='id_search_files'></input>
                               <button type="button" class='btn btn-primary btn-danger' id='upload-file'>upload new file</button>
                             </div>
+                            {% for file in publication.uploadedfile %}
+                                <div class="text-center">
+                                  <!-- Delete book buttons -->
+                                  <button type="button" id="unlink-file" class="bs-modal btn btn-sm btn-danger" data-form-url="{% url 'uploadedfile_unlink' file.pk %}">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                </div>
+                            {% endfor %}
                             <div id="unlinkeddocuments">
                               <div>Document X <button>Add</button></div>
                               <div>Document Y<button>Add</button></div>
                             </div>
+                        <script type="text/javascript">
+                        $(function() {
+                             $(".bs-modal").each(function () {
+                              $(this).modalForm({
+                                  formURL: $(this).data('form-url')
+                              });
+                            });
+                            $("#upload-file").modalForm({
+                                formURL: "{% url 'uploadedfile_new' %}",
+                                modalID: "#create-modal"
+                            });
+                        
+                        });
+                        </script>
         
                         """),
                 ),
@@ -982,9 +1002,9 @@ class UploadedFileModelForm(BSModalModelForm):
                                                     formData.append('filecategory', $('#id_filecategory').val());
                                                     formData.append('image_contents', $('#id_image_contents').val());
 
-                                                    setTimeout(function () {
-                                                            window.location.href='/uploadedfile/show/';
-                                                    }, 1000);
+                                                    //setTimeout(function () {
+                                                    //        window.location.href='/uploadedfile/show/';
+                                                    //}, 1000);
 
                                                 }
                                             });
