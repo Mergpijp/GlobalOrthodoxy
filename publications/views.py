@@ -21,6 +21,7 @@ import re
 from django_countries import countries
 from django.utils import timezone
 import datetime
+from django.core.exceptions import ImproperlyConfigured
 import json
 from django.urls import reverse
 from django.core import serializers
@@ -123,7 +124,21 @@ class UploadedFileCreateView(BSModalCreateView):
     template_name = 'uploadedfiles/uploadedfile_new.html'
     form_class = UploadedFileModelForm
     success_message = 'Success: uploadedfile was created.'
+    #context_object_name = 'publication'
+    #model = Publication
     success_url = reverse_lazy('publication-new')
+
+    '''
+    def get_success_url(self):
+        """Detect the submit button used and act accordingly"""
+        if 'next' in self.request.POST:
+            return '/publication/show/'
+        elif 'save' in self.request.POST:
+            return '/publication/' + str(self.object.id) + '/edit/'
+        else: #self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
+            #pdb.set_trace()
+            return reverse_lazy('/publication/' + str(self.object.id) + '/edit/')
+    '''
 
     def form_valid(self, form):
         try:
@@ -143,8 +158,14 @@ class UploadedFileCreateView(BSModalCreateView):
         form = UploadedFileForm(post_mutable or None, self.request.FILES or None, instance=obj)
         if self.request.method == 'POST':
             if form.is_valid():
-                form.save()
-                return HttpResponseRedirect(self.success_url)
+                instance = form.save(commit=False)
+                instance.save()
+                form.save_m2m()
+                #pub = Publication.objects.get(id=form.cleaned_data['publication'])
+                #pub.uploadedfiles.add(obj)
+                return super().form_valid(form)
+                #return render(self.request, 'orders/order.html', {'active_tab': 'demo-lft-tab-5'})
+                #return HttpResponseRedirect(self.success_url)
 
         return HttpResponse(status=500)
 
@@ -164,6 +185,7 @@ class PublicationUpdate(UpdateView):
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
     model = Publication
+    context_object_name = 'publication'
     #success_url = '/publication/show/'
 
     def get_success_url(self):
@@ -195,8 +217,42 @@ class PublicationCreate(CreateView):
     '''
     template_name = 'publications/form_create.html'
     form_class = NewCrispyForm
-    context_object_name = 'uploadedfiles'
-    #success_url = '/publication/show/'
+    context_object_name = 'publication'
+    model = Publication
+    # success_url = '/publication/show/'
+    '''
+    def get_form_class(self):
+        """
+        Returns the form class to use in this view.
+        """
+        if self.fields is not None and self.form_class:
+            raise ImproperlyConfigured(
+                "Specifying both 'fields' and 'form_class' is not permitted."
+            )
+        if self.form_class:
+            return self.form_class
+        else:
+            if self.model is not None:
+                # If a model has been explicitly provided, use it
+                model = self.model
+            elif hasattr(self, 'object') and self.object is not None:
+                # If this view is operating on a single object, use
+                # the class of that object
+                model = self.object.__class__
+            else:
+                # Try to get a queryset and extract the model class
+                # from that
+                model = self.get_queryset().model
+
+            if self.fields is None:
+                raise ImproperlyConfigured(
+                    "Using ModelFormMixin (base class of %s) without "
+                    "the 'fields' attribute is prohibited." % self.__class__.__name__
+                )
+
+            return model_forms.modelform_factory(model, fields=self.fields)
+    '''
+
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user

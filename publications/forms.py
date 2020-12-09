@@ -437,7 +437,7 @@ class NewCrispyForm(forms.ModelForm):
                               <input type="text" id='id_search_files'></input>
                               <button type="button" class='btn btn-primary btn-danger' id='upload-file'>upload new file</button>
                             </div>
-                            {% for file in uploadedfiles %}
+                            {% for file in publication.uploadedfiles_set.all %}
                                 <div class="text-center">
                                   <!-- Delete uploadedfile buttons -->
                                   <button type="button" id="unlink-file" class="bs-modal btn btn-sm btn-danger" data-form-url="{% url 'uploadedfile_unlink' file.pk %}">

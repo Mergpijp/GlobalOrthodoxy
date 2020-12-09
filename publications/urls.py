@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('uploadedfile_new/', views.UploadedFileCreateView.as_view(), name='uploadedfile_new'),
+    #path('uploadedfile_new/None', views.PublicationUpdate.as_view(), name='uploadedfile_update'),
     path('uploadedfile_new/<int:pk>', views.UploadedFileCreateView.as_view(), name='uploadedfile_new'),
     path('uploadedfile_unlink/<int:pk>', views.UploadedFileUnlinkView.as_view(), name='uploadedfile_unlink'),
     path('publication/new/', login_required(PublicationCreate.as_view()), name='publication-new'),
