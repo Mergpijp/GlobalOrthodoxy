@@ -5,6 +5,7 @@
 {% block headjavascript %}
 <script>
     var URL = "{% url 'view-input-update' %}";
+    var FILES = "{% url 'search-uploaded-files' %}";
 </script>
 <script type="text/javascript" src="{% static 'js/search.js' %}"> </script>
 {% endblock headjavascript %}

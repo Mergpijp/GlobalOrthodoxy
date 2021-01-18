@@ -37,17 +37,26 @@ function update(){
         }
     });
 }
+function update_search_files(){
+    var data = {'input': $("#id_search_files").val()};
+    $.get(FILES, data, function(data, status){
+        if(status === 'success') {
+            $('#id_search_files').html(data);
+        }
+    });
+}
 $(document).ready(function(){
     $('#id_title_original').on('input',function(){
         if ($("#id_title_original").val().length > 4) {
             update();
         }
     });
-});
-$(document).ready(function(){
     $('#id_search_files').on('input',function(){
-        if ($("#id_search_files").val().length > 1) {
-            update();
+        if ($("#id_search_files").val().length > 0) {
+            update_search_files();
         }
+    });
+    $('select').selectize({
+          sortField: 'text'
     });
 });

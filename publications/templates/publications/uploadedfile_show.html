@@ -20,8 +20,8 @@
         <td><a href="{% url 'publication-show' %}?q={{uploadedfile.image_title}}">{{ uploadedfile.image_title }}</a></td>
         <td><a href="{% url 'publication-show' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.filecategory.name }}</a></td>
         <td>
-        {% for imagecontent in uploadedfile.imagecontents.all %}
-            <a href="{% url 'publication-show' %}?uploadedfiles={{uploadedfile.id}}">{{ image_contents.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% for imagecontent in uploadedfile.image_contents.all %}
+            <a href="{% url 'publication-show' %}?uploadedfiles={{uploadedfile.id}}">{{ imagecontent.name }}</a>{% if not forloop.last %}, {% endif %}
         {% endfor %}
         </td>
         <td><a href="/media/{{uploadedfile.file}}">{{ uploadedfile.file }}</a></td>

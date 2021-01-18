@@ -1,6 +1,6 @@
 /* ViaCss: Set the width. It will work since the inline style width is removed. */
 .select2-container {
-    width: 100% !important;
+    /*width: 100% !important;*/
     padding: 0;
 }
 .filecategory {

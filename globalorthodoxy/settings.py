@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'countries_plus',
     'rest_framework',
     'bootstrap_modal_forms',
+    'widget_tweaks',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -70,6 +71,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'globalorthodoxy.urls'
+
+MAX_UPLOAD_SIZE = 5242880
 
 TEMPLATES = [
     {

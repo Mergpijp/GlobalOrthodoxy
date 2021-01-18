@@ -295,7 +295,7 @@ class Publication(models.Model):
     team_comments = models.TextField(max_length=800, blank=True)
     other_comments = models.TextField(max_length=800, blank=True)
     is_deleted = models.BooleanField(default=False)
-
+    is_stub = models.BooleanField(default=False)
     created_by = models.ForeignKey('auth.User', related_name='publications', on_delete=models.CASCADE, blank=True, null=True)
 
 

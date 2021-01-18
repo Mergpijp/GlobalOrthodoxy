@@ -38,10 +38,28 @@ function update(){
         }
     });
 }
+function update_search_files(){
+    var data = {'input': $("#id_search_files").val()};
+    $.post(FILES, data, function(data, status){
+        if(status === 'success') {
+            //$('#id_search_files').html(data);
+            $("#uploadedfiles-candidates-table").html(data["table"]);
+        }
+    });
+}
 $(document).ready(function(){
     $('#id_title_original').on('input',function(){
         if ($("#id_title_original").val().length > 4) {
             update();
         }
     });
+    //$('#id_search_files')[0].selectize.trigger( "change" );
+    $('#id_search_files').on('input',function(){
+        if ($("#id_search_files").val().length > 0) {
+            //console.log('in');
+            update_search_files();
+        }
+    });
+
 });
+

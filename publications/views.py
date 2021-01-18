@@ -21,6 +21,8 @@ import re
 from django_countries import countries
 from django.utils import timezone
 import datetime
+import traceback
+from itertools import chain
 from django.core.exceptions import ImproperlyConfigured
 import json
 from django.urls import reverse
@@ -28,7 +30,9 @@ from django.core import serializers
 from countries_plus.models import Country
 from django.core.paginator import Paginator
 from googletrans import Translator as GTranslator
+
 from googletrans import LANGUAGES
+from django.template.loader import render_to_string
 from urllib.parse import urlencode
 from collections import OrderedDict
 from django import template
@@ -58,13 +62,23 @@ register = template.Library()
 countries_dict = dict([(y.lower(), x) for (x,y) in countries])
 #languages_dict = dict([(x.lower(), y) for (x,y) in countries])
 countries_list = [y for (x,y) in countries]
-translator = GTranslator()
+translator = GTranslator(service_urls=['translate.googleapis.com'])
+
+
+@login_required(login_url='/accounts/login/')
+def nothing(request):
+    return HttpResponse(status=200)
 
 @login_required(login_url='/accounts/login/')
 def process_file(request, pk=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
+
+    #try:
+    #pdb.set_trace()
     post_mutable = {'image_title': request.POST['image_title'], 'filecategory': request.POST['filecategory'], \
                     'image_contents': request.POST['image_contents']}
+    #except:
+    #    return HttpResponse(status=200)
 
     # '''
     # my_filter_qs = Q()
@@ -82,7 +96,75 @@ def process_file(request, pk=None):
             form.save()
             return HttpResponse(status=200)
 
-    return HttpResponse(status=500)
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def process_file2(request, pkb=None):
+
+    obj, created = UploadedFile.objects.get_or_create(pk=None)
+
+    #try:
+    post_mutable = {'image_title': request.POST['image_title'], 'filecategory': request.POST['filecategory'], \
+                    'image_contents': request.POST['image_contents']}
+    #except:
+    #    return HttpResponse(status=200)
+
+    form = UploadedFileForm(post_mutable or None, request.FILES or None, instance=obj)
+
+    if request.method == 'POST':
+        #pdb.set_trace()
+        if form.is_valid():
+            instance = form.save()
+            #pdb.set_trace()
+
+            if pkb:
+                pub = Publication.objects.get(pk=pkb)
+                pub.uploadedfiles.add(instance)
+                pub.save()
+                #instance.save()
+                #pub.form.save_m2m()
+                #return super().form_valid(form)
+                return HttpResponse(status=200)
+
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def link_file(request, pkb=None, pk=None):
+    data = dict()
+    if pkb and pk:
+        pub = Publication.objects.get(pk=pkb)
+        file = UploadedFile.objects.get(pk=pk)
+        #pdb.set_trace()
+        if not file in pub.uploadedfiles.all():
+            pub.uploadedfiles.add(file)
+            pub.save()
+            data['table'] = render_to_string(
+                '_uploadedfiles_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
+        else:
+            return HttpResponse(409)
+
+@login_required(login_url='/accounts/login/')
+def unlink_file(request, pkb=None, pk=None):
+    data = dict()
+    if pkb and pk:
+        pub = Publication.objects.get(pk=pkb)
+        file = UploadedFile.objects.get(pk=pk)
+        if file in pub.uploadedfiles.all():
+            pub.uploadedfiles.remove(file)
+            pub.save()
+            data['table'] = render_to_string(
+                '_uploadedfiles_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
+        else:
+            return HttpResponse(409)
+
 
 @login_required(login_url='/accounts/login/')
 def view_input_update(request):
@@ -92,6 +174,36 @@ def view_input_update(request):
             language = translator.detect(input).lang
             return HttpResponse(LANGUAGES[language])
     return HttpResponse('ERROR')
+
+'''
+@login_required(login_url='/accounts/login/')
+def search_uploaded_files(request):
+    if request.method == 'GET':
+        if 'input' in request.GET:
+            input = request.GET['input']
+            uploadedfiles = UploadedFile.objects.filter(image_title=input).order_by('image_title')[:10]
+            return render(request, 'search_files_dropdown_list.html', {'uploadedfiles': uploadedfiles})
+    return HttpResponse('ERROR')
+'''
+@login_required(login_url='/accounts/login/')
+def search_uploaded_files(request, pkb=None):
+    data = dict()
+    if request.method == 'POST':
+        if pkb:
+            #pdb.set_trace()
+            if 'input' in request.POST:
+                input = request.POST['input']
+                uploadedfiles = UploadedFile.objects.filter(image_title__icontains=input).order_by('image_title')[:10]
+
+            else:
+                uploadedfiles = UploadedFile.objects.none()
+            publication = Publication.objects.get(pk=pkb)
+            data['table'] = render_to_string(
+                '_uploadedfiles_candidates_table.html',
+                {'uploadedfiles': uploadedfiles, 'publication': publication},
+                request=request
+            )
+            return JsonResponse(data)
 
 @login_required(login_url='/accounts/login/')
 def search_files(request):
@@ -119,6 +231,18 @@ def url_replace(request, field, value, direction=''):
 
     return urlencode(OrderedDict(sorted(dict_.items())))
 '''
+def uploadedfiles(request, pkb=None):
+    data = dict()
+    if (request.method == 'GET' or request.method == 'POST') and pkb:
+        publication = Publication.objects.get(pk=pkb)
+
+        data['table'] = render_to_string(
+            '_uploadedfiles_table.html',
+            {'publication': publication},
+            request=request
+        )
+        #pdb.set_trace()
+        return JsonResponse(data)
 
 class UploadedFileCreateView(BSModalCreateView):
     template_name = 'uploadedfiles/uploadedfile_new.html'
@@ -128,6 +252,16 @@ class UploadedFileCreateView(BSModalCreateView):
     #model = Publication
     success_url = reverse_lazy('publication-new')
 
+    def get_context_data(self, **kwargs):
+        context = super(UploadedFileCreateView, self).get_context_data(**kwargs)
+        context['pkb'] = self.kwargs['pk']
+        return context
+
+    '''
+    def get_success_url(self):
+        return reverse_lazy('publication-new', kwargs={'active_tab': 'tab_files', 'object_id': self.object.id}, )
+        #return render(self.request, 'publications/form_create.html', {'form': self.form_valid(None) ,'active_tab': 'tab_files', 'object_id': str(self.object.id)})
+    '''
     '''
     def get_success_url(self):
         """Detect the submit button used and act accordingly"""
@@ -141,39 +275,27 @@ class UploadedFileCreateView(BSModalCreateView):
     '''
 
     def form_valid(self, form):
-        try:
-            obj, created = UploadedFile.objects.get_or_create(pk=self.kwargs['pk'])
-        except Exception as e:
-            obj, created = UploadedFile.objects.get_or_create(pk=None)
-        try:
-            post_mutable = {'image_title': self.request.POST['image_title'],
-                            'filecategory': self.request.POST['filecategory'], \
-                            'image_contents': self.request.POST['image_contents']}
-        except Exception as e:
-            post_mutable = {'image_title': self.request.POST['image_title'],
-                            'filecategory': self.request.POST['filecategory'], \
-                            'image_contents': None}
+        return HttpResponse(status=200)
+        #return super().form_valid(form)
 
-
-        form = UploadedFileForm(post_mutable or None, self.request.FILES or None, instance=obj)
-        if self.request.method == 'POST':
-            if form.is_valid():
-                instance = form.save(commit=False)
-                instance.save()
-                form.save_m2m()
-                #pub = Publication.objects.get(id=form.cleaned_data['publication'])
-                #pub.uploadedfiles.add(obj)
-                return super().form_valid(form)
-                #return render(self.request, 'orders/order.html', {'active_tab': 'demo-lft-tab-5'})
-                #return HttpResponseRedirect(self.success_url)
-
-        return HttpResponse(status=500)
-
-class UploadedFileUnlinkView(BSModalDeleteView):
+class UploadedFileUnlinkView(BSModalUpdateView):
     template_name = 'uploadedfiles/uploadedfile_unlink.html'
     model = UploadedFile
+    form_class = UploadedFileModelForm
     success_message = 'Success: uploadedfile was unlinked.'
     success_url = reverse_lazy('publication-new')
+
+    #def get_success_url(self):
+    #    return reverse_lazy('/publication/' + str(self.kwargs['pkb']) + '/edit/')
+
+    def form_valid(self, form):
+        uploadedfile = UploadedFile.objects.get(self.kwargs['pk'])
+        publication = Publication.objects.get(self.kwargs['pkb'])
+        publication.uploadedfiles.remove(uploadedfile)
+        #pdb.set_trace()
+        #publication.save()
+        return super().form_valid(form)
+        #return HttpResponse(200)
 
 class PublicationUpdate(UpdateView):
     '''
@@ -208,7 +330,7 @@ def PublicationDelete(request, pk):
     publication.save()
     return redirect('/publication/show')
 
-class PublicationCreate(CreateView):
+class PublicationCreate(UpdateView):
     '''
     inherits CreateView
     Uses template for creating/updating.
@@ -219,6 +341,7 @@ class PublicationCreate(CreateView):
     form_class = NewCrispyForm
     context_object_name = 'publication'
     model = Publication
+    #fields = ['UploadedFiles']
     # success_url = '/publication/show/'
     '''
     def get_form_class(self):
@@ -252,10 +375,44 @@ class PublicationCreate(CreateView):
 
             return model_forms.modelform_factory(model, fields=self.fields)
     '''
+    '''
+    def get_context_data(self, **kwargs):
+        context = super(PublicationCreate, self).get_context_data(**kwargs)
+        try:
+            if context['files'] and context['files'].count() < 1:
+                context['files'] = UploadedFile.objects.filter(pk=self.kwargs['object_id'])
+            else:
+                context['files'] |= UploadedFile.objects.filter(pk=self.kwargs['object_id'])
+        except:
+            traceback.print_exc()
+            #context['files_list'] = chain(context['files_list'],context['files'].append(UploadedFile.objects.filter(pk=self.kwargs['pk'])))
+        return context
+    '''
+    '''
+    def get_context_data(self, **kwargs):
+        context = super(PublicationCreate, self).get_context_data(**kwargs)
+        context['publication'] = Publication(is_stub=True)
+        return context
+    '''
 
+    def get_object(self):
+        pub = Publication(is_stub=True)
+        pub.save()
+        return pub
 
     def form_valid(self, form):
+        #form.instance = Publication.objects.get(pk=self.object.id-1)
         form.instance.created_by = self.request.user
+        form.instance.is_stub = False
+        # todo: temporal solution for double publication.
+        pub = Publication.objects.get(pk=self.object.id-1)
+        form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
+        for file in form.instance.uploadedfiles.all():
+            file.save()
+        if form.is_valid():
+            instance = form.save()
+            instance.save()
+        pub.delete()
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -332,7 +489,7 @@ class SearchResultsView(ListView):
     model = Publication
     #template_name = 'publications/show.html'
     context_object_name = 'publications'
-    publications = Publication.objects.filter(is_deleted=False)
+    publications = Publication.objects.filter(is_deleted=False, is_stub=False)
     paginate_by = 10
     #ordering = 'title_original'
 
@@ -373,7 +530,8 @@ class SearchResultsView(ListView):
         copyrights = self.request.GET.get('copyrights')
         is_a_translation =  self.request.GET.get('is_a_translation')
 
-        publications = Publication.objects.filter(is_deleted=False)
+        publications = Publication.objects.filter(is_deleted=False, is_stub=False)
+
         #publications = Publication.objects.filter(is_deleted=False).values('id').distinct()
         #publications = publications.filter(is_deleted=False)
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
@@ -426,6 +584,7 @@ class SearchResultsView(ListView):
             if self.request.user.is_authenticated:
                 search_fields.extend(['collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', 'currently_owned_by__name'])
 
+            print(query_string)
             arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)

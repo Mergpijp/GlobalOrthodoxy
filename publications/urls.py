@@ -3,17 +3,28 @@ from django.urls import path, include
 from .views import SearchResultsView, render_search, PublicationCreate, PublicationUpdate, PublicationDelete, PublicationDetailView#, UploadedfileUpdateView
 from . import views
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
+    path('nothing/', views.nothing, name='nothing'),
     path('uploadedfile_new/', views.UploadedFileCreateView.as_view(), name='uploadedfile_new'),
     #path('uploadedfile_new/None', views.PublicationUpdate.as_view(), name='uploadedfile_update'),
     path('uploadedfile_new/<int:pk>', views.UploadedFileCreateView.as_view(), name='uploadedfile_new'),
-    path('uploadedfile_unlink/<int:pk>', views.UploadedFileUnlinkView.as_view(), name='uploadedfile_unlink'),
+    path('uploadedfile_unlink/<int:pk>/<int:pkb>', views.UploadedFileUnlinkView.as_view(), name='uploadedfile_unlink'),
+    path('publication/new/<str:active_tab>/<int:object_id>', login_required(PublicationCreate.as_view()), name='publication-new'),
+    #path(r'publication/new/(?P<active_tab>\w+)/(?P<object_id>\d+)$', login_required(PublicationCreate.as_view()), name='publication-new'),
+    #path('publication/new/<str:ap><int:pk>', login_required(PublicationCreate.as_view()), name='publication-new'),
     path('publication/new/', login_required(PublicationCreate.as_view()), name='publication-new'),
+    #path('publication/new/None', login_required(PublicationCreate.as_view()), name='publication-new'),
     path('detect_language', views.view_input_update, name='view-input-update'),
+    path('search_uploaded_files/<int:pkb>', csrf_exempt(views.search_uploaded_files), name='search-uploaded-files'),
     path('search_files', views.search_files, name='search-files'),
+    path('uploadedfiles/<int:pkb>', csrf_exempt(views.uploadedfiles), name='uploadedfiles'),
+    path('link_file/<int:pkb>/<int:pk>', csrf_exempt(views.link_file), name='link-file'),
+    path('unlink_file/<int:pkb>/<int:pk>', csrf_exempt(views.unlink_file), name='unlink-file'),
     #path('url_replace', views.url_replace, name='url_replace'),
-    path('uploadedfile/proces/<int:pk>/', views.process_file, name='uploadedfile-proces'),
+    path('uploadedfile/proces/<int:pk>', views.process_file, name='uploadedfile-proces'),
+    path('uploadedfile/proces2/<int:pkb>', views.process_file2, name='uploadedfile-proces2'),
     path('uploadedfile/proces/', views.process_file, name='uploadedfile-proces'),
     path('publication/show/', login_required(SearchResultsView.as_view()), name='publication-show'),
     path('publication/overview/', login_required(SearchResultsView.as_view()), name='publication-overview'),

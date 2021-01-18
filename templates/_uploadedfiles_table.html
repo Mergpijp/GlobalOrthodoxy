@@ -1,0 +1,36 @@
+<div id="uploadedfiles-div">
+<table id="uploadedfiles-table" class="table">
+  <thead>
+  <tr>
+    <th class="text-center" scope="col">ID</th>
+    <th class="text-center" scope="col">Image Title</th>
+    <th class="text-center" scope="col">Picture</th>
+    <th class="text-center" scope="col">Unlink</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for uploadedfile in publication.uploadedfiles.all %}
+    <tr>
+      <th class="text-center" scope="row">{{ uploadedfile.pk }}</th>
+      <td class="text-center">{{ uploadedfile.image_title }}</td>
+      <td style="text-align: center;"><img src="/media/{{ uploadedfile.file }}" width="200" height="200" id="crop_image"></td>
+      <td class="text-center">
+        <!-- Unlink Uploadedfile buttons -->
+        <button type="button" class="uploadedfile-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-file' publication.pk uploadedfile.pk %}">
+          <span class="fa fa-trash"></span> Unlink File
+        </button>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<script>
+ $( ".uploadedfile-unlink" ).click(function() {
+    $.post($(this).attr('data-form-url'), function(data, status){
+        if(status === 'success') {
+            $("#uploadedfiles-div").html(data["table"]);
+        }
+    });
+});
+</script>
+</div>

@@ -16,6 +16,12 @@ from django.utils.encoding import force_text
 from bootstrap_modal_forms.forms import BSModalModelForm
 
 
+class UploadedfileWidget(ModelSelect2Widget):
+    search_fields = [
+        "image_title__icontains",
+    ]
+
+
 class PublicationForm(forms.ModelForm):
     '''
     This is a search form.
@@ -324,7 +330,11 @@ class NewCrispyForm(forms.ModelForm):
         search_fields=['name__icontains', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Language.objects.all(), required=False)
-
+    '''
+    def clean_uploadedfiles(self):
+        uploadedfiles = self.cleaned_data['uploadedfiles']
+        return uploadedfiles
+    '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -375,7 +385,6 @@ class NewCrispyForm(forms.ModelForm):
                     FieldWithButtons('form_of_publication', StrictButton('+', type='button', css_class='btn-danger',
                                                                          onClick="window.open('/form_of_publication/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'ISBN_number',
-                    'tyoe_of_collection',
                     'printed_by',
                     'published_by',
                     'publication_year',
@@ -415,57 +424,131 @@ class NewCrispyForm(forms.ModelForm):
                     'contact_email',
                     'contact_website',
                     ),
-                Tab('Files',
-                    HTML("""
-                          <div id="linkeddocuments">
-                            <div>Document A <button>Remove</button></div>
-                            <div>Document B <button>Remove</button></div>
-                          </div>
-                          <!-- Modal 1 with id="create-uploadedfile"-->
-                            <div class="modal fade" tabindex="-1" role="dialog" id="create-modal">
-                              <div class="modal-dialog" role="document">
-                                <div class="modal-content"></div>
-                              </div>
-                            </div>  
-                           <!-- Modal 2 with id="modal" -->
-                            <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-                              <div class="modal-dialog" role="document">
-                                <div class="modal-content"></div>
-                              </div>
-                            </div>                       
-                            <div id="searchdocumentpanel">
-                              <input type="text" id='id_search_files'></input>
-                              <button type="button" class='btn btn-primary btn-danger' id='upload-file'>upload new file</button>
+                #HTML("""<div id=files class ="tab-pane {% if active_tab == 'tab-files' %} active{% endif %}"> """,#Tab('Files',
+
+            Tab('Files',
+                HTML("""
+                    {% include "_modal.html" %}
+                      
+                      <div id="linkeddocuments">
+                        <div class="col-12 mb-3">
+                            {% if publication.uploadedfiles|length >= 0 %}
+                              {% include "_uploadedfiles_table.html" %}
+                            {% else %}
+                              <p class="no-uploadedfiles">No uploadedfiles added yet.</p>
+                            {% endif %}
+                        </div>   
+                      </div>
+                        <div id="searchdocumentpanel" class="container">
+                          <div class="row">
+                           <div class="col"></div>
+                           <div class="col">
+                           <button type="button" class='btn btn-primary btn-danger' id='create-uploadedfile-async'><span class="fa fa-plus mr-2"></span>upload new file async</button>
+                            <br/>
+                            <br/>Search Files:<br/>
+                            <br/>
+                            <input type="text" id="id_search_files">
+                            </input>
                             </div>
-                            {% for file in publication.uploadedfiles_set.all %}
-                                <div class="text-center">
-                                  <!-- Delete uploadedfile buttons -->
-                                  <button type="button" id="unlink-file" class="bs-modal btn btn-sm btn-danger" data-form-url="{% url 'uploadedfile_unlink' file.pk %}">
-                                    <span class="fa fa-trash"></span>
-                                  </button>
-                                </div>
-                            {% endfor %}
-                            <div id="unlinkeddocuments">
-                              <div>Document X <button>Add</button></div>
-                              <div>Document Y<button>Add</button></div>
-                            </div>
-                        <script type="text/javascript">
-                        $(function() {
-                             $(".bs-modal").each(function () {
-                              $(this).modalForm({
-                                  formURL: $(this).data('form-url')
-                              });
-                            });
-                            $("#upload-file").modalForm({
-                                formURL: "{% url 'uploadedfile_new' %}",
-                                modalID: "#create-modal"
-                            });
-                        
-                        });
-                        </script>
-        
-                        """),
+                            <div class="col"></div>
+                        </div>
+                          <br/>
+                          <div class="col-12 mb-3">
+                            {% if uploadedfiles|length >= 0 %}
+                              {% include "_uploadedfiles_candidates_table.html" %}
+                            {% else %}
+                              <p class="no-uploadedfiles">No uploadedfiles added yet.</p>
+                            {% endif %}
+                          </div>                            
+                        </div>
+                    <script type="text/javascript">
+                    $(function () {
+                      var asyncSuccessMessageCreate = [
+                        "<div ",
+                        "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+                        "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+                        "Success: Uploadedfile was created.",
+                        "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+                        "<span aria-hidden='true'>&times;</span>",
+                        "</button>",
+                        "</div>",
+                        "<script>",
+                        "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+                        "<\/script>"
+                      ].join("");
+            
+                      var asyncSuccessMessageUpdate = [
+                        "<div ",
+                        "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+                        "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+                        "Success: UploadedFile was updated.",
+                        "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+                        "<span aria-hidden='true'>&times;</span>",
+                        "</button>",
+                        "</div>",
+                        "<script>",
+                        "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+                        "<\/script>"
+                      ].join("");
+            
+                    function updateUploadedFileModalForm() {
+                    $(".somebullshit").each(function () {
+                      $(this).modalForm({
+                        formURL: $(this).data("form-url"),
+                        asyncUpdate: true,
+                        asyncSettings: {
+                          closeOnSubmit: false,
+                          successMessage: asyncSuccessMessageUpdate,
+                          dataUrl: "{% url 'uploadedfiles' publication.pk %}",
+                          dataElementId: "#uploadedfiles-table",
+                          dataKey: "table",
+                          addModalFormFunction: updateUploadedFileModalForm
+                        }
+                      });
+                    });
+                  }
+                  updateUploadedFileModalForm();                    
+                  function createUploadedFileAsyncModalForm() {
+                    $("#create-uploadedfile-async").modalForm({
+                        formURL: "{% url 'uploadedfile_new' publication.pk %}",
+                        modalID: "#create-modal",
+                        asyncUpdate: true,
+                        asyncSettings: {
+                          closeOnSubmit: true,
+                          successMessage: asyncSuccessMessageCreate,
+                          dataUrl: "{% url 'uploadedfiles' publication.pk %}",
+                          dataElementId: "#uploadedfiles-table",
+                          dataKey: "table",  
+                          addModalFormFunction: updateUploadedFileModalForm
+                         }
+                  });
+                }
+                createUploadedFileAsyncModalForm(); 
+                function createUploadedFileSyncModalForm() {
+                    $("#create-uploadedfile-sync").modalForm({
+                        formURL: "{% url 'uploadedfile_new' publication.pk %}",
+                        modalID: "#create-modal"
+                    });
+                  }
+                createUploadedFileSyncModalForm();                 
+                // Hide message
+                  $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+                      $(".alert").slideUp(500);
+                  });
+                      // Update, Read and Delete book buttons open modal with id="modal" (default)
+                    // The formURL is retrieved from the data of the element
+                    //$(".bs-modal").each(function () {
+                    //  $(this).modalForm({
+                    //      formURL: $(this).data('form-url')
+                    //  });
+                    //});
+                    });
+                    </script>
+    
+                    """),
+                css_id="files",
                 ),
+
                 Tab('Comments',
                     'general_comments',
                     'team_comments',
@@ -495,12 +578,13 @@ class NewCrispyForm(forms.ModelForm):
                   'connected_to_special_occasion', 'description_of_illustration', \
                   'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights',
                   'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website', 'general_comments', 'team_comments', 'uploadedfiles', 'keywords',
+                  'contact_email', 'contact_website', 'general_comments', 'team_comments', 'other_comments', 'keywords',
                   'is_a_translation', 'ISBN_number', 'translated_from', \
                   'title_original3', 'title_subtitle_transcription3', 'title_translation3', 'title_original4',
                   'title_subtitle_transcription4', 'title_translation4', \
                   'title_original5', 'title_subtitle_transcription5', 'title_translation5', 'price', 'collection_context', \
                   'currency')
+        exclude = ('uploadedfiles',)
         # publication_country = forms.ChoiceField(choices=list(countries))
 
 import pdb
@@ -869,7 +953,7 @@ class UploadedFileForm(forms.ModelForm):
                                                     
                                                     setTimeout(function () {
                                                             window.location.href='/uploadedfile/show/';
-                                                    }, 1000);
+                                                    }, 4000);
 
                                                 }
                                             });
@@ -889,6 +973,14 @@ class UploadedFileForm(forms.ModelForm):
                                                 return cookieValue;
                                             }
                                             $("#my-drop-zone").addClass("dropzone");
+                                              Dropzone.options.myDropZone = {
+                                                maxFilesize: 500,
+                                                init: function() {
+                                                  this.on("uploadprogress", function(file, progress) {
+                                                    console.log("File progress", progress);
+                                                  });
+                                                }
+                                              }
                                         </script>
                                         """),
 
@@ -921,7 +1013,7 @@ class UploadedFileModelForm(BSModalModelForm):
         attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]', },
     ), queryset=ImageContent.objects.all(), required=False)
     '''
-    imagecontents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+    image_contents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=ImageContent,
         search_fields=['name__icontains', ],
         attrs={'data-minimum-input-length': 0},
@@ -970,14 +1062,15 @@ class UploadedFileModelForm(BSModalModelForm):
             #    Submit('Submit', 'Submit', css_class='btn-danger', css_id='submit-btn')),
             HTML("""
                                         <script>
-                                            {% if object %}
-                                            var pk = {{object.id}} + "/";
+                                            {% if pkb %}
+                                            var pkb = {{pkb}} + "/";
                                             {% else %}
-                                            var pk = ""
+                                            var pkb = ""
                                             {% endif %}
                                             Dropzone.autoDiscover = false;
                                             var myDropzone = new Dropzone("div#my-drop-zone", { 
-                                                url: "/uploadedfile_new/" + pk,
+                                                //url: "/uploadedfile/proces/" + pkb,
+                                                url: "{% url 'uploadedfile-proces2' pkb %}",
                                                 method: "post",
                                                 autoProcessQueue: false,
                                                 maxFiles: 1,
@@ -988,14 +1081,15 @@ class UploadedFileModelForm(BSModalModelForm):
                                                 },
                                                 init: function () {
                                                     var myDropzone = this;
-                                                    var addButton = $("#submit-btn");
+                                                    var addButton = $("#submit-btn2");
                                                     addButton.click(function (e) {
                                                         
                                                     if (myDropzone.getQueuedFiles().length > 0) {
                                                         
+                                                        e.preventDefault();
                                                         myDropzone.processQueue();
+                                                        
                                                     }
-                                                    e.stopPropagation();
                                                     });
                                                 },
                                                 sending: function (file, xhr, formData) {
@@ -1004,9 +1098,9 @@ class UploadedFileModelForm(BSModalModelForm):
                                                     formData.append('filecategory', $('#id_filecategory').val());
                                                     formData.append('image_contents', $('#id_image_contents').val());
 
-                                                    //setTimeout(function () {
+                                                    setTimeout(function () {
                                                     //        window.location.href='/uploadedfile/show/';
-                                                    //}, 1000);
+                                                    }, 1000);
 
                                                 }
                                             });

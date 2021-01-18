@@ -1,0 +1,43 @@
+<div id="candidates-div">
+<table id="uploadedfiles-candidates-table" class="table">
+  <thead>
+  <tr>
+    <th class="text-center" scope="col">ID</th>
+    <th class="text-center" scope="col">Image Title</th>
+    <th class="text-center" scope="col">Picture</th>
+    <th class="text-center" scope="col">Link</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for uploadedfile in uploadedfiles.all %}
+    <tr>
+      <th class="text-center" scope="row">{{ uploadedfile.pk }}</th>
+      <td class="text-center">{{ uploadedfile.image_title }}</td>
+      <td style="text-align: center;"><img src="/media/{{ uploadedfile.file }}" width="200" height="200" id="crop_image"></td>
+      <td class="text-center">
+        <!-- Link Uploadedfile buttons -->
+        <button type="button" class="uploadedfile-link btn btn-sm btn-danger" data-form-url="{% url 'link-file' publication.pk uploadedfile.pk%}">
+            <span class="fa fa-plus mr-2"></span>Link file
+        </button>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<script>
+$( ".uploadedfile-link" ).click(function() {
+    $.post($(this).attr('data-form-url'), function(data, status){
+        if(status === 'success') {
+            $("#uploadedfiles-div").html(data["table"]);
+            $('#id_search_files').val('');
+            $.post("{% url 'search-uploaded-files' publication.pk %}", function(data2, status2){
+                if(status2 === 'success') {
+                    $("#candidates-div").html(data2["table"]);
+                }
+
+            })
+        }
+    });
+});
+</script>
+</div>
