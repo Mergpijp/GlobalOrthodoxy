@@ -1,0 +1,177 @@
+{% include "_modal.html" %}
+<div id="linkeddocuments">
+<div class="col-12 mb-3">
+    {% include "_authors_table.html" %}
+</div>
+</div>
+<div id="searchdocumentpanel" class="container">
+  <div class="row">
+   <div class="col"></div>
+   <div class="col">
+   <button type="button" class='btn btn-primary btn-danger' id='create-author-async'><span class="fa fa-plus mr-2"></span>new author async</button>
+    <br/>
+    <br/>Search Authors:<br/>
+    <br/>
+    <input type="text" id="id_search_authors">
+    </input>
+    </div>
+    <div class="col"></div>
+</div>
+  <br/>
+  <div class="col-12 mb-3">
+      {% include "_authors_candidates_table.html" %}
+  </div>
+</div>
+
+<div id="linkeddocuments">
+<div class="col-12 mb-3">
+    {% include "_translators_table.html" %}
+</div>
+</div>
+<div id="searchdocumentpanel" class="container">
+  <div class="row">
+   <div class="col"></div>
+   <div class="col">
+   <button type="button" class='btn btn-primary btn-danger' id='create-translator-async'><span class="fa fa-plus mr-2"></span>new translator async</button>
+    <br/>
+    <br/>Search Translator:<br/>
+    <br/>
+    <input type="text" id="id_search_translators">
+    </input>
+    </div>
+    <div class="col"></div>
+</div>
+  <br/>
+  <div class="col-12 mb-3">
+      {% include "_translators_candidates_table.html" %}
+  </div>
+</div>
+<script type="text/javascript">
+$(function () {
+  var asyncSuccessMessageCreateAuthor = [
+    "<div ",
+    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+    "Success: Author was created.",
+    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+    "<span aria-hidden='true'>&times;</span>",
+    "</button>",
+    "</div>",
+    "<script>",
+    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+    "<\/script>"
+  ].join("");
+
+  var asyncSuccessMessageUpdateAuthor = [
+    "<div ",
+    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+    "Success: Author was updated.",
+    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+    "<span aria-hidden='true'>&times;</span>",
+    "</button>",
+    "</div>",
+    "<script>",
+    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+    "<\/script>"
+  ].join("");
+  var asyncSuccessMessageCreateTranslator = [
+    "<div ",
+    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+    "Success: Translator was created.",
+    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+    "<span aria-hidden='true'>&times;</span>",
+    "</button>",
+    "</div>",
+    "<script>",
+    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+    "<\/script>"
+  ].join("");
+
+  var asyncSuccessMessageUpdateTranslator = [
+    "<div ",
+    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+    "Success: Translator was updated.",
+    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+    "<span aria-hidden='true'>&times;</span>",
+    "</button>",
+    "</div>",
+    "<script>",
+    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+    "<\/script>"
+  ].join("");
+
+function updateAuthorModalForm() {
+$(".author-edit").each(function () {
+  $(this).modalForm({
+    formURL: $(this).data("form-url"),
+    asyncUpdate: true,
+    asyncSettings: {
+      closeOnSubmit: false,
+      successMessage: asyncSuccessMessageUpdateAuthor,
+      dataUrl: "{% url 'authors' publication.pk %}",
+      dataElementId: "#authors-div",
+      dataKey: "table",
+      addModalFormFunction: updateAuthorModalForm
+    }
+  });
+});
+}
+updateAuthorModalForm();
+function updateTranslatorModalForm() {
+$(".translator-edit").each(function () {
+  $(this).modalForm({
+    formURL: $(this).data("form-url"),
+    asyncUpdate: true,
+    asyncSettings: {
+      closeOnSubmit: false,
+      successMessage: asyncSuccessMessageUpdateTranslator,
+      dataUrl: "{% url 'translators' publication.pk %}",
+      dataElementId: "#translators-div",
+      dataKey: "table",
+      addModalFormFunction: updateTranslatorModalForm
+    }
+  });
+});
+}
+updateTranslatorModalForm();
+function createAuthorAsyncModalForm() {
+$("#create-author-async").modalForm({
+    formURL: "{% url 'author_new' publication.pk %}",
+    modalID: "#create-modal",
+    asyncUpdate: true,
+    asyncSettings: {
+      closeOnSubmit: true,
+      successMessage: asyncSuccessMessageCreateAuthor,
+      dataUrl: "{% url 'authors' publication.pk %}",
+      dataElementId: "#authors-div",
+      dataKey: "table",
+      addModalFormFunction: updateAuthorModalForm
+     }
+});
+}
+createAuthorAsyncModalForm();
+function createTranslatorAsyncModalForm() {
+$("#create-translator-async").modalForm({
+    formURL: "{% url 'translator_new' publication.pk %}",
+    modalID: "#create-modal",
+    asyncUpdate: true,
+    asyncSettings: {
+      closeOnSubmit: true,
+      successMessage: asyncSuccessMessageCreateTranslator,
+      dataUrl: "{% url 'translators' publication.pk %}",
+      dataElementId: "#translatros-div",
+      dataKey: "table",
+      addModalFormFunction: updateTranslatorModalForm
+     }
+});
+}
+createTranslatorAsyncModalForm();
+// Hide message
+$(".alert").fadeTo(2000, 500).slideUp(500, function () {
+  $(".alert").slideUp(500);
+});
+});
+</script>

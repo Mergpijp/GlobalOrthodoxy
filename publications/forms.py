@@ -368,10 +368,7 @@ class NewCrispyForm(forms.ModelForm):
                            onclick="$('.hidden:first').removeClass('hidden');"),
                     ),
                 Tab('Author',
-                    FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-danger',
-                                                            onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-danger',
-                                                                onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    HTML("{% include '_author_translator.html' %}"),
                     'is_a_translation',
                     FieldWithButtons('translated_from', StrictButton('+', type='button', css_class='btn-danger',
                                                                      onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
@@ -523,25 +520,11 @@ class NewCrispyForm(forms.ModelForm):
                          }
                   });
                 }
-                createUploadedFileAsyncModalForm(); 
-                function createUploadedFileSyncModalForm() {
-                    $("#create-uploadedfile-sync").modalForm({
-                        formURL: "{% url 'uploadedfile_new' publication.pk %}",
-                        modalID: "#create-modal"
-                    });
-                  }
-                createUploadedFileSyncModalForm();                 
+                createUploadedFileAsyncModalForm();                  
                 // Hide message
                   $(".alert").fadeTo(2000, 500).slideUp(500, function () {
                       $(".alert").slideUp(500);
                   });
-                      // Update, Read and Delete book buttons open modal with id="modal" (default)
-                    // The formURL is retrieved from the data of the element
-                    //$(".bs-modal").each(function () {
-                    //  $(this).modalForm({
-                    //      formURL: $(this).data('form-url')
-                    //  });
-                    //});
                     });
                     </script>
     
@@ -1005,6 +988,16 @@ class UploadedFileModelForm2(BSModalModelForm):
         model = UploadedFile
         fields = ('image_title', 'filecategory', 'file', 'image_contents',)
 
+class AuthorModelForm(BSModalModelForm):
+    class Meta:
+        model = Author
+        fields = ('name', 'name_original_language', 'extra_info',)
+
+class TranslatorModelForm(BSModalModelForm):
+    class Meta:
+        model = Translator
+        fields = ('name', 'name_original_language', 'extra_info',)
+
 class UploadedFileModelForm(BSModalModelForm):
 
     image_contents = forms.ModelMultipleChoiceField(widget=ImageContentSelect2TagWidget(
@@ -1098,9 +1091,9 @@ class UploadedFileModelForm(BSModalModelForm):
                                                     formData.append('filecategory', $('#id_filecategory').val());
                                                     formData.append('image_contents', $('#id_image_contents').val());
 
-                                                    setTimeout(function () {
+                                                    //setTimeout(function () {
                                                     //        window.location.href='/uploadedfile/show/';
-                                                    }, 1000);
+                                                    //}, 1000);
 
                                                 }
                                             });

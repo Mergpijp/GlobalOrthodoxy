@@ -22,6 +22,22 @@ urlpatterns = [
     path('uploadedfiles/<int:pkb>', csrf_exempt(views.uploadedfiles), name='uploadedfiles'),
     path('link_file/<int:pkb>/<int:pk>', csrf_exempt(views.link_file), name='link-file'),
     path('unlink_file/<int:pkb>/<int:pk>', csrf_exempt(views.unlink_file), name='unlink-file'),
+
+    path('search_translators/<int:pkb>', csrf_exempt(views.search_translators), name='search-translators'),
+    path('search_authors/<int:pkb>', csrf_exempt(views.search_authors), name='search-authors'),
+    path('authors/<int:pkb>', csrf_exempt(views.authors), name='authors'),
+    path('translators/<int:pkb>', csrf_exempt(views.translators), name='translators'),
+    path('link_author/<int:pkb>/<int:pk>', csrf_exempt(views.link_author), name='link-author'),
+    path('unlink_author/<int:pkb>/<int:pk>', csrf_exempt(views.unlink_author), name='unlink-author'),
+    path('link_translator/<int:pkb>/<int:pk>', csrf_exempt(views.link_translator), name='link-translator'),
+    path('unlink_translator/<int:pkb>/<int:pk>', csrf_exempt(views.unlink_translator), name='unlink-translator'),
+    path('author_new/<int:pk>', views.AuthorCreateView.as_view(), name='author_new'),
+    path('translator_new/<int:pk>', views.TranslatorCreateView.as_view(), name='translator_new'),
+    path('update_author/<int:pk>', views.AuthorUpdateView.as_view(), name='update-author'),
+    path('update_translator/<int:pk>', views.TranslatorUpdateView.as_view(), name='update-translator'),
+
+
+
     #path('url_replace', views.url_replace, name='url_replace'),
     path('uploadedfile/proces/<int:pk>', views.process_file, name='uploadedfile-proces'),
     path('uploadedfile/proces2/<int:pkb>', views.process_file2, name='uploadedfile-proces2'),

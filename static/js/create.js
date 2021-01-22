@@ -42,8 +42,23 @@ function update_search_files(){
     var data = {'input': $("#id_search_files").val()};
     $.post(FILES, data, function(data, status){
         if(status === 'success') {
-            //$('#id_search_files').html(data);
             $("#uploadedfiles-candidates-table").html(data["table"]);
+        }
+    });
+}
+function update_search_authors(){
+    var data = {'input': $("#id_search_authors").val()};
+    $.post(AUTHORS, data, function(data, status){
+        if(status === 'success') {
+            $("#authors-candidates-table").html(data["table"]);
+        }
+    });
+}
+function update_search_translators(){
+    var data = {'input': $("#id_search_translators").val()};
+    $.post(TRANSLATORS, data, function(data, status){
+        if(status === 'success') {
+            $("#translators-candidates-table").html(data["table"]);
         }
     });
 }
@@ -53,13 +68,20 @@ $(document).ready(function(){
             update();
         }
     });
-    //$('#id_search_files')[0].selectize.trigger( "change" );
     $('#id_search_files').on('input',function(){
         if ($("#id_search_files").val().length > 0) {
-            //console.log('in');
             update_search_files();
         }
     });
-
+    $('#id_search_authors').on('input',function(){
+        if ($("#id_search_authors").val().length > 0) {
+            update_search_authors();
+        }
+    });
+    $('#id_search_translators').on('input',function(){
+        if ($("#id_search_translators").val().length > 0) {
+            update_search_translators();
+        }
+    });
 });
 

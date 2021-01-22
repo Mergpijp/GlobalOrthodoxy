@@ -1,0 +1,49 @@
+<div id="authors-candidates-div">
+<table id="authors-table" class="table">
+  <thead>
+  <tr>
+    <th class="text-center" scope="col">ID</th>
+    <th class="text-center" scope="col">Name</th>
+    <th class="text-center" scope="col">Name original language</th>
+    <th class="text-center" scope="col">Extra info</th>
+    <th class="text-center" scope="col">Link</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for author in authors.all %}
+    <tr>
+      <th class="text-center" scope="row">{{ author.pk }}</th>
+      <td class="text-center">{{ author.name }}</td>
+      <td class="text-center">{{ author.name_original_language }}</td>
+      <td class="text-center">{{ author.extra_info }}</td>
+      <td class="text-center">
+        <!-- Update author buttons -->
+        <button type="button" class="author-edit btn btn-sm btn-primary" data-form-url="{% url 'update-author' author.pk %}">
+          <span class="fa fa-pencil"></span>
+        </button>
+        <!-- Link author buttons -->
+        <button type="button" class="author-Link btn btn-sm btn-danger" data-form-url="{% url 'link-author' publication.pk author.pk %}">
+          <span class="fa fa-plus mr-2"></span>< Link
+        </button>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<script>
+$( ".author-link" ).click(function() {
+    $.post($(this).attr('data-form-url'), function(data, status){
+        if(status === 'success') {
+            $("#authors-div").html(data["table"]);
+            $('#id_search_authors').val('');
+            $.post("{% url 'search-authors' publication.pk %}", function(data2, status2){
+                if(status2 === 'success') {
+                    $("#authors-candidates-div").html(data2["table"]);
+                }
+
+            })
+        }
+    });
+});
+</script>
+</div>
