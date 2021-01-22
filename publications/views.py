@@ -585,16 +585,17 @@ class SearchResultsView(ListView):
                 search_fields.extend(['collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', 'currently_owned_by__name'])
 
             print(query_string)
-            arabic_query = translator.translate(query_string, dest='ar').text
+            #arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)
             entry_query = get_query(query_string, search_fields)
 
-            arabic_query = get_query(arabic_query, search_fields)
+            #arabic_query = get_query(arabic_query, search_fields)
             print('&&&&&&', query_string)
             #publications = publications.filter(entry_query)
             #pdb.set_trace()
-            publications = publications.filter(Q(entry_query) | Q(arabic_query))
+            #publications = publications.filter(Q(entry_query) | Q(arabic_query))
+            publications = publications.filter(Q(entry_query))
             print(publications)
             ordering = self.get_ordering()
             if ordering is not None and ordering != "":
