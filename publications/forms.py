@@ -221,6 +221,8 @@ class KeywordSelect2TagWidget(ModelSelect2TagWidget):
 
     def value_from_datadict(self, data, files, name):
         values = super().value_from_datadict(data, files, name)
+        if isinstance(values, str):
+            values = values.split(sep=',')
         queryset = self.get_queryset()
         pks = queryset.filter(**{'pk__in': [v for v in values if v.isdigit()]}).values_list('pk', flat=True)
         cleaned_values = []
@@ -236,6 +238,8 @@ class ImageContentSelect2TagWidget(ModelSelect2TagWidget):
 
     def value_from_datadict(self, data, files, name):
         values = super().value_from_datadict(data, files, name)
+        if isinstance(values, str):
+            values = values.split(sep=',')
         queryset = self.get_queryset()
         if values:
             pks = queryset.filter(**{'pk__in': [v for v in values if v.isdigit()]}).values_list('pk', flat=True)
@@ -866,8 +870,8 @@ class UploadedFileForm(forms.ModelForm):
 
     image_contents = forms.ModelMultipleChoiceField(widget=ImageContentSelect2TagWidget(
         model=ImageContent,
-        search_fields=['name__icontains', ],
-        attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]',},
+        search_fields=['name__icontains' ],
+        attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]'},
     ), queryset=ImageContent.objects.all(), required=False)
     '''
     imagecontents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
@@ -953,7 +957,7 @@ class UploadedFileForm(forms.ModelForm):
                                                     
                                                     setTimeout(function () {
                                                             window.location.href='/uploadedfile/show/';
-                                                    }, 4000);
+                                                    }, 2000);
 
                                                 }
                                             });
@@ -1009,8 +1013,8 @@ class UploadedFileModelForm(BSModalModelForm):
 
     image_contents = forms.ModelMultipleChoiceField(widget=ImageContentSelect2TagWidget(
         model=ImageContent,
-        search_fields=['name__icontains', ],
-        attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]', },
+        search_fields=['name__icontains' ],
+        attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]' },
     ), queryset=ImageContent.objects.all(), required=False)
     '''
     image_contents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
