@@ -241,23 +241,23 @@ class Publication(models.Model):
     Main class for Publications contains many charfields and several manytomany fields.
     '''
 
-    title_original = models.CharField(max_length=300, blank=True)
+    title = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription = models.CharField(max_length=300, blank=True)
     title_translation = models.CharField(max_length=300, blank=True)
-    title_original2 = models.CharField(max_length=300, blank=True)
+    title2 = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription2 = models.CharField(max_length=300, blank=True)
     title_translation2 = models.CharField(max_length=300, blank=True)
-    title_original3 = models.CharField(max_length=300, blank=True)
+    title3 = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription3 = models.CharField(max_length=300, blank=True)
     title_translation3 = models.CharField(max_length=300, blank=True)
-    title_original4 = models.CharField(max_length=300, blank=True)
+    title4 = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription4 = models.CharField(max_length=300, blank=True)
     title_translation4 = models.CharField(max_length=300, blank=True)
-    title_original5 = models.CharField(max_length=300, blank=True)
+    title5 = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription5 = models.CharField(max_length=300, blank=True)
     title_translation5 = models.CharField(max_length=300, blank=True)
-    author = models.ManyToManyField(Author)
-    translator = models.ManyToManyField(Translator)
+    authors = models.ManyToManyField(Author)
+    translators = models.ManyToManyField(Translator)
     form_of_publication = models.ManyToManyField(FormOfPublication)
     editor = models.CharField(max_length=100, blank=True)
     ISBN_number = models.CharField(max_length=100, blank=True)
@@ -305,12 +305,12 @@ class Publication(models.Model):
     #create_countries()
    
     def __str__(self):
-        return 'title_original: ' + self.title_original +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
+        return 'title: ' + self.title +',  title_subtitle_transcription ' + self.title_subtitle_transcription\
                 + ', title_translation: ' + self.title_translation
 
     @property
-    def get_truncated_title_original(self):
-        x = self.title_original
+    def get_truncated_title(self):
+        x = self.title
         if len(x) > 35:
             x = x[:35] + '...'
         return x

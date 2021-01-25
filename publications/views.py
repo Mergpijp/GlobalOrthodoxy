@@ -491,7 +491,7 @@ class SearchResultsView(ListView):
     context_object_name = 'publications'
     publications = Publication.objects.filter(is_deleted=False, is_stub=False)
     paginate_by = 10
-    #ordering = 'title_original'
+    #ordering = 'title'
 
     def get_template_names(self):
         if self.request.path == '/publication/overview/':
@@ -511,8 +511,8 @@ class SearchResultsView(ListView):
 
     def get_queryset(self):
         #form = PublicationForm(self.request.GET)
-        authors = self.request.GET.getlist('author')
-        translators = self.request.GET.getlist('translator')
+        authors = self.request.GET.getlist('authors')
+        translators = self.request.GET.getlist('translators')
         authors = Author.objects.filter(pk__in=authors).all()
         translators = Translator.objects.filter(pk__in=translators).all()
         form_of_publications = self.request.GET.getlist('form_of_publication')
@@ -559,7 +559,7 @@ class SearchResultsView(ListView):
         print(publications)
 
         exclude = ['csrfmiddlewaretoken','search', 'order_by', 'direction']
-        in_variables = [('author', authors), ('translator', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
+        in_variables = [('authors', authors), ('translators', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by),\
         ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), \
         ('keywords', keywords), ('translated_from',translated_from), ('uploadedfiles__filecategory', filecategory),
@@ -572,13 +572,13 @@ class SearchResultsView(ListView):
                 query_string = countries_dict[query_string.lower()]
 
 
-            search_fields = ['title_original', 'title_subtitle_transcription', 'title_translation', 'author__name', 'author__name_original_language', 'author__extra_info', \
-                  'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translator__name', 'translator__name_original_language', 'translator__extra_info', \
+            search_fields = ['title', 'title_subtitle_transcription', 'title_translation', 'authors__name', 'authors__name_original_language', 'authors__extra_info', \
+                  'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translators__name', 'translators__name_original_language', 'translators__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
                   'nr_of_pages', 'uploadedfiles__filecategory__name', 'uploadedfiles__uploaded_at', 'uploadedfiles__image_contents__name', \
                   'uploadedfiles__image_title', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
-                  'title_original2', 'title_subtitle_transcription2', 'title_translation2', 'title_original3', 'title_subtitle_transcription3', 'title_translation3', \
-                  'title_original4', 'title_subtitle_transcription4', 'title_translation4', 'title_original5', 'title_subtitle_transcription5', 'title_translation5', \
+                  'title2', 'title_subtitle_transcription2', 'title_translation2', 'title3', 'title_subtitle_transcription3', 'title_translation3', \
+                  'title4', 'title_subtitle_transcription4', 'title_translation4', 'title5', 'title_subtitle_transcription5', 'title_translation5', \
                   'currency', 'price', 'collection_context']
 
             if self.request.user.is_authenticated:

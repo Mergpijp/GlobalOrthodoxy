@@ -30,7 +30,7 @@ $(function() {
 unsetInlineWidthOfSelect2($(document));
 
 function update(){
-    var data = {'input': $("#id_title_original").val()};
+    var data = {'input': $("#id_title").val()};
     $.get(URL, data, function(data, status){
         if(status === 'success') {
             $('#language_title').html(data);
@@ -46,8 +46,8 @@ function update_search_files(){
     });
 }
 $(document).ready(function(){
-    $('#id_title_original').on('input',function(){
-        if ($("#id_title_original").val().length > 4) {
+    $('#id_title').on('input',function(){
+        if ($("#id_titlel").val().length > 4) {
             update();
         }
     });

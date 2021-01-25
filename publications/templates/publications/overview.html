@@ -4,7 +4,7 @@
     <thead class="thead-light">  
     <tr>
         <th>Cover Image</th>
-        <th>Title original <br/><a href="?q={{ q }}&order_by=title_original&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_original&direction=desc" class="arrow down"></a></th>
+        <th>Title <br/><a href="?q={{ q }}&order_by=titlel&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title&direction=desc" class="arrow down"></a></th>
         <th>Title translation <br/><a href="?q={{ q }}&order_by=title_translation&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_translation&direction=desc" class="arrow down"></a></th>
         <th>Author name <br/><a href="?order_by=author_name&direction=asc" class="arrow up"></a> <a href="?order_by=author_name&direction=desc" class="arrow down"></a> </th>
         <th>Publication year<br/><a href="?order_by=publication_year&direction=asc" class="arrow up"></a> <a href="?order_by=publication_year&direction=desc" class="arrow down"></a></th>
@@ -21,10 +21,10 @@
         {% else %}
         <td></td>
         {% endif %}
-        <td id="test">{{ publication.get_truncated_title_original }}</td>
+        <td id="test">{{ publication.get_truncated_title }}</td>
         <td>{{ publication.get_truncated_title_translation }}</td>
         <td>
-            {% for author in publication.author.all %}
+            {% for author in publication.authors.all %}
                 {% if forloop.last %}
                     {{ author.name }}
                 {% else %}

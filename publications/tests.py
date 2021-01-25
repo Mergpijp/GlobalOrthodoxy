@@ -13,17 +13,17 @@ class PublicationModelTests(TestCase):
     def setUp(self):
         user = User.objects.create_superuser(username='admin', password='12345', email='')
         user.save()
-        Publication.objects.create(title_original='eindhoven')
-        Publication.objects.create(title_original='لحضور المؤتمر الدولي العاشر ليونيكود')
-        Publication.objects.create(title_original='مزامير') #mazamir
-        #Publication.objects.create(title_original='صلوات') #salawat
+        Publication.objects.create(title='eindhoven')
+        Publication.objects.create(title='لحضور المؤتمر الدولي العاشر ليونيكود')
+        Publication.objects.create(title='مزامير') #mazamir
+        #Publication.objects.create(titlel='صلوات') #salawat
         
     def test_title_publication(self):
-        dutch = Publication.objects.get(title_original='eindhoven')
-        arabic = Publication.objects.get(title_original='لحضور المؤتمر الدولي العاشر ليونيكود')
+        dutch = Publication.objects.get(title='eindhoven')
+        arabic = Publication.objects.get(title='لحضور المؤتمر الدولي العاشر ليونيكود')
         
-        self.assertEqual(dutch.title_original, 'eindhoven')
-        self.assertEqual(arabic.title_original, 'لحضور المؤتمر الدولي العاشر ليونيكود')
+        self.assertEqual(dutch.title, 'eindhoven')
+        self.assertEqual(arabic.title, 'لحضور المؤتمر الدولي العاشر ليونيكود')
         
     def test_environment_set_in_context(self):
         request = RequestFactory().get('/publication/1/detail_view/')
@@ -38,11 +38,11 @@ class PublicationModelTests(TestCase):
         response = client.login(username='admin', password='12345')
         response = client.get('/publication/show/', {'q': 'eindhoven'})
         #there should be one search result publication with the title 'eindhoven'
-        self.assertEqual('eindhoven', response.context[-1]['publications'][0].title_original)
+        self.assertEqual('eindhoven', response.context[-1]['publications'][0].title)
         response = client.get('/publication/show/', {'q': 'mazamir'})
-        self.assertEqual('مزامير', response.context[-1]['publications'][0].title_original)
+        self.assertEqual('مزامير', response.context[-1]['publications'][0].title)
         #response = client.get('/publication/show/', {'q': 'salawat'})
-        #self.assertEqual('صلوات', response.context[-1]['publications'][0].title_original)
+        #self.assertEqual('صلوات', response.context[-1]['publications'][0].title)
 
     def test_publication_create(self):
         client = Client('127.0.0.1')

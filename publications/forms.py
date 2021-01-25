@@ -31,12 +31,12 @@ class PublicationForm(forms.ModelForm):
     The button is a search button instead of a submit button.
     
     '''
-    author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+    authors = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
         search_fields=['name__icontains'],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Author.objects.all(), required=False)
-    translator = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+    translators = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Translator,
         search_fields=['name__icontains'],
         attrs={'data-minimum-input-length': 0},
@@ -110,7 +110,7 @@ class PublicationForm(forms.ModelForm):
 
     class Meta:
         model = Publication
-        fields = ('title_original', 'title_subtitle_transcription', 'title_translation', 'author', 'translator', \
+        fields = ('title', 'title_subtitle_transcription', 'title_translation', 'authors', 'translators', \
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_year',
                   'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre',
@@ -122,8 +122,8 @@ class PublicationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PublicationForm, self).__init__(*args, **kwargs)
-        self.fields['author'].required = False
-        self.fields['translator'].required = False
+        self.fields['authors'].required = False
+        self.fields['translators'].required = False
         self.fields['form_of_publication'].required = False
         self.fields['publication_city'].required = False
         self.fields['affiliated_church'].required = False
@@ -145,14 +145,14 @@ class PublicationForm(forms.ModelForm):
         self.helper.layout = Layout(
             TabHolder(
                 Tab('Titles',
-                    'title_original',
+                    'title',
                     'title_subtitle_transcription',
                     'title_translation',
 
                     ),
                 Tab('Author',
-                    'author',
-                    'translator',
+                    'authors',
+                    'translators',
                     'is_a_translation',
                     'translated_from',
                     'editor',
@@ -258,12 +258,12 @@ class NewCrispyForm(forms.ModelForm):
         Added field with buttons for inline add. Is almost the same as PublicationForm but has a submit button.
 
     '''
-    author = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+    authors = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
         search_fields=['name__icontains'],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Author.objects.all(), required=False)
-    translator = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
+    translators = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Translator,
         search_fields=['name__icontains'],
         attrs={'data-minimum-input-length': 0},
@@ -342,8 +342,8 @@ class NewCrispyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.fields['author'].required = False
-        self.fields['translator'].required = False
+        self.fields['authors'].required = False
+        self.fields['translators'].required = False
         self.fields['form_of_publication'].required = False
         self.fields['publication_city'].required = False
         self.fields['affiliated_church'].required = False
@@ -361,20 +361,20 @@ class NewCrispyForm(forms.ModelForm):
         self.helper.layout = Layout(
             TabHolder(
                 Tab('Titles',
-                    'title_original',
+                    'title',
                     'title_subtitle_transcription',
                     'title_translation',
-                    Div('title_original2', 'title_subtitle_transcription2', 'title_translation2', css_class="hidden"),
-                    Div('title_original3', 'title_subtitle_transcription3', 'title_translation3', css_class="hidden"),
-                    Div('title_original4', 'title_subtitle_transcription4', 'title_translation4', css_class="hidden"),
-                    Div('title_original5', 'title_subtitle_transcription5', 'title_translation5', css_class="hidden"),
+                    Div('title2', 'title_subtitle_transcription2', 'title_translation2', css_class="hidden"),
+                    Div('title3', 'title_subtitle_transcription3', 'title_translation3', css_class="hidden"),
+                    Div('title4', 'title_subtitle_transcription4', 'title_translation4', css_class="hidden"),
+                    Div('title5', 'title_subtitle_transcription5', 'title_translation5', css_class="hidden"),
                     Button('titles', 'Add more titles', css_class='btn-back btn-danger',
                            onclick="$('.hidden:first').removeClass('hidden');"),
                     ),
                 Tab('Author',
-                    FieldWithButtons('author', StrictButton('+', type='button', css_class='btn-danger',
+                    FieldWithButtons('authors', StrictButton('+', type='button', css_class='btn-danger',
                                                             onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    FieldWithButtons('translator', StrictButton('+', type='button', css_class='btn-danger',
+                    FieldWithButtons('translators', StrictButton('+', type='button', css_class='btn-danger',
                                                                 onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
                     'is_a_translation',
                     FieldWithButtons('translated_from', StrictButton('+', type='button', css_class='btn-danger',
@@ -574,8 +574,8 @@ class NewCrispyForm(forms.ModelForm):
     class Meta:
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
-        fields = ('title_original', 'title_subtitle_transcription', 'title_translation', 'title_original2',
-                  'title_subtitle_transcription2', 'title_translation2', 'author', 'translator', \
+        fields = ('title', 'title_subtitle_transcription', 'title_translation', 'title2',
+                  'title_subtitle_transcription2', 'title_translation2', 'authors', 'translators', \
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_year',
                   'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre',
@@ -584,9 +584,9 @@ class NewCrispyForm(forms.ModelForm):
                   'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website', 'general_comments', 'team_comments', 'other_comments', 'keywords',
                   'is_a_translation', 'ISBN_number', 'translated_from', \
-                  'title_original3', 'title_subtitle_transcription3', 'title_translation3', 'title_original4',
+                  'title3', 'title_subtitle_transcription3', 'title_translation3', 'title4',
                   'title_subtitle_transcription4', 'title_translation4', \
-                  'title_original5', 'title_subtitle_transcription5', 'title_translation5', 'price', 'collection_context', \
+                  'title5', 'title_subtitle_transcription5', 'title_translation5', 'price', 'collection_context', \
                   'currency')
         exclude = ('uploadedfiles',)
         # publication_country = forms.ChoiceField(choices=list(countries))
@@ -889,7 +889,7 @@ class UploadedFileForm(forms.ModelForm):
     publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
+        search_fields=['title_subtitle_European__icontains', 'title__icontains',
                        'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     '''
@@ -1032,7 +1032,7 @@ class UploadedFileModelForm(BSModalModelForm):
     publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         queryset=Publication.objects.all(),
         attrs={'data-minimum-input-length': 0},
-        search_fields=['title_subtitle_European__icontains', 'title_original__icontains',
+        search_fields=['title_subtitle_European__icontains', 'title__icontains',
                        'title_subtitle_transcription__icontains', 'title_translation__icontains'],
     ), queryset=Publication.objects.all(), required=False)
     '''

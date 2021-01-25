@@ -4,7 +4,7 @@
     <thead class="thead-light">  
     <tr>
         <th>Cover Image</th>
-        <th>Title original <br/><a href="?q={{ q }}&order_by=title_original&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_original&direction=desc" class="arrow down"></a></th>
+        <th>Title <br/><a href="?q={{ q }}&order_by=title&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title&direction=desc" class="arrow down"></a></th>
         <th>Author name <br/><a href="?order_by=author_name&direction=asc" class="arrow up"></a> <a href="?order_by=author_name&direction=desc" class="arrow down"></a> </th>
         <th>Author name original language <br/><a href="?order_by=author_name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=author_name_original_language&direction=desc" class="arrow down"></a> </th>
         <th>Author extra info <br/><a href="?order_by=author_extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=author_extra_info&direction=desc" class="arrow down"></a> </th>
@@ -25,7 +25,7 @@
         {% else %}
         <td></td>
         {% endif %}
-        <td id="test">{{ publication.get_truncated_title_original }}</td>
+        <td id="test">{{ publication.get_truncated_title }}</td>
         <td>
             {% for author in publication.author.all %}
                 {% if forloop.last %}
@@ -37,7 +37,7 @@
         </td>
 
         <td>
-            {% for author in publication.author.all %}
+            {% for author in publication.authors.all %}
                 {% if forloop.last %}
                     {{ author.name_original_language }}
                 {% else %}
@@ -47,7 +47,7 @@
         </td>
 
         <td>
-            {% for author in publication.author.all %}
+            {% for author in publication.authors.all %}
                 {% if forloop.last %}
                     {{ author.extra_info }}
                 {% else %}
@@ -56,7 +56,7 @@
             {% endfor %}
         </td>
         <td>
-            {% for translator in publication.translator.all %}
+            {% for translator in publication.translators.all %}
                 {% if forloop.last %}
                     {{ translator.name }}
                 {% else %}
@@ -66,7 +66,7 @@
         </td>
 
         <td>
-            {% for translator in publication.translator.all %}
+            {% for translator in publication.translators.all %}
                 {% if forloop.last %}
                     {{ translator.name_original_language }}
                 {% else %}
@@ -76,7 +76,7 @@
         </td>
 
         <td>
-            {% for translator in publication.translator.all %}
+            {% for translator in publication.translators.all %}
                 {% if forloop.last %}
                     {{ translator.extra_info }}
                 {% else %}

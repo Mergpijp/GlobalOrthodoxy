@@ -10,7 +10,7 @@
 .shorter-selects2 .select2-container {
   width: 80%;
 }
-#id_title_original {
+#id_title {
     text-align: start;
     unicode-bidi: plaintext;
 }
