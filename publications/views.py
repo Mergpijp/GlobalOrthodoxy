@@ -286,6 +286,7 @@ def search_authors(request, pkb=None):
                 authors = Author.objects.filter(name__icontains=input).order_by('name')[:10]
             else:
                 authors = Author.objects.none()
+            #pdb.set_trace()
             publication = Publication.objects.get(pk=pkb)
             data['table'] = render_to_string(
                 '_authors_candidates_table.html',
@@ -353,6 +354,7 @@ def uploadedfiles(request, pkb=None):
 @login_required(login_url='/accounts/login/')
 def authors(request, pkb=None):
     data = dict()
+    #pdb.set_trace()
     if (request.method == 'GET' or request.method == 'POST') and pkb:
         publication = Publication.objects.get(pk=pkb)
         data['table'] = render_to_string(
@@ -394,14 +396,16 @@ class AuthorCreateView(BSModalCreateView):
     success_message = 'Success: author was created.'
     success_url = reverse_lazy('publication-new')
 
+    """
     def form_valid(self, form):
         pub = Publication.objects.get(pk=self.kwargs['pk'])
+        pdb.set_trace()
         if form.is_valid():
             instance = form.save()
             pub.authors.add(instance)
             pub.save()
             return super().form_valid(form)
-
+    """
 class TranslatorCreateView(BSModalCreateView):
     template_name = 'translators/translator_new.html'
     form_class = TranslatorModelForm
@@ -409,7 +413,6 @@ class TranslatorCreateView(BSModalCreateView):
     success_url = reverse_lazy('publication-new')
 
     def form_valid(self, form):
-        pdb.set_trace()
         pub = Publication.objects.get(pk=self.kwargs['pk'])
         if form.is_valid():
             instance = form.save()
@@ -431,7 +434,6 @@ class UploadedFileCreateView(BSModalCreateView):
         return context
 
     def form_valid(self, form):
-        pdb.set_trace()
         return HttpResponse(status=200)
     '''
     def get_success_url(self):

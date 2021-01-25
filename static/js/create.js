@@ -42,7 +42,7 @@ function update_search_files(){
     var data = {'input': $("#id_search_files").val()};
     $.post(FILES, data, function(data, status){
         if(status === 'success') {
-            $("#uploadedfiles-candidates-table").html(data["table"]);
+            $("#candidates-div").html(data["table"]);
         }
     });
 }
@@ -50,7 +50,7 @@ function update_search_authors(){
     var data = {'input': $("#id_search_authors").val()};
     $.post(AUTHORS, data, function(data, status){
         if(status === 'success') {
-            $("#authors-candidates-table").html(data["table"]);
+            $("#authors-candidates-div").html(data["table"]);
         }
     });
 }
@@ -58,7 +58,7 @@ function update_search_translators(){
     var data = {'input': $("#id_search_translators").val()};
     $.post(TRANSLATORS, data, function(data, status){
         if(status === 'success') {
-            $("#translators-candidates-table").html(data["table"]);
+            $("#translators-candidates-div").html(data["table"]);
         }
     });
 }

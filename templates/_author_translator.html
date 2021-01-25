@@ -48,60 +48,60 @@
 </div>
 <script type="text/javascript">
 $(function () {
-  var asyncSuccessMessageCreateAuthor = [
-    "<div ",
-    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-    "Success: Author was created.",
-    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-    "<span aria-hidden='true'>&times;</span>",
-    "</button>",
-    "</div>",
-    "<script>",
-    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-    "<\/script>"
-  ].join("");
+var asyncSuccessMessageCreateAuthor = [
+"<div ",
+"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+"Success: Author was created.",
+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+"<span aria-hidden='true'>&times;</span>",
+"</button>",
+"</div>",
+"<script>",
+"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+"<\/script>"
+].join("");
 
-  var asyncSuccessMessageUpdateAuthor = [
-    "<div ",
-    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-    "Success: Author was updated.",
-    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-    "<span aria-hidden='true'>&times;</span>",
-    "</button>",
-    "</div>",
-    "<script>",
-    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-    "<\/script>"
-  ].join("");
-  var asyncSuccessMessageCreateTranslator = [
-    "<div ",
-    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-    "Success: Translator was created.",
-    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-    "<span aria-hidden='true'>&times;</span>",
-    "</button>",
-    "</div>",
-    "<script>",
-    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-    "<\/script>"
-  ].join("");
+var asyncSuccessMessageUpdateAuthor = [
+"<div ",
+"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+"Success: Author was updated.",
+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+"<span aria-hidden='true'>&times;</span>",
+"</button>",
+"</div>",
+"<script>",
+"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+"<\/script>"
+].join("");
+var asyncSuccessMessageCreateTranslator = [
+"<div ",
+"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+"Success: Translator was created.",
+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+"<span aria-hidden='true'>&times;</span>",
+"</button>",
+"</div>",
+"<script>",
+"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+"<\/script>"
+].join("");
 
-  var asyncSuccessMessageUpdateTranslator = [
-    "<div ",
-    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-    "Success: Translator was updated.",
-    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-    "<span aria-hidden='true'>&times;</span>",
-    "</button>",
-    "</div>",
-    "<script>",
-    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-    "<\/script>"
-  ].join("");
+var asyncSuccessMessageUpdateTranslator = [
+"<div ",
+"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+"Success: Translator was updated.",
+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+"<span aria-hidden='true'>&times;</span>",
+"</button>",
+"</div>",
+"<script>",
+"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+"<\/script>"
+].join("");
 
 function updateAuthorModalForm() {
 $(".author-edit").each(function () {
@@ -142,6 +142,7 @@ $("#create-author-async").modalForm({
     formURL: "{% url 'author_new' publication.pk %}",
     modalID: "#create-modal",
     asyncUpdate: true,
+    createAuthor: true,
     asyncSettings: {
       closeOnSubmit: true,
       successMessage: asyncSuccessMessageCreateAuthor,

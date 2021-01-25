@@ -1,4 +1,6 @@
 <div id="authors-candidates-div">
+{% include "_modal.html" %}
+
 <table id="authors-table" class="table">
   <thead>
   <tr>
@@ -6,7 +8,7 @@
     <th class="text-center" scope="col">Name</th>
     <th class="text-center" scope="col">Name original language</th>
     <th class="text-center" scope="col">Extra info</th>
-    <th class="text-center" scope="col">Link</th>
+    <th class="text-center" scope="col">Update/ Link</th>
   </tr>
   </thead>
   <tbody>
@@ -22,8 +24,8 @@
           <span class="fa fa-pencil"></span>
         </button>
         <!-- Link author buttons -->
-        <button type="button" class="author-Link btn btn-sm btn-danger" data-form-url="{% url 'link-author' publication.pk author.pk %}">
-          <span class="fa fa-plus mr-2"></span>< Link
+        <button type="button" class="author-link btn btn-sm btn-danger" data-form-url="{% url 'link-author' publication.pk author.pk %}">
+          <span class="fa fa-plus mr-2"></span>Link
         </button>
       </td>
     </tr>
@@ -31,6 +33,7 @@
   </tbody>
 </table>
 <script>
+$(function () {
 $( ".author-link" ).click(function() {
     $.post($(this).attr('data-form-url'), function(data, status){
         if(status === 'success') {
@@ -44,6 +47,37 @@ $( ".author-link" ).click(function() {
             })
         }
     });
+var asyncSuccessMessageUpdateAuthor = [
+"<div ",
+"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+"Success: Author was updated.",
+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+"<span aria-hidden='true'>&times;</span>",
+"</button>",
+"</div>",
+"<script>",
+"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+"<\/script>"
+].join("");
+function updateAuthorModalForm() {
+$(".author-edit").each(function () {
+  $(this).modalForm({
+    formURL: $(this).data("form-url"),
+    asyncUpdate: true,
+    asyncSettings: {
+      closeOnSubmit: true,
+      successMessage: asyncSuccessMessageUpdateAuthor,
+      dataUrl: "{% url 'authors' publication.pk %}",
+      dataElementId: "#authors-div",
+      dataKey: "table",
+      addModalFormFunction: updateAuthorModalForm
+    }
+  });
+});
+}
+updateAuthorModalForm();
+});
 });
 </script>
 </div>
