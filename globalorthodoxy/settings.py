@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'bootstrap_modal_forms',
     'widget_tweaks',
+    'gitlog',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

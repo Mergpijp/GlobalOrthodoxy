@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('nothing/', views.nothing, name='nothing'),
+    path('gitlog/', include("gitlog.urls", namespace='gitlog')),
     path('uploadedfile_new/', views.UploadedFileCreateView.as_view(), name='uploadedfile_new'),
     #path('uploadedfile_new/None', views.PublicationUpdate.as_view(), name='uploadedfile_update'),
     path('uploadedfile_new/<int:pk>', views.UploadedFileCreateView.as_view(), name='uploadedfile_new'),

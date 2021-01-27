@@ -14,3 +14,5 @@ djangorestframework==3.12.2
 django-filter==2.4.0
 django-bootstrap-modal-forms==2.0.1
 django-widget-tweaks==1.4.8
+Markdown
+django-gitlog==0.2
