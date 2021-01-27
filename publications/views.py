@@ -710,6 +710,8 @@ class SearchResultsView(ListView):
                 publications = Publication.objects.annotate(content_genre_name=Subquery(content_genre_subquery)).order_by(ordering)
             else:
                 publications = publications.order_by(ordering)
+        elif self.request.path == '/publication/overview/':
+            publications = publications.order_by('-date_created')
         return publications
 
     def get_context_data(self, **kwargs):

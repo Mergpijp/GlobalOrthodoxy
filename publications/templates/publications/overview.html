@@ -3,8 +3,9 @@
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">  
     <tr>
+        <th>Date Created<br/><a href="?q={{ q }}&order_by=date_created&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=date_created&direction=desc" class="arrow down"></a></th>
         <th>Cover Image</th>
-        <th>Title <br/><a href="?q={{ q }}&order_by=titlel&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title&direction=desc" class="arrow down"></a></th>
+        <th>Title <br/><a href="?q={{ q }}&order_by=title&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title&direction=desc" class="arrow down"></a></th>
         <th>Title translation <br/><a href="?q={{ q }}&order_by=title_translation&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_translation&direction=desc" class="arrow down"></a></th>
         <th>Author name <br/><a href="?order_by=author_name&direction=asc" class="arrow up"></a> <a href="?order_by=author_name&direction=desc" class="arrow down"></a> </th>
         <th>Publication year<br/><a href="?order_by=publication_year&direction=asc" class="arrow up"></a> <a href="?order_by=publication_year&direction=desc" class="arrow down"></a></th>
@@ -16,6 +17,7 @@
     <br />
 {% for publication, cover_image in publications %}
     <tr id="publications">
+        <td>{{ publication.date_created }}</td>
         {% if cover_image %}
             <td style="text-align: center;"><a href="/publication/{{ publication.id }}/detail_view"><img src="/media/{{ cover_image }}" width="200" height="200" id="crop_image"></a></td>
         {% else %}
@@ -24,6 +26,8 @@
         <td id="test">{{ publication.get_truncated_title }}</td>
         <td>{{ publication.get_truncated_title_translation }}</td>
         <td>
+            {{ publication.get_truncated_author_name }}
+            {% comment %}
             {% for author in publication.authors.all %}
                 {% if forloop.last %}
                     {{ author.name }}
@@ -31,6 +35,7 @@
                     {{ author.name }},
                 {% endif %}
             {% endfor %}
+            {% endcomment %}
         </td>
         <td>
             {% if publication.publication_year %}

@@ -662,7 +662,7 @@ class AuthorForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'name_original_language', 'extra_info', 'publication',
+        self.helper.layout = Layout('name', 'name_original_language', 'extra_info',
                                     ButtonHolder(Submit('Submit', 'Submit', css_class='btn-danger')))
 
     class Meta:
@@ -924,7 +924,7 @@ class UploadedFileForm(forms.ModelForm):
             HTML("""
                                         <script>
                                             {% if object %}
-                                            var pk = {{object.id}} + "/";
+                                            var pk = {{object.id}} ;
                                             {% else %}
                                             var pk = ""
                                             {% endif %}

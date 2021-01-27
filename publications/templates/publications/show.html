@@ -27,62 +27,26 @@
         {% endif %}
         <td id="test">{{ publication.get_truncated_title }}</td>
         <td>
-            {% for author in publication.author.all %}
-                {% if forloop.last %}
-                    {{ author.name }}
-                {% else %}
-                    {{ author.name }},
-                {% endif %}
-            {% endfor %}
+            {{ publication.get_truncated_author_name }}
         </td>
 
         <td>
-            {% for author in publication.authors.all %}
-                {% if forloop.last %}
-                    {{ author.name_original_language }}
-                {% else %}
-                    {{ author.name_original_language }},
-                {% endif %}
-            {% endfor %}
+            {{ publication.get_truncated_author_name_original_language }}
         </td>
 
         <td>
-            {% for author in publication.authors.all %}
-                {% if forloop.last %}
-                    {{ author.extra_info }}
-                {% else %}
-                    {{ author.extra_info }},
-                {% endif %}
-            {% endfor %}
+            {{ publication.get_truncated_author_extra_info }}
         </td>
         <td>
-            {% for translator in publication.translators.all %}
-                {% if forloop.last %}
-                    {{ translator.name }}
-                {% else %}
-                    {{ translator.name }},
-                {% endif %}
-            {% endfor %}
+            {{ publication.get_truncated_translator_name }}
         </td>
 
         <td>
-            {% for translator in publication.translators.all %}
-                {% if forloop.last %}
-                    {{ translator.name_original_language }}
-                {% else %}
-                    {{ translator.name_original_language }},
-                {% endif %}
-            {% endfor %}
+            {{ publication.get_truncated_translator_name_original_language }}
         </td>
 
         <td>
-            {% for translator in publication.translators.all %}
-                {% if forloop.last %}
-                    {{ translator.extra_info }}
-                {% else %}
-                    {{ translator.extra_info }},
-                {% endif %}
-            {% endfor %}
+            {{ publication.get_truncated_translator_extra_info }}
         </td>
         <td>
             {% if publication.publication_year %}

@@ -297,6 +297,7 @@ class Publication(models.Model):
     is_deleted = models.BooleanField(default=False)
     is_stub = models.BooleanField(default=False)
     created_by = models.ForeignKey('auth.User', related_name='publications', on_delete=models.CASCADE, blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
 
     #Fields that do not exist in excel sheet:
@@ -321,3 +322,59 @@ class Publication(models.Model):
         if len(x) > 35:
             x = x[:35] + '...'
         return x
+
+    @property
+    def get_truncated_title_subtitle_transcription(self):
+        x = self.title_subtitle_transcription
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
+
+    @property
+    def get_truncated_author_name(self):
+        authors = self.authors
+        x = ', '.join([author.name for author in authors.all()])
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
+
+    @property
+    def get_truncated_author_name_original_language(self):
+        authors = self.authors
+        x = ', '.join([author.name_original_language for author in authors.all()])
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
+
+    @property
+    def get_truncated_author_extra_info(self):
+        authors = self.authors
+        x = ', '.join([author.extra_info for author in authors.all()])
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
+
+    @property
+    def get_truncated_translator_name(self):
+        translators = self.translators
+        x = ', '.join([translator.name for translator in translators.all()])
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
+
+    @property
+    def get_truncated_translator_name_original_language(self):
+        translators = self.translators
+        x = ', '.join([translator.name_original_language for translator in translators.all()])
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
+
+    @property
+    def get_truncated_translator_extra_info(self):
+        translators = self.translators
+        x = ', '.join([translator.extra_info for translator in translators.all()])
+        if len(x) > 35:
+            x = x[:35] + '...'
+        return x
+
