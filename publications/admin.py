@@ -10,7 +10,7 @@ class GenreInline(admin.TabularInline):
     model = Publication.content_genre.through
 
 class AuthorInline(admin.TabularInline):
-    model = Publication.authors.through
+    model = Publication.author.through
 
 class ChurchInline(admin.TabularInline):
     model = Publication.affiliated_church.through
@@ -28,7 +28,7 @@ class LanguageInline(admin.TabularInline):
     model = Publication.language.through    
 
 class TranslatorInline(admin.TabularInline):
-    model = Publication.translators.through
+    model = Publication.translator.through
 
 class AuthorAdmin(admin.ModelAdmin):
     inline = [
