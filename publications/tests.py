@@ -7,6 +7,7 @@ from .models import Publication
 from .views import PublicationDetailView, SearchResultsView
 from django.test import Client
 from django.contrib.auth.models import User
+import pdb
 
 class PublicationModelTests(TestCase):
 
@@ -38,9 +39,26 @@ class PublicationModelTests(TestCase):
         response = client.login(username='admin', password='12345')
         response = client.get('/publication/show/', {'q': 'eindhoven'})
         #there should be one search result publication with the title 'eindhoven'
-        self.assertEqual('eindhoven', response.context[-1]['publications'][0].title)
+        #pdb.set_trace()
+        x = zip(*response.context[-1]['publications'])
+        y = list(x)
+        pdb.set_trace()
+        self.assertEqual('eindhoven', y[0][0].title)
+        #google translate will return the arabic word for mazamir.
         response = client.get('/publication/show/', {'q': 'mazamir'})
         self.assertEqual('مزامير', response.context[-1]['publications'][0].title)
+        response = client.get('/publication/overview/')
+        #first one is the newest one.
+        self.assertEqual('مزامير', response.context[-1]['publication'][0].title)
+        response = client.get('/publication/overview/', {'order_by': 'title', 'direction': 'asc'})
+        self.assertEqual('eindhoven', response.context[-1]['publications'][0].title)
+        self.assertEqual('لحضور المؤتمر الدولي العاشر ليونيكود', response.context[-1]['publication'][1].title)
+        self.assertEqual('مزامير', response.context[-1]['publication'][2].title)
+        response = client.get('/publication/overview/', {'order_by': 'title', 'direction': 'desc'})
+        self.assertEqual('مزامير', response.context[-1]['publication'][0].title)
+        self.assertEqual('لحضور المؤتمر الدولي العاشر ليونيكود', response.context[-1]['publication'][1].title)
+        self.assertEqual('eindhoven', response.context[-1]['publications'][2].title)
+
         #response = client.get('/publication/show/', {'q': 'salawat'})
         #self.assertEqual('صلوات', response.context[-1]['publications'][0].title)
 
