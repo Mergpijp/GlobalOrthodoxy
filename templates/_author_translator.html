@@ -142,7 +142,6 @@ $("#create-author-async").modalForm({
     formURL: "{% url 'author_new' publication.pk %}",
     modalID: "#create-modal",
     asyncUpdate: true,
-    createAuthor: true,
     asyncSettings: {
       closeOnSubmit: true,
       successMessage: asyncSuccessMessageCreateAuthor,

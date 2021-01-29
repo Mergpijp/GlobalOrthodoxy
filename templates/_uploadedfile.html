@@ -1,5 +1,5 @@
-{% include "_modal.html" %}
-<div id="linkeddocuments">
+{% include "_modal2.html" %}
+<div id="linkeddocuments3">
     <div class="col-12 mb-3">
         {% if publication.uploadedfiles|length >= 0 %}
           {% include "_uploadedfiles_table.html" %}
@@ -8,7 +8,7 @@
         {% endif %}
     </div>
   </div>
-    <div id="searchdocumentpanel" class="container">
+    <div id="searchdocumentpanel3" class="container">
       <div class="row">
        <div class="col"></div>
        <div class="col">
@@ -31,7 +31,7 @@
       </div>
     </div>
 <script type="text/javascript">
-$(function () {
+$(function uploadedfile() {
   var asyncSuccessMessageCreate = [
     "<div ",
     "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
@@ -80,7 +80,7 @@ updateUploadedFileModalForm();
 function createUploadedFileAsyncModalForm() {
 $("#create-uploadedfile-async").modalForm({
     formURL: "{% url 'uploadedfile_new' publication.pk %}",
-    modalID: "#create-modal",
+    modalID: "#create-modal2",
     asyncUpdate: true,
     asyncSettings: {
       closeOnSubmit: true,
@@ -98,4 +98,5 @@ $(".alert").fadeTo(2000, 500).slideUp(500, function () {
   $(".alert").slideUp(500);
 });
 });
+
 </script>
