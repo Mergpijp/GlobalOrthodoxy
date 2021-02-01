@@ -3,15 +3,13 @@
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">  
     <tr>
+        <th>Date Created<br/><a href="?q={{ q }}&order_by=date_created&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=date_created&direction=desc" class="arrow down"></a></th>
         <th>Cover Image</th>
         <th>Title <br/><a href="?q={{ q }}&order_by=title&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title&direction=desc" class="arrow down"></a></th>
+        <th>Title translation<br/><a href="?q={{ q }}&order_by=title_translation&direction=asc" class="arrow up"></a> <a href="?q={{ q }}&order_by=title_translation&direction=desc" class="arrow down"></a></th>
         <th>Author name <br/><a href="?order_by=author_name&direction=asc" class="arrow up"></a> <a href="?order_by=author_name&direction=desc" class="arrow down"></a> </th>
-        <th>Author name original language <br/><a href="?order_by=author_name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=author_name_original_language&direction=desc" class="arrow down"></a> </th>
-        <th>Author extra info <br/><a href="?order_by=author_extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=author_extra_info&direction=desc" class="arrow down"></a> </th>
-        <th>translator name <br/><a href="?order_by=translator_name&direction=asc" class="arrow up"></a> <a href="?order_by=translator_name&direction=desc" class="arrow down"></a> </th>
-        <th>translator name original language <br/><a href="?order_by=translator_name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=translator_name_original_language&direction=desc" class="arrow down"></a> </th>
-        <th>translator extra info <br/><a href="?order_by=translator_extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=translator_extra_info&direction=desc" class="arrow down"></a> </th>
         <th>Publication year<br/><a href="?order_by=publication_year&direction=asc" class="arrow up"></a> <a href="?order_by=publication_year&direction=desc" class="arrow down"></a></th>
+        <th>Publication place <br/><a href="?order_by=publication_city__name&direction=asc" class="arrow up"></a> <a href="?order_by=publication_city__name&direction=desc" class="arrow down"></a></th>
         <th>Actions</th>
 
     </tr>  
@@ -21,45 +19,32 @@
 {% for publication in publications %}
     {% for cover_image in cover_images %}
     <tr id="publications">
+        <td>{{ publication.date_created }}</td>
         {% if cover_image %}
             <td style="text-align: center;"><a href="/publication/{{ publication.id }}/detail_view"><img src="/media/{{ cover_image }}" width="200" height="200" id="crop_image"></a></td>
         {% else %}
         <td></td>
         {% endif %}
         <td id="test">{{ publication.get_truncated_title }}</td>
+        <td>{{ publication.get_truncated_title_translation }}</td>
         <td>
             {{ publication.get_truncated_author_name }}
-        </td>
-
-        <td>
-            {{ publication.get_truncated_author_name_original_language }}
-        </td>
-
-        <td>
-            {{ publication.get_truncated_author_extra_info }}
-        </td>
-        <td>
-            {{ publication.get_truncated_translator_name }}
-        </td>
-
-        <td>
-            {{ publication.get_truncated_translator_name_original_language }}
-        </td>
-
-        <td>
-            {{ publication.get_truncated_translator_extra_info }}
         </td>
         <td>
             {% if publication.publication_year %}
                 {{ publication.publication_year }}
             {% endif %}
         </td>
-        <td> 
+        <td>
+        {% if publication.publication_country %}
+            {{ publication.publication_country }}, {{ publication.publication_city.name }}
+        {% endif %}
+        </td>
+        <td>
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
-            <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
+            <a href="/publication/{{ publication.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete-pub" href="/publication/{{ publication.id }}/delete">Delete</a>
         </td>
-
     </tr>
 {% endfor %}
 {% endfor %}

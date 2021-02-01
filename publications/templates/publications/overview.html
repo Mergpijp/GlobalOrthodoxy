@@ -28,15 +28,6 @@
         <td>{{ publication.get_truncated_title_translation }}</td>
         <td>
             {{ publication.get_truncated_author_name }}
-            {% comment %}
-            {% for author in publication.authors.all %}
-                {% if forloop.last %}
-                    {{ author.name }}
-                {% else %}
-                    {{ author.name }},
-                {% endif %}
-            {% endfor %}
-            {% endcomment %}
         </td>
         <td>
             {% if publication.publication_year %}
