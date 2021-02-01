@@ -15,7 +15,7 @@
     <tr>  
         <td><a href="{% url 'publication-show' %}?currently_owned_by={{owner.id}}">{{ owner.name }}</a></td>
         <td>  
-            <a href="/owner/{{ owner.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
+            <a href="/owner/{{ owner.id }}/edit?next={{ request.get_full_path }}"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete" href="/owner/{{ owner.id }}/delete">Delete</a>
         </td>  
     </tr>  

@@ -19,7 +19,7 @@
         <td><a href="{% url 'publication-show' %}?q={{translator.name_original_language}}">{{ translator.name_original_language }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{translator.extra_info}}">{{ translator.extra_info }}</a></td>
         <td>  
-            <a href="/translator/{{ translator.id }}/edit"><span class="glyphicon glyphicon-pencil" >Edit</span></a>  
+            <a href="/translator/{{ translator.id }}/edit?next={{ request.get_full_path }}"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete" href="/translator/{{ translator.id }}/delete">Delete</a>
         </td>  
     </tr>  

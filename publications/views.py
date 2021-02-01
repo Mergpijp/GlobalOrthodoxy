@@ -328,7 +328,7 @@ def PublicationDelete(request, pk):
     #publication.delete()
     publication.is_deleted = True
     publication.save()
-    return redirect('/publication/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class PublicationCreate(UpdateView):
     '''
@@ -805,7 +805,7 @@ def ThrashbinRestore(request, pk):
     publication = Publication.objects.get(id=pk)
     publication.is_deleted = False
     publication.save()
-    return redirect('/thrashbin/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class KeywordCreate(CreateView):
@@ -864,7 +864,7 @@ def KeywordDelete(request, pk):
     '''
     keyword = Keyword.objects.get(id=pk)
     keyword.delete()
-    return redirect('/keyword/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class KeywordUpdate(UpdateView):
     '''
@@ -875,7 +875,15 @@ class KeywordUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = KeywordForm
     model = Keyword
-    success_url = '/keyword/show/'
+    #success_url = '/keyword/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 
 class AuthorCreate(CreateView):
     '''
@@ -932,7 +940,7 @@ def AuthorDelete(request, pk):
     '''
     author = Author.objects.get(id=pk)
     author.delete()
-    return redirect('/author/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class AuthorUpdate(UpdateView):
     '''
@@ -943,7 +951,15 @@ class AuthorUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = AuthorForm
     model = Author
-    success_url = '/author/show/'
+    #success_url = '/author/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
         
 class TranslatorCreate(CreateView):
     '''
@@ -1002,7 +1018,7 @@ def TranslatorDelete(request, pk):
     '''
     translator = Translator.objects.get(id=pk)
     translator.delete()
-    return redirect('/translator/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class TranslatorUpdate(UpdateView):
     '''
@@ -1013,7 +1029,15 @@ class TranslatorUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = TranslatorForm
     model = Translator
-    success_url = '/translator/show/'
+    #success_url = '/translator/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
     
 class FormOfPublicationCreate(CreateView):
     '''
@@ -1072,7 +1096,7 @@ def FormOfPublicationDelete(request, pk):
     '''
     form_of_publication = FormOfPublication.objects.get(id=pk)
     form_of_publication.delete()
-    return redirect('/form_of_publication/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class FormOfPublicationUpdate(UpdateView):
     '''
@@ -1083,7 +1107,15 @@ class FormOfPublicationUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = FormOfPublicationForm
     model = FormOfPublication
-    success_url = '/form_of_publication/show/'
+    #success_url = '/form_of_publication/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 
 class CityCreate(CreateView):
     '''
@@ -1143,7 +1175,7 @@ def CityDelete(request, pk):
     '''
     city = City.objects.get(id=pk)
     city.delete()
-    return redirect('/city/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class CityUpdate(UpdateView):
     '''
@@ -1154,7 +1186,15 @@ class CityUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = CityForm
     model = City
-    success_url = '/city/show/'
+    #success_url = '/city/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
     
         
 class GenreCreate(CreateView):
@@ -1214,7 +1254,7 @@ def GenreDelete(request, pk):
     '''
     genre = Genre.objects.get(id=pk)
     genre.delete()
-    return redirect('/genre/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class GenreUpdate(UpdateView):
     '''
@@ -1225,7 +1265,15 @@ class GenreUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = GenreForm
     model = Genre
-    success_url = '/genre/show/'
+    #success_url = '/genre/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
         
 class ChurchCreate(CreateView):
     '''
@@ -1284,7 +1332,7 @@ def ChurchDelete(request, pk):
     '''
     church = Church.objects.get(id=pk)
     church.delete()
-    return redirect('/church/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class ChurchUpdate(UpdateView):
     '''
@@ -1295,7 +1343,15 @@ class ChurchUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = ChurchForm
     model = Church
-    success_url = '/church/show/'
+    #success_url = '/church/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
       
 class LanguageCreate(CreateView):
     '''
@@ -1354,7 +1410,7 @@ def LanguageDelete(request, pk):
     '''
     language = Language.objects.get(id=pk)
     language.delete()
-    return redirect('/language/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
  
 class LanguageUpdate(UpdateView):
@@ -1366,7 +1422,16 @@ class LanguageUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = LanguageForm
     model = Language
-    success_url = '/language/show/'
+    #success_url = '/language/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
+
     
 class SpecialOccasionCreate(CreateView):
     '''
@@ -1425,7 +1490,7 @@ def SpecialOccasionDelete(request, pk):
     '''
     special_occasion = SpecialOccasion.objects.get(id=pk)
     special_occasion.delete()
-    return redirect('/special_occasion/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class SpecialOccasionUpdate(UpdateView):
     '''
@@ -1436,7 +1501,15 @@ class SpecialOccasionUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = SpecialOccasionForm
     model = SpecialOccasion
-    success_url = '/special_occasion/show/'   
+    #success_url = '/special_occasion/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 
 class OwnerCreate(CreateView):
     '''
@@ -1495,7 +1568,7 @@ def OwnerDelete(request, pk):
     '''
     owner = Owner.objects.get(id=pk)
     owner.delete()
-    return redirect('/owner/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class OwnerUpdate(UpdateView):
     '''
@@ -1506,7 +1579,15 @@ class OwnerUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = OwnerForm
     model = Owner
-    success_url = '/owner/show/'  
+    #success_url = '/owner/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 
 class UploadedFileCreate(CreateView):
     '''
@@ -1565,7 +1646,8 @@ def UploadedFileDelete(request, pk):
     '''
     uploadedfile = UploadedFile.objects.get(id=pk)
     uploadedfile.delete()
-    return redirect('/uploadedfile/show')
+    # redirect('/uploadedfile/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class UploadedFileUpdate(UpdateView):
     '''
@@ -1576,8 +1658,15 @@ class UploadedFileUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = UploadedFileForm
     model = UploadedFile
-    success_url = '/uploadedfile/show/'
+    #success_url = '/uploadedfile/show/'
 
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 
 class FileCategoryCreate(CreateView):
     '''
@@ -1638,7 +1727,7 @@ def FileCategoryDelete(request, pk):
     '''
     filecategory = FileCategory.objects.get(id=pk)
     filecategory.delete()
-    return redirect('/filecategory/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class FileCategoryUpdate(UpdateView):
@@ -1650,7 +1739,15 @@ class FileCategoryUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = FileCategoryForm
     model = FileCategory
-    success_url = '/filecategory/show/'
+    #success_url = '/filecategory/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 
 class ImageContentCreate(CreateView):
     '''
@@ -1711,7 +1808,7 @@ def ImageContentDelete(request, pk):
     '''
     imagecontent = ImageContent.objects.get(id=pk)
     imagecontent.delete()
-    return redirect('/imagecontent/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class ImageContentUpdate(UpdateView):
@@ -1723,7 +1820,15 @@ class ImageContentUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = ImageContentForm
     model = ImageContent
-    success_url = '/imagecontent/show/'
+    #success_url = '/imagecontent/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 
 class IllustrationLayoutTypeCreate(CreateView):
     '''
@@ -1756,7 +1861,7 @@ def IllustrationLayoutTypeDelete(request, pk):
     '''
     illustration_layout_type = IllustrationLayoutType.objects.get(id=pk)
     illustration_layout_type.delete()
-    return redirect('/illustration_layout_type/show')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class IllustrationLayoutTypeUpdate(UpdateView):
     '''
@@ -1767,7 +1872,15 @@ class IllustrationLayoutTypeUpdate(UpdateView):
     template_name = 'publications/form.html'
     form_class = IllustrationLayoutTypeForm
     model = IllustrationLayoutType
-    success_url = '/illustration_layout_type/show/'  
+    #success_url = '/illustration_layout_type/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 
 def normalize_query(query_string,
     findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
