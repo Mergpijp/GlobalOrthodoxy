@@ -889,6 +889,13 @@ class AuthorModelForm(BSModalModelForm):
         model = Author
         fields = ('name', 'name_original_language', 'extra_info',)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.layout = Layout(
+            HTML("""{% include "_send_author.html" %}"""),
+        )
+
 class TranslatorModelForm(BSModalModelForm):
     class Meta:
         model = Translator

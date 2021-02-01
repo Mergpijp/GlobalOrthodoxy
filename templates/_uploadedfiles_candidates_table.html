@@ -26,11 +26,14 @@
 </table>
 <script>
 $( ".uploadedfile-link" ).click(function() {
-    $.post($(this).attr('data-form-url'), function(data, status){
+    var data_cookie = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+    }
+    $.post($(this).attr('data-form-url'), data_cookie, function(data, status){
         if(status === 'success') {
             $("#uploadedfiles-div").html(data["table"]);
             $('#id_search_files').val('');
-            $.post("{% url 'search-uploaded-files' publication.pk %}", function(data2, status2){
+            $.post("{% url 'search-uploaded-files' publication.pk %}", data_cookie, function(data2, status2){
                 if(status2 === 'success') {
                     $("#candidates-div").html(data2["table"]);
                 }
@@ -39,5 +42,20 @@ $( ".uploadedfile-link" ).click(function() {
         }
     });
 });
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 </script>
 </div>

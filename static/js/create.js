@@ -39,7 +39,10 @@ function update(){
     });
 }
 function update_search_files(){
-    var data = {'input': $("#id_search_files").val()};
+    var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+        input: $("#id_search_files").val(),
+    }
     $.post(FILES, data, function(data, status){
         if(status === 'success') {
             $("#candidates-div").html(data["table"]);
@@ -47,7 +50,10 @@ function update_search_files(){
     });
 }
 function update_search_authors(){
-    var data = {'input': $("#id_search_authors").val()};
+    var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+        input: $("#id_search_authors").val(),
+    }
     $.post(AUTHORS, data, function(data, status){
         if(status === 'success') {
             $("#authors-candidates-div").html(data["table"]);
@@ -55,12 +61,30 @@ function update_search_authors(){
     });
 }
 function update_search_translators(){
-    var data = {'input': $("#id_search_translators").val()};
+    var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+        input: $("#id_search_translators").val(),
+    }
     $.post(TRANSLATORS, data, function(data, status){
         if(status === 'success') {
             $("#translators-candidates-div").html(data["table"]);
         }
     });
+}
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 $(document).ready(function(){
     $('#id_title_original').on('input',function(){

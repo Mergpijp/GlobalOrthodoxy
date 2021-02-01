@@ -1,6 +1,6 @@
-{% include "_modal.html" %}
 <div id="linkeddocuments">
 <div class="col-12 mb-3">
+    <h5>Authors table</h5>
     {% include "_authors_table.html" %}
 </div>
 </div>
@@ -8,7 +8,49 @@
   <div class="row">
    <div class="col"></div>
    <div class="col">
-   <button type="button" class='btn btn-primary btn-danger' id='create-author-async'><span class="fa fa-plus mr-2"></span>new author async</button>
+       <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-primary btn-danger" data-toggle="modal" data-target="#AuthorModal"><span class="fa fa-plus mr-2"></span>Create Linked Author</button>
+
+    <!-- Modal -->
+    <div id="AuthorModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title col-md-10">Create Author</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                <input type="text" name="name" maxlength="100" placeholder="Name" class="form-control" id="id_name">
+                <div class="">
+
+                </div>
+            </div>
+              <div class="form-group">
+                <label for="id_name_original_language">Name original language</label>
+                <input type="text" name="name_original_language" maxlength="100" placeholder="Name original language" class="form-control" id="id_name_original_language">
+                <div class="">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="id_extra_info">Extra info</label>
+                <input type="text" name="extra_info" maxlength="400" placeholder="Extra info" class="form-control" id="id_extra_info">
+                <div class="">
+
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="submit-btn5" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
     <br/>
     <br/>Search Authors:<br/>
     <br/>
@@ -19,12 +61,14 @@
 </div>
   <br/>
   <div class="col-12 mb-3">
+      <h5>Authors candidates table</h5>
       {% include "_authors_candidates_table.html" %}
   </div>
 </div>
 
 <div id="linkeddocuments2">
 <div class="col-12 mb-3">
+    <h5>Translators table</h5>
     {% include "_translators_table.html" %}
 </div>
 </div>
@@ -32,7 +76,49 @@
   <div class="row">
    <div class="col"></div>
    <div class="col">
-   <button type="button" class='btn btn-primary btn-danger' id='create-translator-async'><span class="fa fa-plus mr-2"></span>new translator async</button>
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-primary btn-danger" data-toggle="modal" data-target="#TranslatorModal"><span class="fa fa-plus mr-2"></span>Create Linked Translator</button>
+
+    <!-- Modal -->
+    <div id="TranslatorModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title col-md-10">Create Translator</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+                <label for="id_name_t">Name</label>
+                <input type="text" name="name" maxlength="100" placeholder="Name" class="form-control" id="id_name_t">
+                <div class="">
+
+                </div>
+            </div>
+              <div class="form-group">
+                <label for="id_name_original_language_t">Name original language</label>
+                <input type="text" name="name_original_language" maxlength="100" placeholder="Name original language" class="form-control" id="id_name_original_language_t">
+                <div class="">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="id_extra_info_t">Extra info</label>
+                <input type="text" name="extra_info" maxlength="400" placeholder="Extra info" class="form-control" id="id_extra_info_t">
+                <div class="">
+
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="submit-btn4" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
     <br/>
     <br/>Search Translator:<br/>
     <br/>
@@ -43,135 +129,61 @@
 </div>
   <br/>
   <div class="col-12 mb-3">
+      <h5>Translators candidates table</h5>
       {% include "_translators_candidates_table.html" %}
   </div>
 </div>
 <script type="text/javascript">
 $(function () {
-var asyncSuccessMessageCreateAuthor = [
-"<div ",
-"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-"Success: Author was created.",
-"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-"<span aria-hidden='true'>&times;</span>",
-"</button>",
-"</div>",
-"<script>",
-"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-"<\/script>"
-].join("");
+$("#submit-btn4").click(function(e) {
+    var fd = new FormData();
+    fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+    fd.append("name", $('#id_name_t').val());
+    fd.append("name_original_language", $('#id_name_original_language_t').val());
+    fd.append("extra_info", $('#id_extra_info_t').val());
 
-var asyncSuccessMessageUpdateAuthor = [
-"<div ",
-"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-"Success: Author was updated.",
-"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-"<span aria-hidden='true'>&times;</span>",
-"</button>",
-"</div>",
-"<script>",
-"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-"<\/script>"
-].join("");
-var asyncSuccessMessageCreateTranslator = [
-"<div ",
-"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-"Success: Translator was created.",
-"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-"<span aria-hidden='true'>&times;</span>",
-"</button>",
-"</div>",
-"<script>",
-"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-"<\/script>"
-].join("");
-
-var asyncSuccessMessageUpdateTranslator = [
-"<div ",
-"style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-"class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-"Success: Translator was updated.",
-"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-"<span aria-hidden='true'>&times;</span>",
-"</button>",
-"</div>",
-"<script>",
-"$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-"<\/script>"
-].join("");
-
-function updateAuthorModalForm() {
-$(".author-edit").each(function () {
-  $(this).modalForm({
-    formURL: $(this).data("form-url"),
-    asyncUpdate: true,
-    asyncSettings: {
-      closeOnSubmit: false,
-      successMessage: asyncSuccessMessageUpdateAuthor,
-      dataUrl: "{% url 'authors' publication.pk %}",
-      dataElementId: "#authors-div",
-      dataKey: "table",
-      addModalFormFunction: updateAuthorModalForm
+    $.ajax({
+      url: "{% url 'translator-proces' publication.pk %}",
+      data: fd,
+      processData: false,
+      contentType: false,
+      type: 'POST',
+        success:function(data) {
+          $("#translators-div").html(data["table"]);
+        }
+    });
+});
+$("#submit-btn5").click(function(e) {
+    var fd = new FormData();
+    fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+    fd.append("name", $('#id_name').val());
+    fd.append("name_original_language", $('#id_name_original_language').val());
+    fd.append("extra_info", $('#id_extra_info').val());
+    $.ajax({
+      url: "{% url 'author-proces' publication.pk %}",
+      data: fd,
+      processData: false,
+      contentType: false,
+      type: 'POST',
+        success:function(data) {
+          $("#authors-div").html(data["table"]);
+        }
+    });
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
     }
-  });
-});
+    return cookieValue;
 }
-updateAuthorModalForm();
-function updateTranslatorModalForm() {
-$(".translator-edit").each(function () {
-  $(this).modalForm({
-    formURL: $(this).data("form-url"),
-    asyncUpdate: true,
-    asyncSettings: {
-      closeOnSubmit: false,
-      successMessage: asyncSuccessMessageUpdateTranslator,
-      dataUrl: "{% url 'translators' publication.pk %}",
-      dataElementId: "#translators-div",
-      dataKey: "table",
-      addModalFormFunction: updateTranslatorModalForm
-    }
-  });
-});
-}
-updateTranslatorModalForm();
-function createAuthorAsyncModalForm() {
-$("#create-author-async").modalForm({
-    formURL: "{% url 'author_new' publication.pk %}",
-    modalID: "#create-modal",
-    asyncUpdate: true,
-    asyncSettings: {
-      closeOnSubmit: true,
-      successMessage: asyncSuccessMessageCreateAuthor,
-      dataUrl: "{% url 'authors' publication.pk %}",
-      dataElementId: "#authors-div",
-      dataKey: "table",
-      addModalFormFunction: updateAuthorModalForm
-     }
-});
-}
-createAuthorAsyncModalForm();
-function createTranslatorAsyncModalForm() {
-$("#create-translator-async").modalForm({
-    formURL: "{% url 'translator_new' publication.pk %}",
-    modalID: "#create-modal",
-    asyncUpdate: true,
-    asyncSettings: {
-      closeOnSubmit: true,
-      successMessage: asyncSuccessMessageCreateTranslator,
-      dataUrl: "{% url 'translators' publication.pk %}",
-      dataElementId: "#translatros-div",
-      dataKey: "table",
-      addModalFormFunction: updateTranslatorModalForm
-     }
-});
-}
-createTranslatorAsyncModalForm();
-// Hide message
-$(".alert").fadeTo(2000, 500).slideUp(500, function () {
-  $(".alert").slideUp(500);
-});
 });
 </script>

@@ -1,6 +1,7 @@
 {% include "_modal2.html" %}
 <div id="linkeddocuments3">
     <div class="col-12 mb-3">
+    <h5>Uploadedfiles table</h5>
         {% if publication.uploadedfiles|length >= 0 %}
           {% include "_uploadedfiles_table.html" %}
         {% else %}
@@ -23,6 +24,7 @@
     </div>
       <br/>
       <div class="col-12 mb-3">
+      <h5>Uploadedfiles candidates table</h5>
         {% if uploadedfiles|length >= 0 %}
           {% include "_uploadedfiles_candidates_table.html" %}
         {% else %}
