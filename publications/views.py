@@ -761,7 +761,7 @@ class SearchResultsView(ListView):
             if length == len(cover_images):
                 cover_images.append(None)
         print(context['publications'])
-        context['publications'] = zip(context['publications'], cover_images)
+        context['cover_images'] = cover_images
         return context
 
 class ThrashbinShow(ListView):

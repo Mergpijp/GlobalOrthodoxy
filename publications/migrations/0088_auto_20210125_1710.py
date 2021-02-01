@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('publications', '0087_auto_20210125_1753'),
+        ('publications', '0086_publication_is_stub'),
     ]
 
     operations = [
@@ -34,23 +34,5 @@ class Migration(migrations.Migration):
             model_name='publication',
             old_name='title_original5',
             new_name='title5',
-        ),
-        migrations.RemoveField(
-            model_name='publication',
-            name='authors',
-        ),
-        migrations.RemoveField(
-            model_name='publication',
-            name='translators',
-        ),
-        migrations.AddField(
-            model_name='publication',
-            name='author',
-            field=models.ManyToManyField(to='publications.Author'),
-        ),
-        migrations.AddField(
-            model_name='publication',
-            name='translator',
-            field=models.ManyToManyField(to='publications.Translator'),
         ),
     ]
