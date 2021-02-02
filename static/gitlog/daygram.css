@@ -1,0 +1,43 @@
+/*Height*/
+.daygram .day {
+	background-color: #fff3e0;
+	border: 1px solid #000;
+	height: 5em;
+}
+.daygram .day.diffcolor{
+	background-color: #FFEBCE;
+}
+/*Height*/
+.daygram .date {
+	display: inline-block;
+	width: 5em;
+	height: 5em;
+	vertical-align: middle;
+	text-align: center;
+	border-right: 1px solid #000;
+}
+.daygram .date .content {
+	display: table; 
+	height:100%;
+	width: 100%;
+}
+.daygram .date .content p {
+  display: table-cell; 
+  vertical-align: middle; 
+  text-align: center; 
+  //font-size: 1.2em;
+}
+
+.daygram .message {
+	display: inline-block;
+	vertical-align: middle;
+	padding-left: 1em;
+	width: calc(100% - 5em - 1em);
+}
+
+.daygram .alignright{
+	float:right;
+}
+
+
+
