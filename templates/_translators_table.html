@@ -10,7 +10,7 @@
   </tr>
   </thead>
   <tbody>
-  {% for translator in publication.translator.all %}
+  {% for translator in publication.translators.all %}
     <tr>
       <th class="text-center" scope="row">{{ translator.pk }}</th>
       <td class="text-center">{{ translator.name }}</td>

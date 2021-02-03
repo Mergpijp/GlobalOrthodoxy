@@ -10,8 +10,7 @@ import random
 import string
 from .forms import PublicationForm, NewCrispyForm, KeywordForm,\
     AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, \
-    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm, ImageContentForm, AuthorModelForm, \
-    TranslatorModelForm
+    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm, ImageContentForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -143,7 +142,7 @@ def process_author(request, pkb=None, pk=None):
         if form.is_valid():
             instance = form.save()
             pub = Publication.objects.get(pk=pkb)
-            pub.author.add(instance)
+            pub.authors.add(instance)
             pub.save()
             if pkb:
                 data['table'] = render_to_string(
@@ -169,7 +168,7 @@ def process_translator(request, pkb=None, pk=None):
         if form.is_valid():
             instance = form.save()
             pub = Publication.objects.get(pk=pkb)
-            pub.translator.add(instance)
+            pub.translators.add(instance)
             pub.save()
             if pkb:
                 data['table'] = render_to_string(
@@ -205,8 +204,8 @@ def link_author(request, pkb=None, pk=None):
     if pkb and pk:
         pub = Publication.objects.get(pk=pkb)
         author = Author.objects.get(pk=pk)
-        if not author in pub.author.all():
-            pub.author.add(author)
+        if not author in pub.authors.all():
+            pub.authors.add(author)
             pub.save()
             data['table'] = render_to_string(
                 '_authors_table.html',
@@ -229,8 +228,8 @@ def link_translator(request, pkb=None, pk=None):
     if pkb and pk:
         pub = Publication.objects.get(pk=pkb)
         translator = Translator.objects.get(pk=pk)
-        if not translator in pub.translator.all():
-            pub.translator.add(translator)
+        if not translator in pub.translators.all():
+            pub.translators.add(translator)
             pub.save()
             data['table'] = render_to_string(
                 '_translators_table.html',
@@ -271,8 +270,8 @@ def unlink_author(request, pkb=None, pk=None):
     if pkb and pk:
         pub = Publication.objects.get(pk=pkb)
         author = Author.objects.get(pk=pk)
-        if author in pub.author.all():
-            pub.author.remove(author)
+        if author in pub.authors.all():
+            pub.authors.remove(author)
             pub.save()
             data['table'] = render_to_string(
                 '_authors_table.html',
@@ -289,8 +288,8 @@ def unlink_translator(request, pkb=None, pk=None):
     if pkb and pk:
         pub = Publication.objects.get(pk=pkb)
         translator = Translator.objects.get(pk=pk)
-        if translator in pub.translator.all():
-            pub.translator.remove(translator)
+        if translator in pub.translators.all():
+            pub.translators.remove(translator)
             pub.save()
             data['table'] = render_to_string(
                 '_translators_table.html',
@@ -584,14 +583,14 @@ class PublicationCreate(UpdateView):
         # todo: temporal solution for double publication.
         pub = Publication.objects.get(pk=self.object.id-1)
         form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
-        form.instance.author.add(*pub.author.all())
-        form.instance.translator.add(*pub.translator.all())
+        form.instance.authors.add(*pub.authors.all())
+        form.instance.translators.add(*pub.translators.all())
 
         for file in form.instance.uploadedfiles.all():
             file.save()
-        for author in form.instance.author.all():
+        for author in form.instance.authors.all():
             author.save()
-        for translator in form.instance.translator.all():
+        for translator in form.instance.translators.all():
             translator.save()
 
         if form.is_valid():

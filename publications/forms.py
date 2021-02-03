@@ -372,10 +372,7 @@ class NewCrispyForm(forms.ModelForm):
                            onclick="$('.hidden:first').removeClass('hidden');"),
                     ),
                 Tab('Author',
-                    FieldWithButtons('authors', StrictButton('+', type='button', css_class='btn-danger',
-                                                            onClick="window.open('/author/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
-                    FieldWithButtons('translators', StrictButton('+', type='button', css_class='btn-danger',
-                                                                onClick="window.open('/translator/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+                    HTML("""{% include "_author_translator.html" %}"""),
                     'is_a_translation',
                     FieldWithButtons('translated_from', StrictButton('+', type='button', css_class='btn-danger',
                                                                      onClick="window.open('/language/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
@@ -431,125 +428,7 @@ class NewCrispyForm(forms.ModelForm):
                 #HTML("""<div id=files class ="tab-pane {% if active_tab == 'tab-files' %} active{% endif %}"> """,#Tab('Files',
 
             Tab('Files',
-                HTML("""
-                    {% include "_modal.html" %}
-                      
-                      <div id="linkeddocuments">
-                        <div class="col-12 mb-3">
-                            {% if publication.uploadedfiles|length >= 0 %}
-                              {% include "_uploadedfiles_table.html" %}
-                            {% else %}
-                              <p class="no-uploadedfiles">No uploadedfiles added yet.</p>
-                            {% endif %}
-                        </div>   
-                      </div>
-                        <div id="searchdocumentpanel" class="container">
-                          <div class="row">
-                           <div class="col"></div>
-                           <div class="col">
-                           <button type="button" class='btn btn-primary btn-danger' id='create-uploadedfile-async'><span class="fa fa-plus mr-2"></span>upload new file async</button>
-                            <br/>
-                            <br/>Search Files:<br/>
-                            <br/>
-                            <input type="text" id="id_search_files">
-                            </input>
-                            </div>
-                            <div class="col"></div>
-                        </div>
-                          <br/>
-                          <div class="col-12 mb-3">
-                            {% if uploadedfiles|length >= 0 %}
-                              {% include "_uploadedfiles_candidates_table.html" %}
-                            {% else %}
-                              <p class="no-uploadedfiles">No uploadedfiles added yet.</p>
-                            {% endif %}
-                          </div>                            
-                        </div>
-                    <script type="text/javascript">
-                    $(function () {
-                      var asyncSuccessMessageCreate = [
-                        "<div ",
-                        "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-                        "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-                        "Success: Uploadedfile was created.",
-                        "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-                        "<span aria-hidden='true'>&times;</span>",
-                        "</button>",
-                        "</div>",
-                        "<script>",
-                        "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-                        "<\/script>"
-                      ].join("");
-            
-                      var asyncSuccessMessageUpdate = [
-                        "<div ",
-                        "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-                        "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-                        "Success: UploadedFile was updated.",
-                        "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-                        "<span aria-hidden='true'>&times;</span>",
-                        "</button>",
-                        "</div>",
-                        "<script>",
-                        "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-                        "<\/script>"
-                      ].join("");
-            
-                    function updateUploadedFileModalForm() {
-                    $(".somebullshit").each(function () {
-                      $(this).modalForm({
-                        formURL: $(this).data("form-url"),
-                        asyncUpdate: true,
-                        asyncSettings: {
-                          closeOnSubmit: false,
-                          successMessage: asyncSuccessMessageUpdate,
-                          dataUrl: "{% url 'uploadedfiles' publication.pk %}",
-                          dataElementId: "#uploadedfiles-table",
-                          dataKey: "table",
-                          addModalFormFunction: updateUploadedFileModalForm
-                        }
-                      });
-                    });
-                  }
-                  updateUploadedFileModalForm();                    
-                  function createUploadedFileAsyncModalForm() {
-                    $("#create-uploadedfile-async").modalForm({
-                        formURL: "{% url 'uploadedfile_new' publication.pk %}",
-                        modalID: "#create-modal",
-                        asyncUpdate: true,
-                        asyncSettings: {
-                          closeOnSubmit: true,
-                          successMessage: asyncSuccessMessageCreate,
-                          dataUrl: "{% url 'uploadedfiles' publication.pk %}",
-                          dataElementId: "#uploadedfiles-table",
-                          dataKey: "table",  
-                          addModalFormFunction: updateUploadedFileModalForm
-                         }
-                  });
-                }
-                createUploadedFileAsyncModalForm(); 
-                function createUploadedFileSyncModalForm() {
-                    $("#create-uploadedfile-sync").modalForm({
-                        formURL: "{% url 'uploadedfile_new' publication.pk %}",
-                        modalID: "#create-modal"
-                    });
-                  }
-                createUploadedFileSyncModalForm();                 
-                // Hide message
-                  $(".alert").fadeTo(2000, 500).slideUp(500, function () {
-                      $(".alert").slideUp(500);
-                  });
-                      // Update, Read and Delete book buttons open modal with id="modal" (default)
-                    // The formURL is retrieved from the data of the element
-                    //$(".bs-modal").each(function () {
-                    //  $(this).modalForm({
-                    //      formURL: $(this).data('form-url')
-                    //  });
-                    //});
-                    });
-                    </script>
-    
-                    """),
+                HTML("""{% include "_uploadedfile.html" %}"""),
                 css_id="files",
                 ),
 
