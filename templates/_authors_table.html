@@ -28,7 +28,10 @@
 </table>
 <script>
  $( ".author-unlink" ).click(function() {
-    $.post($(this).attr('data-form-url'), function(data, status){
+     var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+    }
+    $.post($(this).attr('data-form-url'), data, function(data, status){
         if(status === 'success') {
             $("#authors-div").html(data["table"]);
         }

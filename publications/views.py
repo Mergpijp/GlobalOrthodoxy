@@ -201,12 +201,14 @@ def link_file(request, pkb=None, pk=None):
 @login_required(login_url='/accounts/login/')
 def link_author(request, pkb=None, pk=None):
     data = dict()
+    #pdb.set_trace()
     if pkb and pk:
         pub = Publication.objects.get(pk=pkb)
         author = Author.objects.get(pk=pk)
         if not author in pub.authors.all():
             pub.authors.add(author)
             pub.save()
+            author.save()
             data['table'] = render_to_string(
                 '_authors_table.html',
                 {'publication': pub},
@@ -570,6 +572,8 @@ class PublicationCreate(UpdateView):
         context['publication'] = Publication(is_stub=True)
         return context
     '''
+    #def get_success_url(self):
+    #    return
 
     def get_object(self):
         pub = Publication(is_stub=True)
@@ -582,22 +586,32 @@ class PublicationCreate(UpdateView):
         form.instance.is_stub = False
         # todo: temporal solution for double publication.
         pub = Publication.objects.get(pk=self.object.id-1)
-        form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
+        #pdb.set_trace()
         form.instance.authors.add(*pub.authors.all())
+        form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
+
         form.instance.translators.add(*pub.translators.all())
 
-        for file in form.instance.uploadedfiles.all():
-            file.save()
-        for author in form.instance.authors.all():
-            author.save()
-        for translator in form.instance.translators.all():
-            translator.save()
 
+        #for file in form.instance.uploadedfiles.all():
+        #    file.save()
+        #for author in form.instance.authors.all():
+        #    author.save()
+        #for trans in form.instance.translators.all():
+        #    trans.save()
+
+        #pdb.set_trace()
         if form.is_valid():
-            instance = form.save()
-            instance.save()
+            self.object = form.save(commit=False)
+            self.object.save()
+            #instance.save()
+            #form.instance.save()
         pub.delete()
-        return super().form_valid(form)
+        #return HttpResponse(200)
+       #pdb.set_trace()
+        #return self.render_to_response(self.get_context_data(form=form))
+        #return super(self).form_valid(form)
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
         """Detect the submit button used and act accordingly"""
