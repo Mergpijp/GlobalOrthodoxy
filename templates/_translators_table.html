@@ -1,23 +1,25 @@
-<div id="uploadedfiles-div">
-<table id="uploadedfiles-table" class="table">
+<div id="translators-div">
+<table id="translators-table" class="table">
   <thead>
   <tr>
     <th class="text-center" scope="col">ID</th>
-    <th class="text-center" scope="col">Image Title</th>
-    <th class="text-center" scope="col">Picture</th>
+    <th class="text-center" scope="col">Name</th>
+    <th class="text-center" scope="col">Name original language</th>
+    <th class="text-center" scope="col">Extra info</th>
     <th class="text-center" scope="col">Unlink</th>
   </tr>
   </thead>
   <tbody>
-  {% for uploadedfile in publication.uploadedfiles.all %}
+  {% for translator in publication.translator.all %}
     <tr>
-      <th class="text-center" scope="row">{{ uploadedfile.pk }}</th>
-      <td class="text-center">{{ uploadedfile.image_title }}</td>
-      <td style="text-align: center;"><img src="/media/{{ uploadedfile.file }}" width="200" height="200" id="crop_image"></td>
+      <th class="text-center" scope="row">{{ translator.pk }}</th>
+      <td class="text-center">{{ translator.name }}</td>
+      <td class="text-center">{{ translator.name_original_language }}</td>
+      <td class="text-center">{{ translator.extra_info }}</td>
       <td class="text-center">
-        <!-- Unlink Uploadedfile buttons -->
-        <button type="button" class="uploadedfile-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-file' publication.pk uploadedfile.pk %}">
-          <span class="fa fa-trash"></span> Unlink File
+        <!-- Unlink translator buttons -->
+        <button type="button" class="translator-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-translator' publication.pk translator.pk %}">
+          <span class="fa fa-trash"></span> Unlink
         </button>
       </td>
     </tr>
@@ -25,17 +27,17 @@
   </tbody>
 </table>
 <script>
- $( ".uploadedfile-unlink" ).click(function() {
+ $( ".translator-unlink" ).click(function() {
     var data = {
         csrfmiddlewaretoken: getCookie('csrftoken'),
     }
     $.post($(this).attr('data-form-url'), data, function(data, status){
         if(status === 'success') {
-            $("#uploadedfiles-div").html(data["table"]);
+            $("#translators-div").html(data["table"]);
         }
     });
 });
- function getCookie(name) {
+function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
         var cookies = document.cookie.split(';');

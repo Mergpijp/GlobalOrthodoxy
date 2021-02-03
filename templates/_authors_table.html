@@ -1,0 +1,38 @@
+<div id="authors-div">
+<table id="authors-table" class="table">
+  <thead>
+  <tr>
+    <th class="text-center" scope="col">ID</th>
+    <th class="text-center" scope="col">Name</th>
+    <th class="text-center" scope="col">Name original language</th>
+    <th class="text-center" scope="col">Extra info</th>
+    <th class="text-center" scope="col">Unlink</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for author in publication.author.all %}
+    <tr>
+      <th class="text-center" scope="row">{{ author.pk }}</th>
+      <td class="text-center">{{ author.name }}</td>
+      <td class="text-center">{{ author.name_original_language }}</td>
+      <td class="text-center">{{ author.extra_info }}</td>
+      <td class="text-center">
+        <!-- Unlink author buttons -->
+        <button type="button" class="author-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-author' publication.pk author.pk %}">
+          <span class="fa fa-trash"></span> Unlink
+        </button>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<script>
+ $( ".author-unlink" ).click(function() {
+    $.post($(this).attr('data-form-url'), function(data, status){
+        if(status === 'success') {
+            $("#authors-div").html(data["table"]);
+        }
+    });
+});
+</script>
+</div>

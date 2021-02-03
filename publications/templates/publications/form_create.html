@@ -6,6 +6,8 @@
 <script>
     var URL = "{% url 'view-input-update' %}";
     var FILES = "{% url 'search-uploaded-files' publication.pk %}";
+    var AUTHORS = "{% url 'search-authors' publication.pk %}";
+    var TRANSLATORS = "{% url 'search-translators' publication.pk %}";
 </script>
 <script type="text/javascript" src="{% static 'js/create.js' %}">  </script>
 {% endblock headjavascript %}
@@ -19,4 +21,4 @@
     {% csrf_token %}
     {% crispy form form.helper %}
 </form>
-{% endblock %}
+{% endblock content %}

@@ -39,13 +39,52 @@ function update(){
     });
 }
 function update_search_files(){
-    var data = {'input': $("#id_search_files").val()};
+    var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+        input: $("#id_search_files").val(),
+    }
     $.post(FILES, data, function(data, status){
         if(status === 'success') {
-            //$('#id_search_files').html(data);
-            $("#uploadedfiles-candidates-table").html(data["table"]);
+            $("#candidates-div").html(data["table"]);
         }
     });
+}
+function update_search_authors(){
+    var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+        input: $("#id_search_authors").val(),
+    }
+    $.post(AUTHORS, data, function(data, status){
+        if(status === 'success') {
+            $("#authors-candidates-div").html(data["table"]);
+        }
+    });
+}
+function update_search_translators(){
+    var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+        input: $("#id_search_translators").val(),
+    }
+    $.post(TRANSLATORS, data, function(data, status){
+        if(status === 'success') {
+            $("#translators-candidates-div").html(data["table"]);
+        }
+    });
+}
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 $(document).ready(function(){
     $('#id_title').on('input',function(){
@@ -53,13 +92,20 @@ $(document).ready(function(){
             update();
         }
     });
-    //$('#id_search_files')[0].selectize.trigger( "change" );
     $('#id_search_files').on('input',function(){
         if ($("#id_search_files").val().length > 0) {
-            //console.log('in');
             update_search_files();
         }
     });
-
+    $('#id_search_authors').on('input',function(){
+        if ($("#id_search_authors").val().length > 0) {
+            update_search_authors();
+        }
+    });
+    $('#id_search_translators').on('input',function(){
+        if ($("#id_search_translators").val().length > 0) {
+            update_search_translators();
+        }
+    });
 });
 

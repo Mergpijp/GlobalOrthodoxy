@@ -1,0 +1,16 @@
+<script>
+var fd = new FormData();
+fd.append("name", $('#id_name').val());
+fd.append("name_original_language", $('#id_name_original_language').val());
+fd.append("extr_info", $('#id_extra_info').val());
+$("#submit-btn3").click(function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: {% url 'author-proces' pkb %},
+      data: fd,
+      processData: false,
+      contentType: false,
+      type: 'POST',
+    });
+});
+</script>

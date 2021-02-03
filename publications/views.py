@@ -10,7 +10,8 @@ import random
 import string
 from .forms import PublicationForm, NewCrispyForm, KeywordForm,\
     AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, \
-    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm, ImageContentForm
+    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm, ImageContentForm, AuthorModelForm, \
+    TranslatorModelForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -100,7 +101,6 @@ def process_file(request, pk=None):
 
 @login_required(login_url='/accounts/login/')
 def process_file2(request, pkb=None):
-
     obj, created = UploadedFile.objects.get_or_create(pk=None)
 
     #try:
@@ -129,12 +129,64 @@ def process_file2(request, pkb=None):
     return render(request, 'error_template.html', {'form': form}, status=500)
 
 @login_required(login_url='/accounts/login/')
+def process_author(request, pkb=None, pk=None):
+    #pdb.set_trace()
+    data = dict()
+    obj, created = Author.objects.get_or_create(pk=pk)
+
+    post_mutable = {'name': request.POST['name'], 'name_original_language': request.POST['name_original_language'], \
+                    'extra_info': request.POST['extra_info']}
+
+    form = AuthorForm(post_mutable or None, instance=obj)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            pub = Publication.objects.get(pk=pkb)
+            pub.author.add(instance)
+            pub.save()
+            if pkb:
+                data['table'] = render_to_string(
+                    '_authors_table.html',
+                    {'publication': pub},
+                    request=request
+                )
+                return JsonResponse(data)
+
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def process_translator(request, pkb=None, pk=None):
+    data = dict()
+    obj, created = Translator.objects.get_or_create(pk=pk)
+
+    post_mutable = {'name': request.POST['name'], 'name_original_language': request.POST['name_original_language'], \
+                    'extra_info': request.POST['extra_info']}
+
+    form = TranslatorForm(post_mutable or None, instance=obj)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            pub = Publication.objects.get(pk=pkb)
+            pub.translator.add(instance)
+            pub.save()
+            if pkb:
+                data['table'] = render_to_string(
+                    '_translators_table.html',
+                    {'publication': pub},
+                    request=request
+                )
+                return JsonResponse(data)
+
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
 def link_file(request, pkb=None, pk=None):
     data = dict()
     if pkb and pk:
         pub = Publication.objects.get(pk=pkb)
         file = UploadedFile.objects.get(pk=pk)
-        #pdb.set_trace()
         if not file in pub.uploadedfiles.all():
             pub.uploadedfiles.add(file)
             pub.save()
@@ -146,6 +198,54 @@ def link_file(request, pkb=None, pk=None):
             return JsonResponse(data)
         else:
             return HttpResponse(409)
+
+@login_required(login_url='/accounts/login/')
+def link_author(request, pkb=None, pk=None):
+    data = dict()
+    if pkb and pk:
+        pub = Publication.objects.get(pk=pkb)
+        author = Author.objects.get(pk=pk)
+        if not author in pub.author.all():
+            pub.author.add(author)
+            pub.save()
+            data['table'] = render_to_string(
+                '_authors_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
+        else:
+            data['table'] = render_to_string(
+                '_authors_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
+        return HttpResponse(409)
+
+@login_required(login_url='/accounts/login/')
+def link_translator(request, pkb=None, pk=None):
+    data = dict()
+    if pkb and pk:
+        pub = Publication.objects.get(pk=pkb)
+        translator = Translator.objects.get(pk=pk)
+        if not translator in pub.translator.all():
+            pub.translator.add(translator)
+            pub.save()
+            data['table'] = render_to_string(
+                '_translators_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
+        else:
+            data['table'] = render_to_string(
+                '_translators_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
+    return HttpResponse(409)
 
 @login_required(login_url='/accounts/login/')
 def unlink_file(request, pkb=None, pk=None):
@@ -164,6 +264,43 @@ def unlink_file(request, pkb=None, pk=None):
             return JsonResponse(data)
         else:
             return HttpResponse(409)
+
+@login_required(login_url='/accounts/login/')
+def unlink_author(request, pkb=None, pk=None):
+    data = dict()
+    if pkb and pk:
+        pub = Publication.objects.get(pk=pkb)
+        author = Author.objects.get(pk=pk)
+        if author in pub.author.all():
+            pub.author.remove(author)
+            pub.save()
+            data['table'] = render_to_string(
+                '_authors_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
+        else:
+            return HttpResponse(409)
+
+@login_required(login_url='/accounts/login/')
+def unlink_translator(request, pkb=None, pk=None):
+    data = dict()
+    if pkb and pk:
+        pub = Publication.objects.get(pk=pkb)
+        translator = Translator.objects.get(pk=pk)
+        if translator in pub.translator.all():
+            pub.translator.remove(translator)
+            pub.save()
+            data['table'] = render_to_string(
+                '_translators_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
+        else:
+            return HttpResponse(409)
+
 
 
 @login_required(login_url='/accounts/login/')
@@ -190,17 +327,52 @@ def search_uploaded_files(request, pkb=None):
     data = dict()
     if request.method == 'POST':
         if pkb:
-            #pdb.set_trace()
             if 'input' in request.POST:
                 input = request.POST['input']
                 uploadedfiles = UploadedFile.objects.filter(image_title__icontains=input).order_by('image_title')[:10]
-
             else:
                 uploadedfiles = UploadedFile.objects.none()
             publication = Publication.objects.get(pk=pkb)
             data['table'] = render_to_string(
                 '_uploadedfiles_candidates_table.html',
                 {'uploadedfiles': uploadedfiles, 'publication': publication},
+                request=request
+            )
+            return JsonResponse(data)
+
+@login_required(login_url='/accounts/login/')
+def search_authors(request, pkb=None):
+    data = dict()
+    if request.method == 'POST':
+        if pkb:
+            if 'input' in request.POST:
+                input = request.POST['input']
+                authors = Author.objects.filter(name__icontains=input).order_by('name')[:10]
+            else:
+                authors = Author.objects.none()
+            #pdb.set_trace()
+            publication = Publication.objects.get(pk=pkb)
+            data['table'] = render_to_string(
+                '_authors_candidates_table.html',
+                {'authors': authors, 'publication': publication},
+                request=request
+            )
+            return JsonResponse(data)
+
+@login_required(login_url='/accounts/login/')
+def search_translators(request, pkb=None):
+    data = dict()
+    if request.method == 'POST':
+        if pkb:
+            if 'input' in request.POST:
+                input = request.POST['input']
+                translators = Translator.objects.filter(name__icontains=input).order_by('name')[:10]
+            else:
+                translators = Translator.objects.none()
+            publication = Publication.objects.get(pk=pkb)
+            data['table'] = render_to_string(
+                '_translators_candidates_table.html',
+                {'translators': translators, 'publication': publication},
                 request=request
             )
             return JsonResponse(data)
@@ -231,17 +403,41 @@ def url_replace(request, field, value, direction=''):
 
     return urlencode(OrderedDict(sorted(dict_.items())))
 '''
+@login_required(login_url='/accounts/login/')
 def uploadedfiles(request, pkb=None):
     data = dict()
     if (request.method == 'GET' or request.method == 'POST') and pkb:
         publication = Publication.objects.get(pk=pkb)
-
         data['table'] = render_to_string(
             '_uploadedfiles_table.html',
             {'publication': publication},
             request=request
         )
-        #pdb.set_trace()
+        return JsonResponse(data)
+
+@login_required(login_url='/accounts/login/')
+def authors(request, pkb=None):
+    data = dict()
+    #pdb.set_trace()
+    if (request.method == 'GET' or request.method == 'POST') and pkb:
+        publication = Publication.objects.get(pk=pkb)
+        data['table'] = render_to_string(
+            '_authors_table.html',
+            {'publication': publication},
+            request=request
+        )
+        return JsonResponse(data)
+
+@login_required(login_url='/accounts/login/')
+def translators(request, pkb=None):
+    data = dict()
+    if (request.method == 'GET' or request.method == 'POST') and pkb:
+        publication = Publication.objects.get(pk=pkb)
+        data['table'] = render_to_string(
+            '_translators_table.html',
+            {'publication': publication},
+            request=request
+        )
         return JsonResponse(data)
 
 class UploadedFileCreateView(BSModalCreateView):
@@ -257,6 +453,8 @@ class UploadedFileCreateView(BSModalCreateView):
         context['pkb'] = self.kwargs['pk']
         return context
 
+    def form_valid(self, form):
+        return HttpResponse(status=200)
     '''
     def get_success_url(self):
         return reverse_lazy('publication-new', kwargs={'active_tab': 'tab_files', 'object_id': self.object.id}, )
@@ -274,28 +472,7 @@ class UploadedFileCreateView(BSModalCreateView):
             return reverse_lazy('/publication/' + str(self.object.id) + '/edit/')
     '''
 
-    def form_valid(self, form):
-        return HttpResponse(status=200)
         #return super().form_valid(form)
-
-class UploadedFileUnlinkView(BSModalUpdateView):
-    template_name = 'uploadedfiles/uploadedfile_unlink.html'
-    model = UploadedFile
-    form_class = UploadedFileModelForm
-    success_message = 'Success: uploadedfile was unlinked.'
-    success_url = reverse_lazy('publication-new')
-
-    #def get_success_url(self):
-    #    return reverse_lazy('/publication/' + str(self.kwargs['pkb']) + '/edit/')
-
-    def form_valid(self, form):
-        uploadedfile = UploadedFile.objects.get(self.kwargs['pk'])
-        publication = Publication.objects.get(self.kwargs['pkb'])
-        publication.uploadedfiles.remove(uploadedfile)
-        #pdb.set_trace()
-        #publication.save()
-        return super().form_valid(form)
-        #return HttpResponse(200)
 
 class PublicationUpdate(UpdateView):
     '''
@@ -407,8 +584,16 @@ class PublicationCreate(UpdateView):
         # todo: temporal solution for double publication.
         pub = Publication.objects.get(pk=self.object.id-1)
         form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
+        form.instance.author.add(*pub.author.all())
+        form.instance.translator.add(*pub.translator.all())
+
         for file in form.instance.uploadedfiles.all():
             file.save()
+        for author in form.instance.author.all():
+            author.save()
+        for translator in form.instance.translator.all():
+            translator.save()
+
         if form.is_valid():
             instance = form.save()
             instance.save()

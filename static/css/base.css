@@ -124,3 +124,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     -webkit-box-orient: vertical;
     */
 }
+.modal-header{
+  z-index:10000;
+}
