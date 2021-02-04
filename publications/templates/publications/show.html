@@ -16,8 +16,7 @@
     </thead>
     <tbody>
     <br />
-{% for publication in publications %}
-    {% for cover_image in cover_images %}
+{% for publication, cover_image in zipped_data %}
     <tr id="publications">
         <td>{{ publication.date_created }}</td>
         {% if cover_image %}
@@ -46,7 +45,6 @@
             <a class="confirm-delete-pub" href="/publication/{{ publication.id }}/delete">Delete</a>
         </td>
     </tr>
-{% endfor %}
 {% endfor %}
     </tbody>  
 </table>

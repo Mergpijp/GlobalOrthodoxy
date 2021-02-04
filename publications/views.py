@@ -960,6 +960,7 @@ class SearchResultsView(ListView):
                 cover_images.append(None)
         print(context['publications'])
         context['cover_images'] = cover_images
+        context['zipped_data'] = zip(context['publications'], context['cover_images'])
         return context
 
 class ThrashbinShow(ListView):
