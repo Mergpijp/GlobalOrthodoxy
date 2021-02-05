@@ -707,9 +707,7 @@ class SearchResultsView(ListView):
     #ordering = 'title'
 
     def get_template_names(self):
-        if self.request.path == '/publication/overview/':
-            return ['publications/overview.html']
-        elif self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
+        if self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
             return ['publications/form_create.html']
         return ['publications/show.html']
 
@@ -923,7 +921,7 @@ class SearchResultsView(ListView):
                 publications = Publication.objects.annotate(content_genre_name=Subquery(content_genre_subquery)).order_by(ordering)
             else:
                 publications = publications.order_by(ordering)
-        elif self.request.path == '/publication/overview/':
+        elif self.request.path == '/publication/show/':
             publications = publications.order_by('-date_created')
         return publications
 

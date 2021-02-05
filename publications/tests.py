@@ -45,14 +45,14 @@ class PublicationModelTests(TestCase):
         #response = client.get('/publication/show/', {'q': 'mazamir'})
         #Google translate is not functioning
         #self.assertEqual('مزامير', response.context['publications'][0].title)
-        response = client.get('/publication/overview/')
+        response = client.get('/publication/show/')
         #first one is the newest one.
         self.assertEqual('مزامير', response.context['publications'][0].title)
-        response = client.get('/publication/overview/', {'order_by': 'title', 'direction': 'asc'})
+        response = client.get('/publication/show/', {'order_by': 'title', 'direction': 'asc'})
         self.assertEqual('eindhoven', response.context['publications'][0].title)
         self.assertEqual('لحضور المؤتمر الدولي العاشر ليونيكود', response.context['publications'][1].title)
         self.assertEqual('مزامير', response.context['publications'][2].title)
-        response = client.get('/publication/overview/', {'order_by': 'title', 'direction': 'desc'})
+        response = client.get('/publication/show/', {'order_by': 'title', 'direction': 'desc'})
         self.assertEqual('مزامير', response.context['publications'][0].title)
         self.assertEqual('لحضور المؤتمر الدولي العاشر ليونيكود', response.context['publications'][1].title)
         self.assertEqual('eindhoven', response.context['publications'][2].title)
