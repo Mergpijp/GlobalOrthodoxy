@@ -1,7 +1,7 @@
 {% include "_modal2.html" %}
 <div id="linkeddocuments3">
     <div class="col-12 mb-3">
-    <h5>Uploadedfiles table</h5>
+    <h5>Linked uploadedfiles</h5>
         {% if publication.uploadedfiles|length >= 0 %}
           {% include "_uploadedfiles_table.html" %}
         {% else %}
@@ -13,7 +13,7 @@
       <div class="row">
        <div class="col"></div>
        <div class="col">
-       <button type="button" class='btn btn-primary btn-danger' id='create-uploadedfile-async'><span class="fa fa-plus mr-2"></span>upload new file async</button>
+       <button type="button" class='btn btn-primary btn-danger' id='create-uploadedfile-async'><span class="fa fa-plus mr-2"></span>Create linked uploadedfile</button>
         <br/>
         <br/>Search Files:<br/>
         <br/>
@@ -24,7 +24,7 @@
     </div>
       <br/>
       <div class="col-12 mb-3">
-      <h5>Uploadedfiles candidates table</h5>
+      <h5>Uploadedfile candidates</h5>
         {% if uploadedfiles|length >= 0 %}
           {% include "_uploadedfiles_candidates_table.html" %}
         {% else %}
