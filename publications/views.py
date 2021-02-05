@@ -489,11 +489,19 @@ class PublicationUpdate(UpdateView):
     #success_url = '/publication/show/'
 
     def get_success_url(self):
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
+        '''
         """Detect the submit button used and act accordingly"""
         if 'next' in self.request.POST:
             return '/publication/show/'
         elif 'save' in self.request.POST:
             return '/publication/' + str(self.object.id) + '/edit/'
+        '''
 
 @login_required(login_url='/accounts/login/')
 def PublicationDelete(request, pk):
@@ -615,13 +623,20 @@ class PublicationCreate(UpdateView):
 
     def get_success_url(self):
         """Detect the submit button used and act accordingly"""
+        '''
         if 'next' in self.request.POST:
             return '/publication/show/'
         elif 'save' in self.request.POST:
             return '/publication/' + str(self.object.id) + '/edit/'
         elif self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
             return '/publication/' + str(self.object.id) + '/edit/'
-
+        '''
+        url = self.request.GET.get('next')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        return url
 class PublicationDetailView(DetailView):
     '''
     Inherits DetailView
