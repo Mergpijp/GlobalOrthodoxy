@@ -10,14 +10,12 @@
         <th>uploaded at <a href="?order_by=uploaded_at&direction=asc" class="arrow up"></a> <a href="?order_by=uploaded_at&direction=desc" class="arrow down"></a> </th>
         <th>Actions</th>  
     </tr>  
-    </thead> 
-<br>
-<center><a href="/uploadedfile/new" class="btn btn-primary btn-danger ">Add New Uploaded File</a></center>
-<br>      
-    <tbody>  
-{% for uploadedfile in uploadedfiles %}  
+    </thead>
+    <tbody>
+    <br />
+{% for uploadedfile in files %}
     <tr>  
-        <td><a href="{% url 'publication-show' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.image_title }}</a></td>
+        <td><a href="{% url 'publication-show' %}?q={{uploadedfile.image_title}}">{{ uploadedfile.image_title }}</a></td>
         <td><a href="{% url 'publication-show' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.filecategory.name }}</a></td>
         <td>
         {% for imagecontent in uploadedfile.image_contents.all %}
@@ -28,7 +26,7 @@
         <td><a href="{% url 'publication-show' %}?q={{uploadedfile.uploaded_at}}">{{ uploadedfile.uploaded_at }}</a></td>
         <td>  
             <a href="/uploadedfile/{{ uploadedfile.id }}/edit?next={{ request.get_full_path }}"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
-            <a class="confirm-delete" href="/uploadedfile/{{ uploadedfile.id }}/delete">Delete</a>
+            <a href="/uploadedfile/{{ uploadedfile.id }}/restore">Restore</a>
         </td>  
     </tr>  
 {% endfor %}  

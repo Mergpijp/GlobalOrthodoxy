@@ -511,7 +511,6 @@ def PublicationDelete(request, pk):
     redirect to main publication page (Show)
     '''
     publication = Publication.objects.get(id=pk)
-    #publication.delete()
     publication.is_deleted = True
     publication.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -644,7 +643,11 @@ class PublicationDetailView(DetailView):
     Usess now in template thus the function get_context_data
     '''
     model = Publication
-    
+
+    def get_queryset(self):
+        publications = Publication.objects.filter(is_deleted=False)
+        return publications
+
     def get_context_data(self, **kwargs):
         self.object = []
         context = super().get_context_data(**kwargs)
@@ -746,6 +749,8 @@ class SearchResultsView(ListView):
         #publications = Publication.objects.filter(is_deleted=False).values('id').distinct()
         #publications = publications.filter(is_deleted=False)
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
+        #files = UploadedFile.objects.filter(is_deleted=False)
+        #uploadedfiles = files.filter(pk__in=uploadedfiles).all()
         uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
         keywords = self.request.GET.getlist('keywords')
         keywords = Keyword.objects.filter(pk__in=keywords).all()
@@ -1017,6 +1022,49 @@ def ThrashbinRestore(request, pk):
     publication = Publication.objects.get(id=pk)
     publication.is_deleted = False
     publication.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+class ThrashbinUploadedFileShow(ListView):
+    '''
+    Inherits ListView shows author mainpage (ThrashbinShow)
+    Uses context_object_name authors for all keywords.
+    '''
+    model = UploadedFile
+    template_name = 'publications/thrashbin_uploadedfile_show.html'
+    context_object_name = 'files'
+    paginate_by = 10
+
+    def get_queryset(self):
+        files = UploadedFile.objects.filter(is_deleted=True)
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            files = files.order_by(ordering)
+        return files
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(ThrashbinUploadedFileShow, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
+@login_required(login_url='/accounts/login/')
+def ThrashbinUploadedFileRestore(request, pk):
+    file = UploadedFile.objects.get(id=pk)
+    file.is_deleted = False
+    file.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -1823,7 +1871,7 @@ class UploadedFileShow(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        uploadedfiles = UploadedFile.objects.all()
+        uploadedfiles = UploadedFile.objects.filter(is_deleted=False)
         ordering = self.get_ordering()
         if ordering is not None and ordering != "":
             uploadedfiles = uploadedfiles.order_by(ordering)
@@ -1857,7 +1905,8 @@ def UploadedFileDelete(request, pk):
     redirects to main page. (show)
     '''
     uploadedfile = UploadedFile.objects.get(id=pk)
-    uploadedfile.delete()
+    uploadedfile.is_deleted = True
+    uploadedfile.save()
     # redirect('/uploadedfile/show')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

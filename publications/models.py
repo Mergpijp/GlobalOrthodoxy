@@ -205,6 +205,7 @@ class UploadedFile(models.Model):
     image_contents = models.ManyToManyField(ImageContent)
     file = models.FileField(upload_to='files/%Y/%m/%d/%H/%M/%S/%f/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.image_title
