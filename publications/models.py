@@ -93,7 +93,7 @@ class Author(models.Model):
     extra_info = models.CharField(max_length=400, blank=True)
 	
     def __str__(self):
-        return 'name: ' + self.name +  'name original language: ' + self.name_original_language
+        return 'name: ' + self.name +  ' name original language: ' + self.name_original_language
 
 class Translator(models.Model):
     '''

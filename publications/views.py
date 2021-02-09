@@ -140,6 +140,7 @@ def process_author(request, pkb=None, pk=None):
 
     if request.method == 'POST':
         if form.is_valid():
+            pdb.set_trace()
             instance = form.save()
             pub = Publication.objects.get(pk=pkb)
             pub.authors.add(instance)
@@ -490,6 +491,11 @@ class PublicationUpdate(UpdateView):
 
     def get_success_url(self):
         url = self.request.GET.get('next')
+        #pdb.set_trace()
+        if self.request.GET.get('q'):
+            url += '?q=' + self.request.GET.get('q')
+        if self.request.GET.get('page'):
+            url += '&page=' + self.request.GET.get('page')
         if self.request.GET.get('order_by'):
             url += '&order_by=' + self.request.GET.get('order_by')
         if self.request.GET.get('direction'):
@@ -502,6 +508,12 @@ class PublicationUpdate(UpdateView):
         elif 'save' in self.request.POST:
             return '/publication/' + str(self.object.id) + '/edit/'
         '''
+
+    def form_valid(self, form):
+        if form.is_valid():
+            self.object = form.save(commit=False)
+            self.object.save()
+        return redirect(self.get_success_url())
 
 @login_required(login_url='/accounts/login/')
 def PublicationDelete(request, pk):
@@ -588,7 +600,6 @@ class PublicationCreate(UpdateView):
         return pub
 
     def form_valid(self, form):
-        #form.instance = Publication.objects.get(pk=self.object.id-1)
         form.instance.created_by = self.request.user
         form.instance.is_stub = False
         # todo: temporal solution for double publication.
@@ -599,25 +610,11 @@ class PublicationCreate(UpdateView):
 
         form.instance.translators.add(*pub.translators.all())
 
-
-        #for file in form.instance.uploadedfiles.all():
-        #    file.save()
-        #for author in form.instance.authors.all():
-        #    author.save()
-        #for trans in form.instance.translators.all():
-        #    trans.save()
-
-        #pdb.set_trace()
         if form.is_valid():
             self.object = form.save(commit=False)
             self.object.save()
-            #instance.save()
-            #form.instance.save()
+
         pub.delete()
-        #return HttpResponse(200)
-       #pdb.set_trace()
-        #return self.render_to_response(self.get_context_data(form=form))
-        #return super(self).form_valid(form)
         return redirect(self.get_success_url())
 
     def get_success_url(self):
@@ -631,6 +628,10 @@ class PublicationCreate(UpdateView):
             return '/publication/' + str(self.object.id) + '/edit/'
         '''
         url = self.request.GET.get('next')
+        if self.request.GET.get('q'):
+            url += '?q=' + self.request.GET.get('q')
+        if self.request.GET.get('page'):
+            url += '&page=' + self.request.GET.get('page')
         if self.request.GET.get('order_by'):
             url += '&order_by=' + self.request.GET.get('order_by')
         if self.request.GET.get('direction'):
@@ -1371,6 +1372,10 @@ class FormOfPublicationUpdate(UpdateView):
 
     def get_success_url(self):
         url = self.request.GET.get('next')
+        if self.request.GET.get('q'):
+            url += '?q=' + self.request.GET.get('q')
+        if self.request.GET.get('page'):
+            url += '&page=' + self.request.GET.get('page')
         if self.request.GET.get('order_by'):
             url += '&order_by=' + self.request.GET.get('order_by')
         if self.request.GET.get('direction'):
