@@ -13,7 +13,7 @@
     <tbody>  
 {% for filecategory in filecategories %}
     <tr>  
-        <td><a href="{% url 'publication-show' %}?q={{filecategory.name}}">{{ filecategory.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?filecategory={{filecategory.id}}">{{ filecategory.name }}</a></td>
         <td>  
             <a href="/filecategory/{{ filecategory.id }}/edit?next={{ request.get_full_path }}"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete" href="/filecategory/{{ filecategory.id }}/delete">Delete</a>

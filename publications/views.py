@@ -781,7 +781,7 @@ class SearchResultsView(ListView):
         ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), \
         ('keywords', keywords), ('translated_from',translated_from), ('uploadedfiles__filecategory', filecategory),
                     ]
-        special_case = ['copyrights', 'page', 'is_a_translation']
+        special_case = ['copyrights', 'page', 'is_a_translation', 'filecategory']
 
         if ('q' in self.request.GET) and self.request.GET['q'].strip():
             query_string = self.request.GET['q']
@@ -827,12 +827,13 @@ class SearchResultsView(ListView):
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
                not field_name in special_case:
                 print('******', field_name)
-                arabic_query = translator.translate(get_value, dest='ar').text
+                #arabic_query = translator.translate(get_value, dest='ar').text
                 get_value = to_searchable(get_value)
                 get_value = get_query(get_value, [field_name])
-                arabic_query = get_query(arabic_query, [field_name])
+                #arabic_query = get_query(arabic_query, [field_name])
                 print('444444444', get_value)
-                publications = publications.filter(Q(get_value) | Q(arabic_query))
+                publications.filter(Q(get_value))
+                #publications = publications.filter(Q(get_value) | Q(arabic_query))
                 print('55555555555', publications)
                 #publications = publications.filter(Q(**{field_name+'__regex':get_value}) | Q(**{field_name+'__icontains':arabic_query}) )
 
