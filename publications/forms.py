@@ -981,9 +981,9 @@ class UploadedFileModelForm(BSModalModelForm):
                                                     formData.append('filecategory', $('#id_filecategory').val());
                                                     formData.append('image_contents', $('#id_image_contents').val());
 
-                                                    setTimeout(function () {
+                                                    //setTimeout(function () {
                                                     //        window.location.href='/uploadedfile/show/';
-                                                    }, 1000);
+                                                    //}, 1000);
 
                                                 }
                                             });

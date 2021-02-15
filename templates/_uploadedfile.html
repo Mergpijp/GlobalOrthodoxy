@@ -13,7 +13,63 @@
       <div class="row">
        <div class="col"></div>
        <div class="col">
-       <button type="button" class='btn btn-primary btn-danger' id='create-uploadedfile-async'><span class="fa fa-plus mr-2"></span>Create linked uploadedfile</button>
+              <!-- Trigger the modal with a button -->
+        <button type="button" class="btn btn-primary btn-danger" data-toggle="modal" data-target="#FileModal"><span class="fa fa-plus mr-2"></span>Create linked uploadedfile</button>
+
+        <!-- Modal -->
+        <div id="FileModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title col-md-10">Create Uploadedfile</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div id="div_id_image_title" class="form-group">
+                   <label for="id_image_title" class="">
+                   Image title
+                   </label>
+                   <div class=""> <input type="text" name="image_title" maxlength="255" class="textinput textInput form-control" id="id_image_title"> </div>
+                </div>
+                <div class="form-group" >
+                   <label for="id_filecategory" class="">
+                   Filecategory
+                   </label>
+                   <div class="">
+                      <div class="input-group">
+                         <select name="filecategory" data-minimum-input-length="0" data-allow-clear="true" data-placeholder="---------" data-ajax--url="/select2/fields/auto.json" data-ajax--cache="true" data-ajax--type="GET" class="modelselect2widget form-control django-select2 django-select2-heavy" id="id_filecategory" data-field_id="Mjg3Njc2MjU0NzI1Ng:1lBbly:C5tObKpOSUQAtAsm1M3-zKzgD-o">
+                            <option value=""></option>
+                         </select>
+                         <span class="input-group-append"><button  class="btn btn-danger" onClick="window.open(&#39;/filecategory/new&#39;, &#39;_blank&#39;, &#39;width=1000,height=600,menubar=no,toolbar=no&#39;);" type="button">+</button>
+                         </span>
+                      </div>
+                   </div>
+                </div>
+                <div id="div_id_image_contents" class="form-group">
+                   <label for="id_image_contents" class="">
+                   Image contents
+                   </label>
+                   <div class=""> <select name="image_contents" data-minimum-input-length="0" data-allow-clear="true" data-placeholder="None" data-tags="true" data-token-separators="[&quot;;&quot;]" data-ajax--url="/select2/fields/auto.json" data-ajax--cache="true" data-ajax--type="GET" class="imagecontentselect2tagwidget form-control django-select2 django-select2-heavy" id="id_image_contents" data-field_id="Mjg3Njc2MjU0NzIwMA:1lBbly:Biz3kWZaMEUMhijwuP1zON6v7aI" multiple>
+                      </select>
+                   </div>
+                </div>
+                File
+                <div id='my-drop-zone' class='needsclick'>
+                   <div class="dz-message needsclick">
+                      Drop file here or click to upload.
+                   </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="create-file-btn" class="submit-btn btn btn-danger" data-dismiss="modal">Create</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
         <br/>
         <br/>Search Files:<br/>
         <br/>
@@ -33,72 +89,55 @@
       </div>
     </div>
 <script type="text/javascript">
-$(function uploadedfile() {
-  var asyncSuccessMessageCreate = [
-    "<div ",
-    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-    "Success: Uploadedfile was created.",
-    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-    "<span aria-hidden='true'>&times;</span>",
-    "</button>",
-    "</div>",
-    "<script>",
-    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-    "<\/script>"
-  ].join("");
+Dropzone.autoDiscover = false;
+var myDropzone = new Dropzone("div#my-drop-zone", {
+    url: "{% url 'uploadedfile-proces2' publication.pk %}",
+    method: "post",
+    autoProcessQueue: false,
+    maxFiles: 1,
+    addRemoveLinks: true,
+    maxfilesexceeded: function(file) {
+        this.removeAllFiles();
+        this.addFile(file);
+    },
+    init: function () {
+        var myDropzone = this;
+        var addButton = $("#create-file-btn");
+        addButton.click(function (e) {
 
-  var asyncSuccessMessageUpdate = [
-    "<div ",
-    "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
-    "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
-    "Success: UploadedFile was updated.",
-    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
-    "<span aria-hidden='true'>&times;</span>",
-    "</button>",
-    "</div>",
-    "<script>",
-    "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
-    "<\/script>"
-  ].join("");
+        if (myDropzone.getQueuedFiles().length > 0) {
 
-function updateUploadedFileModalForm() {
-$(".somebullshit").each(function () {
-  $(this).modalForm({
-    formURL: $(this).data("form-url"),
-    asyncUpdate: true,
-    asyncSettings: {
-      closeOnSubmit: false,
-      successMessage: asyncSuccessMessageUpdate,
-      dataUrl: "{% url 'uploadedfiles' publication.pk %}",
-      dataElementId: "#uploadedfiles-table",
-      dataKey: "table",
-      addModalFormFunction: updateUploadedFileModalForm
+            e.preventDefault();
+            myDropzone.processQueue();
+
+        }
+        });
+    },
+    sending: function (file, xhr, formData) {
+        formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+        formData.append("image_title", $('#id_image_title').val());
+        formData.append('filecategory', $('#id_filecategory').val());
+        formData.append('image_contents', $('#id_image_contents').val());
+    },
+    success: function (file, response) {
+        $("#uploadedfiles-div").html(response["table"]);
     }
-  });
 });
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
-updateUploadedFileModalForm();
-function createUploadedFileAsyncModalForm() {
-$("#create-uploadedfile-async").modalForm({
-    formURL: "{% url 'uploadedfile_new' publication.pk %}",
-    modalID: "#create-modal2",
-    asyncUpdate: true,
-    asyncSettings: {
-      closeOnSubmit: true,
-      successMessage: asyncSuccessMessageCreate,
-      dataUrl: "{% url 'uploadedfiles' publication.pk %}",
-      dataElementId: "#uploadedfiles-table",
-      dataKey: "table",
-      addModalFormFunction: updateUploadedFileModalForm
-     }
-});
-}
-createUploadedFileAsyncModalForm();
-// Hide message
-$(".alert").fadeTo(2000, 500).slideUp(500, function () {
-  $(".alert").slideUp(500);
-});
-});
+$("#my-drop-zone").addClass("dropzone");
 
 </script>

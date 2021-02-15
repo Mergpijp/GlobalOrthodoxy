@@ -100,6 +100,7 @@ def process_file(request, pk=None):
 
 @login_required(login_url='/accounts/login/')
 def process_file2(request, pkb=None):
+    data = dict()
     obj, created = UploadedFile.objects.get_or_create(pk=None)
 
     #try:
@@ -123,7 +124,13 @@ def process_file2(request, pkb=None):
                 #instance.save()
                 #pub.form.save_m2m()
                 #return super().form_valid(form)
-                return HttpResponse(status=200)
+                data['table'] = render_to_string(
+                    '_uploadedfiles_table.html',
+                    {'publication': pub},
+                    request=request
+                )
+                return JsonResponse(data)
+                #return HttpResponse(status=200)
 
     return render(request, 'error_template.html', {'form': form}, status=500)
 
@@ -140,7 +147,7 @@ def process_author(request, pkb=None, pk=None):
 
     if request.method == 'POST':
         if form.is_valid():
-            pdb.set_trace()
+            #pdb.set_trace()
             instance = form.save()
             pub = Publication.objects.get(pk=pkb)
             pub.authors.add(instance)
