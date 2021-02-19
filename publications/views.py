@@ -518,10 +518,12 @@ class PublicationUpdate(UpdateView):
 
     def form_valid(self, form):
         if form.is_valid():
-            self.object = form.save(commit=False)
-            self.object.save()
+            self.object = form.save()
+            #self.object = form.save(commit=False)
+            #self.object.save()
         return redirect(self.get_success_url())
-
+        #pdb.set_trace()
+        #return super().form_valid(form)
 @login_required(login_url='/accounts/login/')
 def PublicationDelete(request, pk):
     '''
@@ -618,8 +620,9 @@ class PublicationCreate(UpdateView):
         form.instance.translators.add(*pub.translators.all())
 
         if form.is_valid():
-            self.object = form.save(commit=False)
-            self.object.save()
+            self.object = form.save()
+            #self.object = form.save(commit=False)
+            #self.object.save()
 
         pub.delete()
         return redirect(self.get_success_url())
