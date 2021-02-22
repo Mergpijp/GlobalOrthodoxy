@@ -14,7 +14,7 @@
        <div class="col"></div>
        <div class="col">
               <!-- Trigger the modal with a button -->
-        <button type="button" class="btn btn-primary btn-danger" data-toggle="modal" data-target="#FileModal"><span class="fa fa-plus mr-2"></span>Create linked uploadedfile</button>
+        <button type="button" class="btn btn-primary btn-danger" id="uploadedfile-btn" data-toggle="modal" data-target="#FileModal"><span class="fa fa-plus mr-2"></span>Create linked uploadedfile</button>
 
         <!-- Modal -->
         <div id="FileModal" class="modal fade" role="dialog">
@@ -24,7 +24,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title col-md-10">Create Uploadedfile</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" id="close-btn" data-dismiss="modal">&times;</button>
               </div>
               <div class="modal-body">
                 <div id="div_id_image_title" class="form-group">
@@ -51,9 +51,7 @@
                    <label for="id_image_contents" class="">
                    Image contents
                    </label>
-                   <div class=""> <select name="image_contents" data-minimum-input-length="0" data-allow-clear="true" data-placeholder="None" data-tags="true" data-token-separators="[&quot;;&quot;]" data-ajax--url="/select2/fields/auto.json" data-ajax--cache="true" data-ajax--type="GET" class="imagecontentselect2tagwidget form-control django-select2 django-select2-heavy" id="id_image_contents" data-field_id="Mjg3Njc2MjU0NzIwMA:1lBbly:Biz3kWZaMEUMhijwuP1zON6v7aI" multiple>
-                      </select>
-                   </div>
+                   <div class=""> <input type="text" name="image contents" maxlength="1000" class="textinput textInput form-control" id="id_image_contents"> </div>
                 </div>
                 File
                 <div id='my-drop-zone' class='needsclick'>
@@ -63,7 +61,7 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" id="close-btn2" data-dismiss="modal">Close</button>
                 <button type="button" id="create-file-btn" class="submit-btn btn btn-danger" data-dismiss="modal">Create</button>
               </div>
             </div>
@@ -89,6 +87,10 @@
       </div>
     </div>
 <script type="text/javascript">
+$("#uploadedfile-btn").click(function(e) {
+    document.getElementById('id_image_title').value = '';
+    document.getElementById('id_image_contents').value = '';
+});
 Dropzone.autoDiscover = false;
 var myDropzone = new Dropzone("div#my-drop-zone", {
     url: "{% url 'uploadedfile-proces2' publication.pk %}",
@@ -103,8 +105,15 @@ var myDropzone = new Dropzone("div#my-drop-zone", {
     init: function () {
         var myDropzone = this;
         var addButton = $("#create-file-btn");
+        var closeButton =  $("#close-btn");
+        closeButton.click(function (e) {
+            Dropzone.forElement("#my-drop-zone").removeAllFiles(true);
+        });
+        var closeButton2 =  $("#close-btn2");
+        closeButton2.click(function (e) {
+            Dropzone.forElement("#my-drop-zone").removeAllFiles(true);
+        });
         addButton.click(function (e) {
-
         if (myDropzone.getQueuedFiles().length > 0) {
 
             e.preventDefault();
@@ -121,6 +130,7 @@ var myDropzone = new Dropzone("div#my-drop-zone", {
     },
     success: function (file, response) {
         $("#uploadedfiles-div").html(response["table"]);
+        this.removeAllFiles();
     }
 });
 function getCookie(name) {
