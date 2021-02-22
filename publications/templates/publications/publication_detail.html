@@ -733,11 +733,7 @@
     <tr>
         <td>{{file.image_title}}</td>
         <td>{{ file.filecategory.name }}</td>
-        <td>
-        {% for imagecontent in file.image_contents.all %}
-            {{ imagecontent.name }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-        </td>
+        <td>{{ file.image_contents }}</td>
         <td><a href="/media/{{file.file}}">/media/{{ file.file }}</a></td>
         <td><img src="/media/{{ file.file }}" width="100" height="100" id="crop_image"></td>
         <td>{{file.uploaded_at}}</td>

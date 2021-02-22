@@ -96,10 +96,5 @@ urlpatterns = [
     path('filecategory/show/', login_required(views.FileCategoryShow.as_view()), name='filecategory-show'),
     path('filecategory/<int:pk>/edit/', login_required(views.FileCategoryUpdate.as_view()), name='filecategory-update',),
     path('filecategory/<int:pk>/delete/', views.FileCategoryDelete, name='filecategory-delete'),
-    path('imagecontent/<int:pk>/edit/', login_required(views.ImageContentUpdate.as_view()),
-         name='imagecontent-update', ),
-    path('imagecontent/<int:pk>/delete/', views.ImageContentDelete, name='imagecontent-delete'),
-    path('imagecontent/new/', login_required(views.ImageContentCreate.as_view()), name='imagecontent-new'),
-    path('imagecontent/show/', login_required(views.ImageContentShow.as_view()), name='imagecontent-show'),
     path('', login_required(SearchResultsView.as_view()), name='publication-show'),
 ]

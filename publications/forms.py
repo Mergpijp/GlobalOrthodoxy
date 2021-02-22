@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, \
-    Language, IllustrationLayoutType, UploadedFile, Keyword, FileCategory, ImageContent
+    Language, IllustrationLayoutType, UploadedFile, Keyword, FileCategory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, Field, Button, HTML
 from crispy_forms.bootstrap import Tab, TabHolder, FieldWithButtons, StrictButton, AppendedText
@@ -233,6 +233,7 @@ class KeywordSelect2TagWidget(ModelSelect2TagWidget):
         return cleaned_values
 
 
+'''
 class ImageContentSelect2TagWidget(ModelSelect2TagWidget):
     queryset = ImageContent.objects.all()
 
@@ -250,7 +251,7 @@ class ImageContentSelect2TagWidget(ModelSelect2TagWidget):
                     val = queryset.create(name=val).pk
                 cleaned_values.append(val)
         return cleaned_values
-
+'''
 
 class NewCrispyForm(forms.ModelForm):
     '''
@@ -514,10 +515,8 @@ class FileCategoryForm(forms.ModelForm):
         instance = super().save(commit)
         return instance
 
+'''
 class ImageContentForm(forms.ModelForm):
-    '''
-        Form to create or edit an ImageContent.
-    '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -531,6 +530,7 @@ class ImageContentForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit)
         return instance
+'''
 
 class AuthorForm(forms.ModelForm):
     '''
@@ -747,11 +747,13 @@ class UploadedFileForm(forms.ModelForm):
         If its a uploaded file create do not load any publications at start.
     '''
 
+    '''
     image_contents = forms.ModelMultipleChoiceField(widget=ImageContentSelect2TagWidget(
         model=ImageContent,
         search_fields=['name__icontains' ],
         attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]'},
     ), queryset=ImageContent.objects.all(), required=False)
+    '''
     '''
     imagecontents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=ImageContent,
@@ -889,12 +891,13 @@ class UploadedFileModelForm2(BSModalModelForm):
         fields = ('image_title', 'filecategory', 'file', 'image_contents',)
 
 class UploadedFileModelForm(BSModalModelForm):
-
+    '''
     image_contents = forms.ModelMultipleChoiceField(widget=ImageContentSelect2TagWidget(
         model=ImageContent,
         search_fields=['name__icontains' ],
         attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]' },
     ), queryset=ImageContent.objects.all(), required=False)
+    '''
     '''
     image_contents = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=ImageContent,

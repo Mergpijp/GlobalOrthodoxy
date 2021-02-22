@@ -3,14 +3,14 @@ from django.template import loader
 from django.shortcuts import get_object_or_404, render
 
 from .models import Publication, Author, Translator, FormOfPublication, Genre, Church, SpecialOccasion, Owner, City, Language, \
-    IllustrationLayoutType, UploadedFile, Keyword, FileCategory, ImageContent
+    IllustrationLayoutType, UploadedFile, Keyword, FileCategory
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
 from .forms import PublicationForm, NewCrispyForm, KeywordForm,\
     AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, \
-    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm, ImageContentForm
+    OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm
 from django.db.models.query import QuerySet
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -802,7 +802,7 @@ class SearchResultsView(ListView):
             search_fields = ['title', 'title_subtitle_transcription', 'title_translation', 'authors__name', 'authors__name_original_language', 'authors__extra_info', \
                   'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translators__name', 'translators__name_original_language', 'translators__extra_info', \
                   'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'nr_of_pages', 'uploadedfiles__filecategory__name', 'uploadedfiles__uploaded_at', 'uploadedfiles__image_contents__name', \
+                  'nr_of_pages', 'uploadedfiles__filecategory__name', 'uploadedfiles__uploaded_at', 'uploadedfiles__image_contents', \
                   'uploadedfiles__image_title', 'general_comments', 'team_comments', 'other_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
                   'title2', 'title_subtitle_transcription2', 'title_translation2', 'title3', 'title_subtitle_transcription3', 'title_translation3', \
                   'title4', 'title_subtitle_transcription4', 'title_translation4', 'title5', 'title_subtitle_transcription5', 'title_translation5', \
@@ -2017,87 +2017,6 @@ class FileCategoryUpdate(UpdateView):
     form_class = FileCategoryForm
     model = FileCategory
     #success_url = '/filecategory/show/'
-
-    def get_success_url(self):
-        url = self.request.GET.get('next')
-        if self.request.GET.get('order_by'):
-            url += '&order_by=' + self.request.GET.get('order_by')
-        if self.request.GET.get('direction'):
-            url += '&direction=' + self.request.GET.get('direction')
-        return url
-
-class ImageContentCreate(CreateView):
-    '''
-    Inherits CreateView. Uses ImageContentForm as layout.
-    redirects to main page (show)
-    '''
-    template_name = 'publications/form.html'
-    form_class = ImageContentForm
-    success_url = '/imagecontent/show/'
-
-
-class ImageContentShow(ListView):
-    '''
-    Inherits ListView.
-    Uses imagecontent as model.
-    Uses imagecontent_show.html as template_name.
-    Set context_object_name to imagecontents.
-    '''
-    model = ImageContent
-    template_name = 'publications/imagecontent_show.html'
-    context_object_name = 'imagecontents'
-    paginate_by = 10
-
-    def get_queryset(self):
-        imagecontents = ImageContent.objects.all()
-        ordering = self.get_ordering()
-        if ordering is not None and ordering != "":
-            imagecontents = imagecontents.order_by(ordering)
-        return imagecontents
-
-    def get_ordering(self):
-        ordering = self.request.GET.get('order_by')
-        direction = self.request.GET.get('direction')
-        if ordering is not None and ordering != "" and direction is not None and direction != "":
-            if direction == 'desc':
-                ordering = '-{}'.format(ordering)
-        return ordering
-
-    def get_context_data(self, **kwargs):
-        context = super(ImageContentShow, self).get_context_data(**kwargs)
-        order_by = self.request.GET.get('order_by')
-        if order_by is not None and order_by != "":
-            context['order_by'] = order_by
-            context['direction'] = self.request.GET.get('direction')
-        else:
-            context['order_by'] = ''
-            context['direction'] = ''
-        return context
-
-
-@login_required(login_url='/accounts/login/')
-def ImageContentDelete(request, pk):
-    '''
-    Arguments: request, pk
-    Selects imagecontent object by id equals pk.
-    Deletes the object.
-    redirects to main page. (show)
-    '''
-    imagecontent = ImageContent.objects.get(id=pk)
-    imagecontent.delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-class ImageContentUpdate(UpdateView):
-    '''
-    Inherits UpdateView uses a standard form (crispy form)
-    Uses ImageContentForm as layout. And model ImageContent.
-    redirects to local main page. (show)
-    '''
-    template_name = 'publications/form.html'
-    form_class = ImageContentForm
-    model = ImageContent
-    #success_url = '/imagecontent/show/'
 
     def get_success_url(self):
         url = self.request.GET.get('next')

@@ -188,12 +188,6 @@ class FileCategory(models.Model):
     def __str__(self):
         return self.name
 
-class ImageContent(models.Model):
-    name = models.CharField(max_length=255, blank=True)
-
-    def __str__(self):
-        return self.name
-
 class UploadedFile(models.Model):
     '''
     Manytomany field class with three fields.
@@ -202,7 +196,7 @@ class UploadedFile(models.Model):
     '''
     image_title = models.CharField(max_length=255, blank=True)
     filecategory = models.ForeignKey(FileCategory, on_delete=models.CASCADE, related_name="filecategory", null=True, blank=True)
-    image_contents = models.ManyToManyField(ImageContent)
+    image_contents = models.CharField(max_length=1000, blank=True)
     file = models.FileField(upload_to='files/%Y/%m/%d/%H/%M/%S/%f/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
