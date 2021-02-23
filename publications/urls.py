@@ -1,7 +1,6 @@
 from django.urls import path, include, re_path
 
-from .views import SearchResultsView, render_search, PublicationCreate, PublicationUpdate, PublicationDelete, PublicationDetailView,\
-    QueryResultsCsvView#, UploadedfileUpdateView
+from .views import SearchResultsView, render_search, PublicationCreate, PublicationUpdate, PublicationDelete, PublicationDetailView#, UploadedfileUpdateView
 from . import views
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -98,5 +97,4 @@ urlpatterns = [
     path('filecategory/<int:pk>/edit/', login_required(views.FileCategoryUpdate.as_view()), name='filecategory-update',),
     path('filecategory/<int:pk>/delete/', views.FileCategoryDelete, name='filecategory-delete'),
     path('', login_required(SearchResultsView.as_view()), name='publication-show'),
-    re_path(r'^results/csv/$', QueryResultsCsvView.as_view(), name='query-results-csv'),
 ]
