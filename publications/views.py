@@ -52,7 +52,7 @@ from bootstrap_modal_forms.generic import (
   BSModalReadView,
   BSModalDeleteView
 )
-
+import csv
 
 utc=pytz.UTC
 
@@ -705,6 +705,28 @@ def to_searchable(s):
     #s = re.sub(x, s, s)
     return s
 
+def export_csv_file(request, queryset):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;filename=export.csv'
+
+    opts = queryset.model._meta
+    field_names = [field.name for field in opts.fields]
+
+    writer = csv.writer(response, delimiter='\t')
+    # write a first row with header information
+    writer.writerow(field_names)
+
+    # write data rows
+    # I suggest you to check what output of `queryset`
+    # because your `queryset` using `cursor.fetchall()`
+    # print(queryset)
+    for pub in queryset:
+        fields = []
+        for field_name in field_names:
+            fields.append(getattr(pub, field_name))
+        writer.writerow(fields)
+    return response
+
 class SearchResultsView(ListView):
     '''
     ListView of the initial search page.
@@ -725,6 +747,11 @@ class SearchResultsView(ListView):
             return ['publications/form_create.html']
         return ['publications/show.html']
 
+    def post(self, request, *args, **kwargs):
+        return export_csv_file(request, self.get_queryset())
+        #q = request.POST.get('q')
+        #pubs= self.get_queryset()
+        #return render(request, self.template_name, {'publications': pubs, 'q': q})
 
     def get_ordering(self):
         ordering = self.request.GET.get('order_by')
@@ -753,7 +780,7 @@ class SearchResultsView(ListView):
         currently_owned_by = self.request.GET.getlist('currently_owned_by')
         currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
-        is_a_translation =  self.request.GET.get('is_a_translation')
+        is_a_translation = self.request.GET.get('is_a_translation')
 
         publications = Publication.objects.filter(is_deleted=False, is_stub=False)
 
@@ -991,6 +1018,7 @@ class SearchResultsView(ListView):
         print(context['publications'])
         context['cover_images'] = cover_images
         context['zipped_data'] = zip(context['publications'], context['cover_images'])
+        context['request'] = self.request
         return context
 
 class ThrashbinShow(ListView):
