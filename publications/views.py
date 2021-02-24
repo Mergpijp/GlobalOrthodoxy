@@ -638,16 +638,23 @@ class PublicationCreate(UpdateView):
         elif self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
             return '/publication/' + str(self.object.id) + '/edit/'
         '''
-        url = self.request.GET.get('next')
-        if self.request.GET.get('q'):
-            url += '?q=' + self.request.GET.get('q')
-        if self.request.GET.get('page'):
-            url += '&page=' + self.request.GET.get('page')
-        if self.request.GET.get('order_by'):
-            url += '&order_by=' + self.request.GET.get('order_by')
-        if self.request.GET.get('direction'):
-            url += '&direction=' + self.request.GET.get('direction')
-        return url
+        if self.request.POST.get("save_add_another"):
+            return '/publication/new/'
+        elif self.request.POST.get("save_and_continue_editing") :
+            return '/publication/' + str(self.object.id) + '/edit/'
+        elif self.request.POST.get("save"):
+            url = self.request.GET.get('next')
+            if self.request.GET.get('q'):
+                url += '?q=' + self.request.GET.get('q')
+            if self.request.GET.get('page'):
+                url += '&page=' + self.request.GET.get('page')
+            if self.request.GET.get('order_by'):
+                url += '&order_by=' + self.request.GET.get('order_by')
+            if self.request.GET.get('direction'):
+                url += '&direction=' + self.request.GET.get('direction')
+            if url == None:
+                return '/publication/show/'
+            return url
 class PublicationDetailView(DetailView):
     '''
     Inherits DetailView
