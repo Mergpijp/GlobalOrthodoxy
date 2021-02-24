@@ -37,7 +37,7 @@
               </div>
               <div class="form-group">
                 <label for="id_extra_info">Extra info</label>
-                <input type="text" name="extra_info" maxlength="400" placeholder="Extra info" class="form-control" id="id_extra_info">
+                <input type="text" name="extra_info" maxlength="400" placeholder="Extra info" class="form-control" id="id_extra_info_author">
                 <div class="">
 
                 </div>
@@ -145,7 +145,7 @@ $("#translator-btn").click(function(e) {
 $("#author-btn").click(function(e) {
     document.getElementById('id_name').value = '';
     document.getElementById('id_name_original_language').value = '';
-    document.getElementById('id_extra_info').value = '';
+    document.getElementById('id_extra_info_author').value = '';
 });
 $("#submit-btn4").click(function(e) {
     var fd = new FormData();
@@ -170,7 +170,7 @@ $("#submit-btn5").click(function(e) {
     fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
     fd.append("name", $('#id_name').val());
     fd.append("name_original_language", $('#id_name_original_language').val());
-    fd.append("extra_info", $('#id_extra_info').val());
+    fd.append("extra_info", $('#id_extra_info_author').val());
     $.ajax({
       url: "{% url 'author-proces' publication.pk %}",
       data: fd,

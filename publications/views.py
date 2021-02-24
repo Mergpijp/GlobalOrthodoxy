@@ -314,6 +314,7 @@ def unlink_translator(request, pkb=None, pk=None):
 
 @login_required(login_url='/accounts/login/')
 def view_input_update(request):
+    return HttpResponse(200)
     if request.method == 'GET':
         if 'input' in request.GET:
             input = request.GET['input']
