@@ -70,6 +70,19 @@ def nothing(request):
     return HttpResponse(status=200)
 
 @login_required(login_url='/accounts/login/')
+def filecategory_ajax(request):
+    query = request.GET.get('term', None)
+    if query:
+        filecategories = FileCategory.objects.filter(name__icontains=query).values("pk", "name")
+    else:
+        filecategories = FileCategory.objects.values("pk", "name")
+    filecategories = list(filecategories)
+    for d in filecategories:
+        d['id'] = d.pop('pk')
+        d['text'] = d.pop('name')
+    return JsonResponse({'results':filecategories}, safe=False)
+
+@login_required(login_url='/accounts/login/')
 def process_file(request, pk=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
 
@@ -519,7 +532,9 @@ class PublicationUpdate(UpdateView):
 
     def form_valid(self, form):
         if form.is_valid():
+            #self.object = form.save()
             self.object = form.save()
+            self.object.save()
             #self.object = form.save(commit=False)
             #self.object.save()
         return redirect(self.get_success_url())
@@ -621,9 +636,9 @@ class PublicationCreate(UpdateView):
         form.instance.translators.add(*pub.translators.all())
 
         if form.is_valid():
+            #self.object = form.save()
             self.object = form.save()
-            #self.object = form.save(commit=False)
-            #self.object.save()
+            self.object.save()
 
         pub.delete()
         return redirect(self.get_success_url())

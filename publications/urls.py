@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
+    path('select2_filecategory/', views.filecategory_ajax, name='select2-filecategory'),
     path('nothing/', views.nothing, name='nothing'),
     path('gitlog/', include("gitlog.urls", namespace='gitlog')),
     path('uploadedfile_new/', views.UploadedFileCreateView.as_view(), name='uploadedfile_new'),

@@ -457,7 +457,7 @@ class NewCrispyForm(forms.ModelForm):
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
         fields = ('title', 'title_subtitle_transcription', 'title_translation', 'title2',
-                  'title_subtitle_transcription2', 'title_translation2', 'authors', 'translators', \
+                  'title_subtitle_transcription2', 'title_translation2', \
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_year',
                   'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre',
@@ -470,7 +470,7 @@ class NewCrispyForm(forms.ModelForm):
                   'title_subtitle_transcription4', 'title_translation4', \
                   'title5', 'title_subtitle_transcription5', 'title_translation5', 'price', 'collection_context', \
                   'currency')
-        exclude = ('uploadedfiles',)
+        exclude = ('uploadedfiles', 'authors', 'translators')
         # publication_country = forms.ChoiceField(choices=list(countries))
 
 import pdb

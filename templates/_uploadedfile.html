@@ -38,8 +38,7 @@
                    </label>
                    <div class="">
                       <div class="input-group">
-                         <select name="filecategory" data-minimum-input-length="0" data-allow-clear="true" data-placeholder="---------" data-ajax--url="/select2/fields/auto.json?field_id=Mjc5NDMxNzU1OTM0NA%3A1lEEm5%3AK_HUKQUF1aEwQZZGHySFs6tbuzc" data-ajax--cache="true" data-ajax--type="GET" class="modelselect2widget form-control django-select2 django-select2-heavy" id="id_filecategory">
-                            <option value=" " selected></option>
+                         <select name="filecategory" id="id_filecategory">
                          </select>
                          <span class="input-group-append"><button  class="btn btn-danger" onClick="window.open(&#39;/filecategory/new&#39;, &#39;_blank&#39;, &#39;width=1000,height=600,menubar=no,toolbar=no&#39;);" type="button">+</button>
                          </span>
@@ -86,7 +85,25 @@
       </div>
     </div>
 <script type="text/javascript">
+    $(document).ready(function(){
+        $("#id_filecategory").select2({
+    minimumInputLength: 0,
+    allowClear: true,
+    placeholder: "--------",
+    ajax: {
+        url: "/select2_filecategory",
+        dataType: "json",
+        type: "GET",
 
+    },
+    processResults: function (data) {
+        return {
+            results: data
+        };
+    }
+});
+
+});
 $("#uploadedfile-btn").click(function(e) {
     document.getElementById('id_image_title').value = '';
     document.getElementById('id_image_contents').value = '';
@@ -126,12 +143,17 @@ var myDropzone = new Dropzone("div#my-drop-zone", {
     sending: function (file, xhr, formData) {
         formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
         formData.append("image_title", $('#id_image_title').val());
-        formData.append('filecategory', $('#id_filecategory').val());
+        if ($('#id_filecategory').val() == null) {
+            formData.append('filecategory', "");
+        }
+        else {
+            formData.append('filecategory', $('#id_filecategory').val());
+        }
         formData.append('image_contents', $('#id_image_contents').val());
     },
     success: function (file, response) {
         $("#uploadedfiles-div").html(response["table"]);
-        this.removeAllFiles();
+        Dropzone.forElement("#my-drop-zone").removeAllFiles(true);
     }
 });
 function getCookie(name) {
