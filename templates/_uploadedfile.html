@@ -104,6 +104,9 @@
 });
 
 });
+$("#FileModal").on("hidden.bs.modal", function () {
+    Dropzone.forElement("#my-drop-zone").removeAllFiles(true);
+});
 $("#uploadedfile-btn").click(function(e) {
     document.getElementById('id_image_title').value = '';
     document.getElementById('id_image_contents').value = '';
