@@ -277,6 +277,7 @@ class NewCrispyForm(forms.ModelForm):
     publication_country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
         label=u"Publication Country",
+        required=False,
         widget=ModelSelect2Widget(
             model=Country,
             search_fields=['name__icontains'],
