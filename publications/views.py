@@ -70,6 +70,30 @@ def nothing(request):
     return HttpResponse(status=200)
 
 @login_required(login_url='/accounts/login/')
+def get_countries(request):
+    query = request.GET.get('term', None)
+    if query:
+        result_countries = [(x,y) for (x,y) in countries if query in y]
+    else:
+        result_countries = countries
+    list_of_countries_dict = []
+    for idx, (x,y) in enumerate(result_countries):
+        list_of_countries_dict.append({'id': idx, 'text': y, 'code': x})
+    #pdb.set_trace()
+    return JsonResponse({'results': list_of_countries_dict}, safe=False)
+
+@login_required(login_url='/accounts/login/')
+def city_proces(request):
+    post_mutable = {'name': request.POST['name'], 'country': request.POST['country']}
+    form = CityForm(post_mutable or None, instance=None)
+    #pdb.set_trace()
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse()
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
 def filecategory_ajax(request):
     query = request.GET.get('term', None)
     if query:
@@ -200,6 +224,78 @@ def process_translator(request, pkb=None, pk=None):
                 return JsonResponse(data)
 
     return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def proces_language(request):
+    post_mutable = {'name': request.POST['name'], 'direction': request.POST['direction']}
+    form = LanguageForm(post_mutable or None, instance=None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse()
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def proces_form_of_publication(request):
+    post_mutable = {'name': request.POST['name']}
+    form = FormOfPublicationForm(post_mutable or None, instance=None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse()
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def church_proces(request):
+    post_mutable = {'name': request.POST['name']}
+    form = ChurchForm(post_mutable or None, instance=None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse()
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def genre_proces(request):
+    post_mutable = {'name': request.POST['name']}
+    form = GenreForm(post_mutable or None, instance=None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse()
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def occasion_proces(request):
+    post_mutable = {'name': request.POST['name']}
+    form = SpecialOccasionForm(post_mutable or None, instance=None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse()
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def ownedby_proces(request):
+    post_mutable = {'name': request.POST['name']}
+    form = OwnerForm(post_mutable or None, instance=None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse()
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
+@login_required(login_url='/accounts/login/')
+def filecategory_proces(request):
+    post_mutable = {'name': request.POST['name'], 'list_view_priority': request.POST['list_view_priority'],
+                    'order_index': request.POST['order_index']}
+    form = FileCategoryForm(post_mutable or None, instance=None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save()
+            return HttpResponse()
+    return render(request, 'error_template.html', {'form': form}, status=500)
+
 
 @login_required(login_url='/accounts/login/')
 def link_file(request, pkb=None, pk=None):

@@ -1,0 +1,63 @@
+<button class="btn btn-danger" data-toggle="modal" data-target="#ChurchModal" type="button" id="church-btn">Add church</button>
+<br/>
+<br/>
+<!-- Modal -->
+<div id="ChurchModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title col-md-10">Create Church</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="id_church_name">Name</label>
+            <input type="text" name="name" maxlength="100" placeholder="Name" class="form-control" id="id_church_name">
+            <div class="">
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" id="church-create" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+$("#church-btn").click(function(e) {
+    document.getElementById('id_church_name').value = '';
+});
+$("#church-create").click(function(e) {
+var fd = new FormData();
+fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+fd.append("name", $('#id_church_name').val());
+
+$.ajax({
+  url: "{% url 'church-proces' %}",
+  data: fd,
+  processData: false,
+  contentType: false,
+  type: 'POST',
+});
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+

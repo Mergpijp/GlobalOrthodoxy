@@ -124,6 +124,17 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     -webkit-box-orient: vertical;
     */
 }
+/*
 .modal-header{
   z-index:10000;
 }
+ */
+/*
+.modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+}
+
+ */

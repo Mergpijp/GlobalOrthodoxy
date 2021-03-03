@@ -40,10 +40,13 @@
                       <div class="input-group">
                          <select name="filecategory" id="id_filecategory">
                          </select>
-                         <span class="input-group-append"><button  class="btn btn-danger" onClick="window.open(&#39;/filecategory/new&#39;, &#39;_blank&#39;, &#39;width=1000,height=600,menubar=no,toolbar=no&#39;);" type="button">+</button>
-                         </span>
-                      </div>
+                            <br/>
+                            <br/>
+
+                          <a data-toggle="modal" href="#FilecategoryModal" class="btn btn-primary btn-danger">Add Filecategory</a>
+
                    </div>
+                </div>
                 </div>
                 <div id="div_id_image_contents" class="form-group">
                    <label for="id_image_contents" class="">
@@ -84,7 +87,60 @@
         {% endif %}
       </div>
     </div>
+<!-- Modal -->
+<div id="FilecategoryModal" class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title col-md-10">Create Filecategory</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="id_filecategory_name">Name</label>
+            <input type="text" name="name" maxlength="100" placeholder="Name" class="form-control" id="id_filecategory_name">
+            <div class="">
+            </div>
+        </div>
+        <div id="div_id_order_index" class="form-group"> <label for="id_order_index" class="">
+            Order index
+        </label> <div class=""> <input type="number" name="order_index" class="numberinput form-control" id="id_order_index"> </div>
+        </div>
+        <div id="div_id_list_view_priority" class="form-group"> <label for="id_list_view_priority" class="">
+            List view priority
+        </label> <div class=""> <input type="number" name="list_view_priority" class="numberinput form-control" id="id_list_view_priority"> </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" id="filecategory-create" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+      </div>
+  </div>
+</div>
+</div>
 <script type="text/javascript">
+$("#filecategory-btn").click(function(e) {
+    document.getElementById('id_filecategory_name').value = '';
+    document.getElementById('id_list_view_priority').value = 0;
+    document.getElementById('id_order_index').value = 0;
+});
+$("#filecategory-create").click(function(e) {
+var fd = new FormData();
+fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+fd.append("name", $('#id_filecategory_name').val());
+fd.append("list_view_priority", $('#id_list_view_priority').val());
+fd.append("order_index", $('#id_order_index').val());
+
+$.ajax({
+  url: "{% url 'filecategory-proces' %}",
+  data: fd,
+  processData: false,
+  contentType: false,
+  type: 'POST',
+});
+});
     $(document).ready(function(){
         $("#id_filecategory").select2({
     minimumInputLength: 0,

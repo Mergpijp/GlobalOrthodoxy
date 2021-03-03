@@ -1,0 +1,63 @@
+<button class="btn btn-danger" data-toggle="modal" data-target="#GenreModal" type="button" id="genre-btn">Add content genre</button>
+<br/>
+<br/>
+<!-- Modal -->
+<div id="GenreModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title col-md-10">Create Content genre</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="id_content_genre_name">Name</label>
+            <input type="text" name="name" maxlength="100" placeholder="Name" class="form-control" id="id_content_genre_name">
+            <div class="">
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" id="genre-create" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+$("#genre-btn").click(function(e) {
+    document.getElementById('id_content_genre_name').value = '';
+});
+$("#genre-create").click(function(e) {
+var fd = new FormData();
+fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+fd.append("name", $('#id_content_genre_name').val());
+
+$.ajax({
+  url: "{% url 'genre-proces' %}",
+  data: fd,
+  processData: false,
+  contentType: false,
+  type: 'POST',
+});
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+

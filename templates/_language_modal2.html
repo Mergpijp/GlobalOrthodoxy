@@ -1,0 +1,78 @@
+<button class="btn btn-danger" data-toggle="modal" data-target="#LanguageModal2" type="button" id="language-btn2">Add a language</button>
+<br/>
+<br/>
+<!-- Modal -->
+<div id="LanguageModal2" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title col-md-10">Create Language</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="id_language_name2">Name</label>
+            <input type="text" name="name" maxlength="100" placeholder="Name" class="form-control" id="id_language_name2">
+            <div class="">
+            </div>
+        </div>
+          <div class="form-group">
+            <label for="id_direction2">Direction*</label>
+            <select name="direction" class="select form-control" required="true" id="id_direction2">
+                <option selected value="">---------</option>
+                <option value="Left">Left</option>
+                <option value="Right">Right</option>
+            </select>
+            <div class="">
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" id="language-create2" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+$("#language-btn2").click(function(e) {
+    document.getElementById('id_language_name2').value = '';
+    document.getElementById('id_direction2').value = '';
+});
+$("#language-create2").click(function(e) {
+if (!$('#id_direction2').val()) {
+  return alert('Please fill in all required fields.');
+}
+var fd = new FormData();
+fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+fd.append("name", $('#id_language_name2').val());
+fd.append("direction", $('#id_direction2').val());
+
+$.ajax({
+  url: "{% url 'language-proces' %}",
+  data: fd,
+  processData: false,
+  contentType: false,
+  type: 'POST',
+});
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+

@@ -6,6 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
+    path('get_countries/', views.get_countries, name='get-countries'),
+    path('city_proces', views.city_proces, name='city-proces'),
+    path('church_proces', views.church_proces, name='church-proces'),
+    path('genre_proces', views.genre_proces, name='genre-proces'),
+    path('occasion_prcoes', views.occasion_proces, name='occasion-proces'),
+    path('ownedby_proces', views.ownedby_proces, name='ownedby-proces'),
+    path('language_proces', views.proces_language, name='language-proces'),
+    path('filecategory_proces', views.filecategory_proces, name='filecategory-proces'),
+    path('form_of_publication_proces', views.proces_form_of_publication, name='form_of_publication-proces'),
     path('select2_filecategory/', views.filecategory_ajax, name='select2-filecategory'),
     path('nothing/', views.nothing, name='nothing'),
     path('gitlog/', include("gitlog.urls", namespace='gitlog')),

@@ -17,7 +17,7 @@ $(function() {
   $('#tab3_select2_multiple').select2();
 
   // Width hack
-  $.fn.select2.defaults.set("width", '96%');
+  $.fn.select2.defaults.set("width", '100%');
   $('.special_select2').css("width", '100%');
   $('#tab4_select2_single').select2();
   $('#tab4_select2_multiple').select2();

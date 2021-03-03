@@ -1,0 +1,100 @@
+<button class="btn btn-danger" data-toggle="modal" data-target="#CityModal" type="button" id="city-btn">Add a city</button>
+<br/>
+<br/>
+<!-- Modal -->
+<div id="CityModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title col-md-10">Create City</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="id_city">Name</label>
+            <input type="text" name="name" maxlength="100" placeholder="Name" class="form-control" id="id_city">
+            <div class="">
+            </div>
+        </div>
+        <div class="form-group" >
+           <label for="id_country" class="">
+           Country*
+           </label>
+           <div class="">
+              <div class="input-group">
+                 <select name="country" id="id_country">
+                 </select>
+              </div>
+           </div>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" id="city-create" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+$(document).ready(function() {
+    $("#id_country").select2({
+        minimumInputLength: 0,
+        allowClear: true,
+        placeholder: "--------",
+        ajax: {
+            url: "/get_countries",
+            dataType: "json",
+            type: "GET",
+
+        },
+        processResults: function (data) {
+            return {
+                results: data
+            };
+        }
+    });
+});
+$("#city-btn").click(function(e) {
+    document.getElementById('id_city').value = '';
+    $("#id_country").select2("val", "0");
+});
+$("#city-create").click(function(e) {
+var fd = new FormData();
+fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+fd.append("name", $('#id_city').val());
+var data = $('#id_country').select2('data')
+if (data[0] == null) {
+    return alert('Please fill in all required fields.');
+}
+else {
+    fd.append("country", data[0].code);
+}
+
+$.ajax({
+  url: "{% url 'city-proces' %}",
+  data: fd,
+  processData: false,
+  contentType: false,
+  type: 'POST',
+});
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
