@@ -32,21 +32,21 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
-                <label for="id_name_t">Name</label>
-                <input type="text" name="name" maxlength="100" value="{{ translator.name }}" class="form-control name" id="id_name{{ translator.pk }}">
+                <label for="id_name_t{{ translator.pk }}">Name</label>
+                <input type="text" name="name" maxlength="100" value="{{ translator.name }}" class="form-control name" id="id_name_t{{ translator.pk }}">
                 <div class="">
 
                 </div>
             </div>
               <div class="form-group">
-                <label for="id_name_original_language_t">Name original language</label>
-                <input type="text" name="name_original_language" maxlength="100" value="{{ translator.name_original_language }}" class="form-control name_original_language" id="id_name_original_language{{ translator.pk }}">
+                <label for="id_name_original_language_t{{ translator.pk }}">Name original language</label>
+                <input type="text" name="name_original_language" maxlength="100" value="{{ translator.name_original_language }}" class="form-control name_original_language" id="id_name_original_language_t{{ translator.pk }}">
                 <div class="">
                 </div>
               </div>
               <div class="form-group">
-                <label for="id_extra_info_t">Extra info</label>
-                <input type="text" name="extra_info" maxlength="400" value="{{ translator.extra_info }}" class="form-control extra_info" id="id_extra_info{{ translator.pk }}">
+                <label for="id_extra_info_t{{ translator.pk }}">Extra info</label>
+                <input type="text" name="extra_info" maxlength="400" value="{{ translator.extra_info }}" class="form-control extra_info" id="id_extra_info_t{{ translator.pk }}">
                 <div class="">
 
                 </div>
@@ -71,9 +71,9 @@ $(function () {
 $("#update-btn{{ translator.pk }}").click(function(e) {
     var data = {
         csrfmiddlewaretoken: getCookie('csrftoken'),
-        name: $('#id_name{{ translator.pk }}').val(),
-        name_original_language: $('#id_name_original_language{{ translator.pk }}').val(),
-        extra_info: $('#id_extra_info{{ translator.pk }}').val()
+        name: $('#id_name_t{{ translator.pk }}').val(),
+        name_original_language: $('#id_name_original_language_t{{ translator.pk }}').val(),
+        extra_info: $('#id_extra_info_t{{ translator.pk }}').val()
     }
     $.post($(this).attr('data-form-url'), data, function(data,status){
         if(status === 'success') {
