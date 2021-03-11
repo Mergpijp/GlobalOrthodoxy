@@ -21,6 +21,12 @@
         <button type="button" id='init-btn{{ translator.pk }}' class="btn btn-primary btn-danger" data-toggle="modal" data-target="#UpdateTranslatorModal{{ translator.pk }}">
           <span class="fa fa-pencil"></span>
         </button>
+        <!-- Link translator buttons -->
+        <button type="button" id="translator-link{{ translator.pk }}" class="translator-link btn btn-sm btn-danger" data-form-url="{% url 'link-translator' publication.pk translator.pk %}">
+          <span class="fa fa-plus mr-2"></span>Link
+        </button>
+      </td>
+    </tr>
             <!-- Modal -->
     <div id="UpdateTranslatorModal{{ translator.pk }}" class="modal fade" tabindex="-1">
       <div class="modal-dialog">
@@ -59,13 +65,6 @@
         </div>
       </div>
     </div>
-        <!-- Link translator buttons -->
-        <button type="button" id="translator-link{{ translator.pk }}" class="translator-link btn btn-sm btn-danger" data-form-url="{% url 'link-translator' publication.pk translator.pk %}">
-          <span class="fa fa-plus mr-2"></span>Link
-        </button>
-      </td>
-    </tr>
-
 <script>
 $(function () {
 $("#update-btn{{ translator.pk }}").click(function(e) {

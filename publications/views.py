@@ -775,7 +775,7 @@ class PublicationDetailView(DetailView):
     model = Publication
 
     def get_queryset(self):
-        publications = Publication.objects.filter(is_deleted=False)
+        publications = Publication.objects.filter(is_deleted=False, is_stub=False)
         return publications
 
     def get_context_data(self, **kwargs):

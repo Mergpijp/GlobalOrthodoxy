@@ -124,6 +124,13 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     -webkit-box-orient: vertical;
     */
 }
+.navbar-brand.abs
+{
+    position: absolute;
+    width: 100%;
+    right: 684px;
+    text-align: center;
+}
 /*
 .modal-header{
   z-index:10000;
