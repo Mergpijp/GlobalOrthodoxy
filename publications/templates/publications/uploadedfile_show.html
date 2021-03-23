@@ -12,7 +12,7 @@
     </tr>  
     </thead> 
 <br>
-<center><a href="/uploadedfile/new" class="btn btn-primary btn-danger ">Add New Uploaded File</a></center>
+<center><a href="/uploadedfile/new?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary btn-danger ">Add New Uploaded File</a></center>
 <br>      
     <tbody>  
 {% for uploadedfile in uploadedfiles %}  

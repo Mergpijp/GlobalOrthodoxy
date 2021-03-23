@@ -9,7 +9,7 @@
     </tr>  
     </thead> 
 <br>
-<center><a href="/city/new" class="btn btn-primary btn-danger">Add New City</a></center>
+<center><a href="/city/new?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary btn-danger">Add New City</a></center>
 <br>      
     <tbody>  
 {% for city in cities %}  

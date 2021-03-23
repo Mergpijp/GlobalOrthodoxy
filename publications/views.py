@@ -1234,7 +1234,10 @@ class KeywordCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = KeywordForm
-    success_url = '/keyword/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/keyword/show/' + '?page=' + url
 
 class KeywordShow(ListView):
     '''
@@ -1311,7 +1314,10 @@ class AuthorCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = AuthorForm
-    success_url = '/author/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/uploadedfile/show/' + '?page=' + url
 
 class AuthorShow(ListView):
     '''
@@ -1387,7 +1393,10 @@ class TranslatorCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = TranslatorForm
-    success_url = '/translator/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/translator/show/' + '?page=' + url
 
 class TranslatorShow(ListView):
     '''
@@ -1465,7 +1474,10 @@ class FormOfPublicationCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = FormOfPublicationForm
-    success_url = '/form_of_publication/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/form_of_publication/show/' + '?page=' + url
 
 class FormOfPublicationShow(ListView):
     '''
@@ -1547,7 +1559,10 @@ class CityCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = CityForm
-    success_url = '/city/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/city/show/' + '?page=' + url
 
 class CityShow(ListView):
     '''
@@ -1627,7 +1642,10 @@ class GenreCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = GenreForm
-    success_url = '/genre/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/genre/show/' + '?page=' + url
 
 class GenreShow(ListView):
     '''
@@ -1705,7 +1723,10 @@ class ChurchCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = ChurchForm
-    success_url = '/church/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/church/show/' + '?page=' + url
 
 class ChurchShow(ListView):
     '''
@@ -1783,7 +1804,10 @@ class LanguageCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = LanguageForm
-    success_url = '/language/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/language/show/' + '?page=' + url
     
 class LanguageShow(ListView):
     '''
@@ -1863,7 +1887,10 @@ class SpecialOccasionCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = SpecialOccasionForm
-    success_url = '/special_occasion/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/special_occasion/show/' + '?page=' + url
     
 class SpecialOccasionShow(ListView):
     '''
@@ -1941,7 +1968,10 @@ class OwnerCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = OwnerForm
-    success_url = '/owner/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/owner/show/' + '?page=' + url
     
 class OwnerShow(ListView):
     '''
@@ -2019,7 +2049,11 @@ class UploadedFileCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = UploadedFileForm
-    success_url = '/uploadedfile/show/'   
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/uploadedfile/show/' + '?page=' + url
+
     
 class UploadedFileShow(ListView):
     '''
@@ -2099,7 +2133,10 @@ class FileCategoryCreate(CreateView):
     '''
     template_name = 'publications/form.html'
     form_class = FileCategoryForm
-    success_url = '/filecategory/show/'
+
+    def get_success_url(self):
+        url = self.request.GET.get('page')
+        return '/filecategory/show/' + '?page=' + url
 
 
 class FileCategoryShow(ListView):

@@ -10,7 +10,7 @@
     </tr>  
     </thead>
 <br>  
-<center><a href="/translator/new" class="btn btn-primary btn-danger">Add New Translator</a></center>
+<center><a href="/translator/new?page={{ page_obj.paginator.num_pages }} class="btn btn-primary btn-danger">Add New Translator</a></center>
 <br>    
     <tbody>  
 {% for translator in translators %}  

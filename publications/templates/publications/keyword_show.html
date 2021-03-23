@@ -8,7 +8,7 @@
     </tr>  
     </thead> 
 <br> 
-<center><a href="/keyword/new" class="btn btn-primary btn-danger">Add New Keyword</a></center>
+<center><a href="/keyword/new?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary btn-danger">Add New Keyword</a></center>
 <br>      
     <tbody>  
 {% for keyword in keywords %}

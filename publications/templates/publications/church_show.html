@@ -9,7 +9,7 @@
     </tr>  
     </thead>  
 <br> 
-<center><a href="/church/new" class="btn btn-primary btn-danger">Add New Church</a></center>
+<center><a href="/church/new?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary btn-danger">Add New Church</a></center>
 <br>  
     <tbody>  
 {% for church in churches %}  

@@ -8,7 +8,7 @@
     </tr>  
     </thead>  
 <br>  
-<center><a href="/special_occasion/new" class="btn btn-primary btn-danger">Add New Special Occasion</a></center>
+<center><a href="/special_occasion/new?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary btn-danger">Add New Special Occasion</a></center>
 <br>  
     <tbody>  
 {% for specialoccasion in specialoccasions %}  

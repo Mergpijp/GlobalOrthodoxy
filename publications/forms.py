@@ -835,6 +835,7 @@ class UploadedFileForm(forms.ModelForm):
                                                 method: "post",
                                                 autoProcessQueue: false,
                                                 maxFiles: 1,
+                                                timeout: 180000,
                                                 addRemoveLinks: true,
                                                 maxfilesexceeded: function(file) {
                                                     this.removeAllFiles();

@@ -9,7 +9,7 @@
     </tr>  
     </thead>
 <br>  
-<center><a href="/language/new" class="btn btn-primary btn-danger">Add New Language</a></center>
+<center><a href="/language/new?page={{ page_obj.paginator.num_pages }} class="btn btn-primary btn-danger">Add New Language</a></center>
 <br>      
     <tbody>  
 {% for language in languages %}  
