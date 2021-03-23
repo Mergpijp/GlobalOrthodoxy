@@ -196,6 +196,7 @@ var myDropzone = new Dropzone("div#my-drop-zone", {
             e.preventDefault();
             e.stopPropagation();
             myDropzone.processQueue();
+            $('#FileModal').modal('toggle');
 
         }
         });
