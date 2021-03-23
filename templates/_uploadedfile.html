@@ -196,7 +196,7 @@ var myDropzone = new Dropzone("div#my-drop-zone", {
             e.preventDefault();
             e.stopPropagation();
             myDropzone.processQueue();
-            $('#FileModal').modal('toggle');
+
 
         }
         });
@@ -215,6 +215,7 @@ var myDropzone = new Dropzone("div#my-drop-zone", {
     success: function (file, response) {
         $("#uploadedfiles-div").html(response["table"]);
         Dropzone.forElement("#my-drop-zone").removeAllFiles(true);
+        $('#FileModal').modal('toggle');
     }
 });
 function getCookie(name) {
