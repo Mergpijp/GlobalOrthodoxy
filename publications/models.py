@@ -215,7 +215,7 @@ CHOICES = (
 
 CURRENCIES = ['USD: United States Dollar', 'CAD: Canadian Dollar', 'AUD: Australian Dollar', 'EUR: Euro', 'GBP: Pound sterling', \
               'SEK: Swedish krona', 'EGP: Egyptian pound', 'LBP: Libanese pound', 'ETB: Ethopian birr', 'ERN: Eritrean nakfa', \
-              'ILS: Israeli shekel', 'AMD: Armenian dram']
+              'ILS: Israeli shekel', 'AMD: Armenian dram', 'NLD: Dutch gulden', 'unknown']
 
 CURRENCY_CHOICES = [(str(i), CURRENCIES[i]) for i in range(0,12)]
 
