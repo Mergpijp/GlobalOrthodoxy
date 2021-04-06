@@ -454,7 +454,6 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Comments',
                     'general_comments',
                     'team_comments',
-                    'other_comments',
                     ),
             ),
             ButtonHolder(
@@ -482,7 +481,7 @@ class NewCrispyForm(forms.ModelForm):
                   'connected_to_special_occasion', 'description_of_illustration', \
                   'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights',
                   'currently_owned_by', 'contact_telephone_number', \
-                  'contact_email', 'contact_website', 'general_comments', 'team_comments', 'other_comments', 'keywords',
+                  'contact_email', 'contact_website', 'general_comments', 'team_comments', 'keywords',
                   'is_a_translation', 'ISBN_number', 'translated_from', \
                   'title3', 'title_subtitle_transcription3', 'title_translation3', 'title4',
                   'title_subtitle_transcription4', 'title_translation4', \
