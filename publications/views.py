@@ -736,7 +736,7 @@ class PublicationCreate(UpdateView):
             self.object = form.save()
             self.object.save()
 
-        pub.delete()
+        pub.is_deleted = True
         return redirect(self.get_success_url())
 
     def get_success_url(self):
