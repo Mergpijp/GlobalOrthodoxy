@@ -466,7 +466,7 @@ def search_authors(request, pkb=None):
         if pkb:
             if 'input' in request.POST:
                 input = request.POST['input']
-                authors = Author.objects.filter(name__icontains=input).order_by('name')[:10]
+                authors = Author.objects.filter(Q(name__icontains=input) | Q(name_original_language__icontains=input)| Q(extra_info__icontains=input)).order_by('name')[:10]
             else:
                 authors = Author.objects.none()
             #pdb.set_trace()
@@ -485,7 +485,7 @@ def search_translators(request, pkb=None):
         if pkb:
             if 'input' in request.POST:
                 input = request.POST['input']
-                translators = Translator.objects.filter(name__icontains=input).order_by('name')[:10]
+                translators = Translator.objects.filter(Q(name__icontains=input) | Q(name_original_language__icontains=input)| Q(extra_info__icontains=input)).order_by('name')[:10]
             else:
                 translators = Translator.objects.none()
             publication = Publication.objects.get(pk=pkb)
