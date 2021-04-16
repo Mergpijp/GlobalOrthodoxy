@@ -81,9 +81,27 @@
     </nav>
 
     <form class="form-inline my-2 my-lg-0" action="{% url 'publication-show' %}" method="get">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" style="Text-align: start;unicode-bidi: plaintext;">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar" name="q" style="Text-align: start;unicode-bidi: plaintext;" onkeyup='saveValue(this);'>
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
+    <script>
+        document.getElementById("search_bar").value = getSavedValue("search_bar");
+
+        //Save the value function - save it to localStorage as (ID, VALUE)
+        function saveValue(e){
+            var id = e.id;  // get the sender's id to save it .
+            var val = e.value; // get the value.
+            localStorage.setItem(id, val);// Every time user writing something, the localStorage's value will override .
+        }
+
+        //get the saved value function - return the value of "v" from localStorage.
+        function getSavedValue  (v){
+            if (!localStorage.getItem(v)) {
+                return "";// You can change this to your defualt value.
+            }
+            return localStorage.getItem(v);
+        }
+    </script>
     </nav>
    <div class="container">
       <div class="row">
