@@ -20,7 +20,7 @@
           <span class="fa fa-trash"></span> Unlink File
         </button>
         <!-- Update UploadedFile buttons -->
-        <button type="button" id='init-btn{{ uploadedfile.pk }}' class="btn btn-primary btn-danger" data-toggle="modal" data-target="#UpdateUploadedFileModal{{ uploadedfile.pk }}">
+        <button type="button" id='init-btn{{ uploadedfile.pk }}' class="btn btn-primary btn-danger" onclick="window.open('{% url 'uploadedfile-update' uploadedfile.pk %}','_blank')">
           <span class="fa fa-pencil"></span>
         </button>
       </td>
