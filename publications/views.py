@@ -607,17 +607,23 @@ class PublicationUpdate(UpdateView):
     #success_url = '/publication/show/'
 
     def get_success_url(self):
-        url = self.request.GET.get('next')
-        #pdb.set_trace()
-        if self.request.GET.get('q'):
-            url += '?q=' + self.request.GET.get('q')
-        if self.request.GET.get('page'):
-            url += '&page=' + self.request.GET.get('page')
-        if self.request.GET.get('order_by'):
-            url += '&order_by=' + self.request.GET.get('order_by')
-        if self.request.GET.get('direction'):
-            url += '&direction=' + self.request.GET.get('direction')
-        return url
+        if self.request.POST.get("save_add_another"):
+            return '/publication/new/'
+        elif self.request.POST.get("save_and_continue_editing") :
+            return '/publication/' + str(self.object.id) + '/edit/'
+        elif self.request.POST.get("save"):
+            url = self.request.GET.get('next')
+            if url == None:
+                return '/publication/' + str(self.object.id) + '/edit/'
+            if self.request.GET.get('q'):
+                url += '?q=' + self.request.GET.get('q')
+            if self.request.GET.get('page'):
+                url += '&page=' + self.request.GET.get('page')
+            if self.request.GET.get('order_by'):
+                url += '&order_by=' + self.request.GET.get('order_by')
+            if self.request.GET.get('direction'):
+                url += '&direction=' + self.request.GET.get('direction')
+            return url
         '''
         """Detect the submit button used and act accordingly"""
         if 'next' in self.request.POST:
@@ -755,6 +761,8 @@ class PublicationCreate(UpdateView):
             return '/publication/' + str(self.object.id) + '/edit/'
         elif self.request.POST.get("save"):
             url = self.request.GET.get('next')
+            if url == None:
+                return '/publication/' + str(self.object.id) + '/edit/'
             if self.request.GET.get('q'):
                 url += '?q=' + self.request.GET.get('q')
             if self.request.GET.get('page'):
@@ -763,9 +771,8 @@ class PublicationCreate(UpdateView):
                 url += '&order_by=' + self.request.GET.get('order_by')
             if self.request.GET.get('direction'):
                 url += '&direction=' + self.request.GET.get('direction')
-            if url == None:
-                return '/publication/show/'
             return url
+
 class PublicationDetailView(DetailView):
     '''
     Inherits DetailView
