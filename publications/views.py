@@ -107,8 +107,9 @@ def filecategory_ajax(request):
     return JsonResponse({'results':filecategories}, safe=False)
 
 @login_required(login_url='/accounts/login/')
-def process_file(request, pk=None):
+def process_file(request, pk=None, pkb=None):
     obj, created = UploadedFile.objects.get_or_create(pk=pk)
+    data = dict()
 
     #try:
     #pdb.set_trace()
@@ -131,7 +132,14 @@ def process_file(request, pk=None):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return HttpResponse(status=200)
+            pub = Publication.objects.get(pk=pkb)
+            #return HttpResponse(status=200)
+            data['table'] = render_to_string(
+                '_uploadedfiles_table.html',
+                {'publication': pub},
+                request=request
+            )
+            return JsonResponse(data)
 
     return render(request, 'error_template.html', {'form': form}, status=500)
 

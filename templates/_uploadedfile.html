@@ -43,7 +43,7 @@
                             <br/>
                             <br/>
 
-                          <a data-toggle="modal" href="#FilecategoryModal" class="btn btn-primary btn-danger">Add Filecategory</a>
+                          <a data-toggle="modal" href="#FilecategoryModal" class="btn btn-primary btn-danger" id="filecategory-btn">Add Filecategory</a>
 
                    </div>
                 </div>
@@ -216,6 +216,7 @@ var myDropzone = new Dropzone("div#my-drop-zone", {
         $('#FileModal').modal('toggle');
     }
 });
+$("#my-drop-zone").addClass("dropzone");
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -231,6 +232,6 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-$("#my-drop-zone").addClass("dropzone");
+
 
 </script>

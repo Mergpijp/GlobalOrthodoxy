@@ -48,6 +48,7 @@ urlpatterns = [
 
     #path('url_replace', views.url_replace, name='url_replace'),
     path('uploadedfile/proces/<int:pk>', views.process_file, name='uploadedfile-proces'),
+    path('uploadedfile/proces/<int:pk>/<int:pkb>', views.process_file, name='uploadedfile-proces'),
     path('uploadedfile/proces2/<int:pkb>', views.process_file2, name='uploadedfile-proces2'),
     path('uploadedfile/proces/', views.process_file, name='uploadedfile-proces'),
     path('publication/show/', login_required(SearchResultsView.as_view()), name='publication-show'),
