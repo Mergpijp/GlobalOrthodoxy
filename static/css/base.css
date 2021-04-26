@@ -96,6 +96,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .hidden{
     display: none;
 }
+.phidden{
+    display: none;
+}
 #my-drop-zone {
     background: white;
     border-radius: 5px;

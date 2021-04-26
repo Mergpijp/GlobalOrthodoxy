@@ -254,7 +254,7 @@
     </tbody>
 </table>
 {% endif %}
-{% if object.publication_year %}
+{% if object.publication_year and not object.is_periodical %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
     <tr>
@@ -264,6 +264,24 @@
     <tbody>
     <tr>
         <td>{{object.publication_year}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
+{% if object.is_periodical %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th>Start year</th>
+        <th>End year</th>
+        <th>Ongoing</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{ object.start_year }}</td>
+        <td>{{ object.end_year }}</td>
+        <td>{{ object.ongoing }}</td>
     </tr>
     </tbody>
 </table>

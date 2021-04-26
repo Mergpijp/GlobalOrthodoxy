@@ -398,6 +398,13 @@ class NewCrispyForm(forms.ModelForm):
                     'printed_by',
                     'published_by',
                     'publication_year',
+                    'is_periodical',
+                    'start_year',
+                    'end_year',
+                    'ongoing',
+                    #Div('is_periodical', 'start_year', 'end_year', 'ongoing', css_class="phidden", css_id="hiddenp"),
+                    #Button('periodical', 'toggle periodical', css_class='btn-back btn-danger',
+                    #       onclick="$('.phidden').toggleClass('phidden');"),
                     'publication_country',
                     #FieldWithButtons('publication_city', StrictButton('+', type='button', css_class='btn-danger',
                     #                                                  onClick="window.open('/city/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
@@ -486,7 +493,7 @@ class NewCrispyForm(forms.ModelForm):
                   'title3', 'title_subtitle_transcription3', 'title_translation3', 'title4',
                   'title_subtitle_transcription4', 'title_translation4', \
                   'title5', 'title_subtitle_transcription5', 'title_translation5', 'price', 'collection_context', \
-                  'currency')
+                  'currency', 'ongoing', 'start_year', 'end_year', 'is_periodical')
         exclude = ('uploadedfiles', 'authors', 'translators')
         # publication_country = forms.ChoiceField(choices=list(countries))
 
