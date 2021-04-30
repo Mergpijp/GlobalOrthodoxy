@@ -969,6 +969,7 @@ class SearchResultsView(ListView):
             query_string = to_searchable(query_string)
             #arabic_query = to_searchable(arabic_query)
             entry_query = get_query(query_string, search_fields)
+            #publications
 
             #arabic_query = get_query(arabic_query, search_fields)
             print('&&&&&&', query_string)
@@ -976,6 +977,8 @@ class SearchResultsView(ListView):
             #pdb.set_trace()
             #publications = publications.filter(Q(entry_query) | Q(arabic_query))
             publications = publications.filter(Q(entry_query))
+            #for (idx, apin) in enumerate(appears_in):
+
             print(publications)
             ordering = self.get_ordering()
             if ordering is not None and ordering != "":
@@ -2291,6 +2294,7 @@ def get_query(query_string, search_fields):
 
     query = None # Query to search for every search term
     terms = normalize_query(query_string)
+    appears_in = []
     for term in terms:
         or_query = None # Query to search for a given term in each field
         for field_name in search_fields:
@@ -2305,6 +2309,7 @@ def get_query(query_string, search_fields):
             query = or_query
         else:
             query = query & or_query
+
     #pdb.set_trace()
-    return query    
+    return query
          
