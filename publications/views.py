@@ -868,6 +868,19 @@ class SearchResultsView(ListView):
     paginate_by = 10
     #ordering = 'title'
 
+    '''
+    def get_success_url(self):
+        url = self.request.GET.get('')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        if self.request.GET.get('q'):
+            url += '&q' + self.request.GET.get('q')
+
+        return url
+    '''
+
     def get_template_names(self):
         if self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
             return ['publications/form_create.html']
@@ -891,20 +904,29 @@ class SearchResultsView(ListView):
         #form = PublicationForm(self.request.GET)
         authors = self.request.GET.getlist('authors')
         translators = self.request.GET.getlist('translators')
-        authors = Author.objects.filter(pk__in=authors).all()
-        translators = Translator.objects.filter(pk__in=translators).all()
+        #pdb.set_trace()
+        if not authors == ['']:
+            authors = Author.objects.filter(pk__in=authors).all()
+        if not translators == ['']:
+            translators = Translator.objects.filter(pk__in=translators).all()
         form_of_publications = self.request.GET.getlist('form_of_publication')
-        form_of_publications = FormOfPublication.objects.filter(pk__in=form_of_publications).all()
+        if not form_of_publications == ['']:
+            form_of_publications = FormOfPublication.objects.filter(pk__in=form_of_publications).all()
         languages = self.request.GET.getlist('language')
-        languages = Language.objects.filter(pk__in=languages).all()
+        if not languages == ['']:
+            languages = Language.objects.filter(pk__in=languages).all()
         affiliated_churches = self.request.GET.getlist('affiliated_church')
-        affiliated_churches = Church.objects.filter(pk__in=affiliated_churches).all()
+        if not affiliated_churches == ['']:
+            affiliated_churches = Church.objects.filter(pk__in=affiliated_churches).all()
         content_genres = self.request.GET.getlist('content_genre')
-        content_genres = Genre.objects.filter(pk__in=content_genres).all()
+        if not content_genres == ['']:
+            content_genres = Genre.objects.filter(pk__in=content_genres).all()
         connected_to_special_occasions = self.request.GET.getlist('connected_to_special_occasion')
-        connected_to_special_occasions = SpecialOccasion.objects.filter(pk__in=connected_to_special_occasions).all()
+        if not connected_to_special_occasions == ['']:
+            connected_to_special_occasions = SpecialOccasion.objects.filter(pk__in=connected_to_special_occasions).all()
         currently_owned_by = self.request.GET.getlist('currently_owned_by')
-        currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
+        if not currently_owned_by == ['']:
+            currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
         copyrights = self.request.GET.get('copyrights')
         is_a_translation = self.request.GET.get('is_a_translation')
 
@@ -915,16 +937,20 @@ class SearchResultsView(ListView):
         uploadedfiles = self.request.GET.getlist('uploadedfiles')
         #files = UploadedFile.objects.filter(is_deleted=False)
         #uploadedfiles = files.filter(pk__in=uploadedfiles).all()
-        uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
+        if not uploadedfiles == ['']:
+            uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
         keywords = self.request.GET.getlist('keywords')
-        keywords = Keyword.objects.filter(pk__in=keywords).all()
+        if not keywords == ['']:
+            keywords = Keyword.objects.filter(pk__in=keywords).all()
         translated_from = self.request.GET.getlist('translated_From')
-        translated_from = Language.objects.filter(pk__in=translated_from).all()
+        if not translated_from == ['']:
+            translated_from = Language.objects.filter(pk__in=translated_from).all()
         city = self.request.GET.getlist('publication_city')
         country = self.request.GET.getlist('publication_country')
         collection_country = self.request.GET.getlist('collection_country')
         filecategory = self.request.GET.getlist('filecategory')
-        filecategory = FileCategory.objects.filter(pk__in=filecategory).all()
+        if not filecategory == ['']:
+            filecategory = FileCategory.objects.filter(pk__in=filecategory).all()
 
         if list(collection_country) != ['']:
             collection_country = Country.objects.filter(pk__in=city).all()
@@ -1098,6 +1124,7 @@ class SearchResultsView(ListView):
     def get_context_data(self, **kwargs):
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         order_by = self.request.GET.get('order_by')
+        #pdb.set_trace()
         if order_by is not None and order_by != "":
             context['order_by'] = order_by
             context['direction'] = self.request.GET.get('direction')
@@ -1109,6 +1136,66 @@ class SearchResultsView(ListView):
             context['q'] = q
         else:
             context['q'] = ''
+        affiliated_church = self.request.GET.get('affiliated_church')
+        if affiliated_church is not None and affiliated_church != "":
+            context['affiliated_church'] = affiliated_church
+        else:
+            context['affiliated_church'] = ''
+        authors = self.request.GET.get('authors')
+        if authors is not None and authors != "":
+            context['authors'] = authors
+        else:
+            context['authors'] = ''
+        translators = self.request.GET.get('translators')
+        if translators is not None and translators != "":
+            context['translators'] = translators
+        else:
+            context['translators'] = ''
+        form_of_publication = self.request.GET.get('form_of_publication')
+        if form_of_publication is not None and form_of_publication != "":
+            context['form_of_publication'] = form_of_publication
+        else:
+            context['form_of_publication'] = ''
+        publication_city = self.request.GET.get('publication_city')
+        if publication_city is not None and publication_city != "":
+            context['publication_city'] = publication_city
+        else:
+            context['publication_city'] = ''
+        language = self.request.GET.get('language')
+        if language is not None and language != "":
+            context['language'] = language
+        else:
+            context['language'] = ''
+        content_genre = self.request.GET.get('content_genre')
+        if content_genre is not None and content_genre != "":
+            context['content_genre'] = content_genre
+        else:
+            context['content_genre'] = ''
+        connected_to_special_occasion = self.request.GET.get('connected_to_special_occasion')
+        if connected_to_special_occasion is not None and connected_to_special_occasion != "":
+            context['connected_to_special_occasion'] = connected_to_special_occasion
+        else:
+            context['connected_to_special_occasion'] = ''
+        currently_owned_by = self.request.GET.get('currently_owned_by')
+        if currently_owned_by is not None and currently_owned_by != "":
+            context['currently_owned_by'] = currently_owned_by
+        else:
+            context['currently_owned_by'] = ''
+        keywords = self.request.GET.get('keywords')
+        if keywords is not None and keywords != "":
+            context['keywords'] = keywords
+        else:
+            context['keywords'] = ''
+        uploadedfiles = self.request.GET.get('uploadedfiles')
+        if uploadedfiles is not None and uploadedfiles != "":
+            context['uploadedfiles'] = uploadedfiles
+        else:
+            context['uploadedfiles'] = ''
+        filecategory = self.request.GET.get('filecategory')
+        if filecategory is not None and filecategory != "":
+            context['filecategory'] = filecategory
+        else:
+            context['filecategory'] = ''
 
         cover_images = []
         for pub in context['publications']:

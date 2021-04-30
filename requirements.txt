@@ -16,3 +16,4 @@ django-bootstrap-modal-forms==2.0.1
 django-widget-tweaks==1.4.8
 Markdown
 django-gitlog==0.2
+googletrans

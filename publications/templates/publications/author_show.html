@@ -15,7 +15,7 @@
     <tbody>  
 {% for author in authors %}  
     <tr>  
-        <td><a href="{% url 'publication-show' %}?author={{author.id}}">{{ author.name }}</a></td>
+        <td><a href="{% url 'publication-show' %}?authors={{author.id}}">{{ author.name }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{author.name_original_language}}">{{ author.name_original_language }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{author.extra_info}}">{{ author.extra_info }}</a></td>
         <td>  
