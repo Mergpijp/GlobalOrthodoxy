@@ -297,7 +297,7 @@ class Publication(models.Model):
     is_stub = models.BooleanField(default=False)
     created_by = models.ForeignKey('auth.User', related_name='publications', on_delete=models.CASCADE, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    search_terms_appear_in = models.CharField(max_length=500, blank=True)
+    search_term_appear_in = models.CharField(max_length=500, blank=True)
 
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)

@@ -30,6 +30,7 @@ from django.core import serializers
 from countries_plus.models import Country
 from django.core.paginator import Paginator
 from googletrans import Translator as GTranslator
+from django.contrib.auth.models import User
 
 from googletrans import LANGUAGES
 from django.template.loader import render_to_string
@@ -888,6 +889,8 @@ class SearchResultsView(ListView):
         return ordering
 
     def get_queryset(self):
+
+            #pub.save()
         #form = PublicationForm(self.request.GET)
         authors = self.request.GET.getlist('authors')
         translators = self.request.GET.getlist('translators')
@@ -967,6 +970,7 @@ class SearchResultsView(ListView):
             print(query_string)
             #arabic_query = translator.translate(query_string, dest='ar').text
             query_string = to_searchable(query_string)
+
             #arabic_query = to_searchable(arabic_query)
             entry_query = get_query(query_string, search_fields)
             #publications
@@ -985,8 +989,227 @@ class SearchResultsView(ListView):
                 publications = publications.order_by(ordering)
             publications = publications.distinct()
 
+            regexp = re.compile(query_string, re.IGNORECASE)
+            for pub in publications:
+                for field in Publication._meta.get_fields():
+                    if Publication._meta.get_field(field.name).get_internal_type() == 'ManyToManyField' or \
+                        Publication._meta.get_field(field.name).get_internal_type() == 'ForeignKey':
+                        if field.name == 'authors':
+                            for author in pub.authors.all():
+                                for author_field in Author._meta.get_fields():
+                                    if author_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(author, author_field.name), str) \
+                                            and not isinstance(getattr(author, author_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(author, author_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=author_field.name)
+                                        elif not (author_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', af' + author_field.name)
+                        elif field.name == 'translators':
+                            for translator in pub.translators.all():
+                                for translator_field in Translator._meta.get_fields():
+                                    if translator_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(translator, translator_field.name), str) \
+                                            and not isinstance(getattr(translator, translator_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(translator, translator_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=translator_field.name)
+                                        elif not (translator_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', tf' + translator_field.name)
+                        elif field.name == 'publication_city':
+                            if not isinstance(pub.publication_city.name, str) \
+                                    and not isinstance(pub.publication_city.name, int):
+                                continue
+                            if regexp.search(str(pub.publication_city.name)):
+                                if pub.search_term_appear_in == '':
+                                    City.objects.filter(pk=pub.publication_city.pk).update(search_term_appear_in='publication_city.name')
+                                elif not ('publication_city.name' in pub.search_term_appear_in):
+                                    Publication.objects.filter(pk=pub.pk).update(
+                                        search_term_appear_in=pub.search_term_appear_in + ', ' + 'publication_city.name',)
+                        elif field.name == 'publication_country' and pub.publication_country:
+                            if not isinstance(pub.publication_country.name, str) \
+                                    and not isinstance(pub.publication_country.name, int):
+                                continue
+                            if regexp.search(str(pub.publication_country.name)):
+                                if pub.search_term_appear_in == '':
+                                    Publication.objects.filter(pk=pub.pk).update(search_term_appear_in='publication_country.name')
+                                elif not ('publication_country.name' in pub.search_term_appear_in):
+                                    Publication.objects.filter(pk=pub.pk).update(
+                                        search_term_appear_in=pub.search_term_appear_in + ', ' + 'publication_country.name')
+                        elif field.name == 'form_of_publication':
+                            for form_of_publication in pub.form_of_publication.all():
+                                for form_of_publication_field in FormOfPublication._meta.get_fields():
+                                    if form_of_publication_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(form_of_publication, form_of_publication_field.name), str) \
+                                            and not isinstance(getattr(form_of_publication, form_of_publication_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(form_of_publication, form_of_publication_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=form_of_publication_field.name)
+                                        elif not (form_of_publication_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', fop' + form_of_publication_field.name)
+                        elif field.name == 'affiliated_church':
+                            for affiliated_church in pub.affiliated_church.all():
+                                for affiliated_church_field in Church._meta.get_fields():
+                                    if affiliated_church_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(affiliated_church, affiliated_church_field.name), str)\
+                                            and not isinstance(getattr(affiliated_church, affiliated_church_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(affiliated_church, affiliated_church_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=affiliated_church_field.name)
+                                        elif not (affiliated_church_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', ac' + affiliated_church_field.name)
+                        elif field.name == 'language':
+                            for language in pub.language.all():
+                                for language_field in Language._meta.get_fields():
+                                    if language_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(language, language_field.name), str) \
+                                            and not isinstance(getattr(language, language_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(language, language_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=language_field.name)
+                                        elif not (language_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', lf' + language_field.name)
+                        elif field.name == 'translated_from' and pub.translated_from:
+                            for translated_from_field in Language._meta.get_fields():
+                                if translated_from_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(pub.translated_from, translated_from_field.name), str) \
+                                        and not isinstance(getattr(pub.translated_from, translated_from_field.name), int):
+                                    continue
+                                if regexp.search(str(getattr(pub.translated_from, translated_from_field.name))):
+                                    if pub.search_term_appear_in == '':
+                                        Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=translated_from_field.name)
+                                    elif not (translated_from_field.name in pub.search_term_appear_in):
+                                        Publication.objects.filter(pk=pub.pk).update(
+                                            search_term_appear_in=pub.search_term_appear_in + ', tf' + translated_from_field.name)
+                        elif field.name == 'content_genre':
+                            for genre in pub.content_genre.all():
+                                for content_genre_field in Genre._meta.get_fields():
+                                    if content_genre_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(genre, content_genre_field.name), str) \
+                                            and not isinstance(getattr(genre, content_genre_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(genre, content_genre_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=content_genre_field.name)
+                                        elif not (content_genre_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', cg' + content_genre_field.name)
+                        elif field.name == 'connected_to_special_occasion':
+                            for special_occasion in pub.connected_to_special_occasion.all():
+                                for special_occasion_field in SpecialOccasion._meta.get_fields():
+                                    if special_occasion_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(special_occasion, special_occasion_field.name), str) \
+                                            and not isinstance(getattr(special_occasion, special_occasion_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(special_occasion, special_occasion_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=special_occasion_field.name)
+                                        elif not (special_occasion_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', so' + special_occasion_field.name)
+                        elif field.name == 'collection_country' and pub.collection_country:
+                            if not isinstance(pub.collection_country.name, str) \
+                                    and not isinstance(pub.collection_country.name, int):
+                                continue
+                            if regexp.search(str(pub.collection_country.name)):
+                                if pub.search_term_appear_in == '':
+                                    Publication.objects.filter(pk=pub.pk).update(search_term_appear_in='collection_country.name')
+                                elif not ('collection_country.name' in pub.search_term_appear_in):
+                                    Publication.objects.filter(pk=pub.pk).update(
+                                        search_term_appear_in=pub.search_term_appear_in + ', cc' + 'collection_country.name')
+                        elif field.name == 'currently_owned_by':
+                            for currently_owned_by in pub.currently_owned_by.all():
+                                for currently_owned_by_field in Owner._meta.get_fields():
+                                    if currently_owned_by_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(currently_owned_by, currently_owned_by_field.name), str) \
+                                            and not isinstance(getattr(currently_owned_by, currently_owned_by_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(currently_owned_by, currently_owned_by_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=currently_owned_by_field.name)
+                                        elif not (currently_owned_by_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', owner' + currently_owned_by_field.name)
+                        elif field.name == 'keywords':
+                            for keyword in pub.keywords.all():
+                                for keyword_field in Keyword._meta.get_fields():
+                                    if keyword_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(keyword, keyword_field.name), str) \
+                                            and not isinstance(getattr(keyword, keyword_field.name), int):
+                                        continue
+                                    if 'Pope' in keyword.name and keyword_field.name == 'name':
+                                        #pdb.set_trace()
+                                        pass
+                                    if regexp.search(str(getattr(keyword, keyword_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=keyword_field.name)
+                                        elif not (keyword_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', ' + 'keyword.'+keyword_field.name)
+                        elif field.name == 'uploadedfiles':
+                            for uploadedfile in pub.uploadedfiles.all():
+                                for uploadedfile_field in UploadedFile._meta.get_fields():
+                                    if uploadedfile_field.name == 'publication':
+                                        continue
+                                    if not isinstance(getattr(uploadedfile, uploadedfile_field.name), str) \
+                                            and not isinstance(getattr(uploadedfile, uploadedfile_field.name), int):
+                                        continue
+                                    if regexp.search(str(getattr(uploadedfile, uploadedfile_field.name))):
+                                        if pub.search_term_appear_in == '':
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=uploadedfile_field.name)
+                                        elif not (uploadedfile_field.name in pub.search_term_appear_in):
+                                            Publication.objects.filter(pk=pub.pk).update(
+                                                search_term_appear_in=pub.search_term_appear_in + ', ' + 'up'+uploadedfile_field.name)
+                        elif field.name == 'created_by':
+                            user_fields = ['username', 'first_name', 'last_name']
+                            for created_by_field in user_fields:
+                                if not isinstance(getattr(pub.created_by, created_by_field), str) \
+                                        and not isinstance(getattr(pub.created_by, created_by_field), int):
+                                    continue
+                                if regexp.search(str(getattr(pub.created_by, created_by_field))):
+                                    if pub.search_term_appear_in == '':
+                                        Publication.objects.filter(pk=pub.pk).update(search_term_appear_in='created_by.'+created_by_field)
+                                    elif not ('created_by.'+created_by_field in pub.search_term_appear_in):
+                                        Publication.objects.filter(pk=pub.pk).update(
+                                            search_term_appear_in=pub.search_term_appear_in + ', ' + 'created_by.'+created_by_field)
+                    if not isinstance(getattr(pub, field.name), str) and not isinstance(getattr(pub, field.name), int):
+                        continue
+                    elif regexp.search(str(getattr(pub, field.name))):
+                        if pub.search_term_appear_in == '':
+                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=field.name)
+                        elif not (field.name in pub.search_term_appear_in):
+                            Publication.objects.filter(pk=pub.pk).update(search_term_appear_in=pub.search_term_appear_in + ', ' + 'gen' +field.name)
+
             #context['publications'] = publications
             return publications
+
+        pdb.set_trace()
+        for pub in Publication.objects.all():
+            pub.search_term_appear_in = ''
+            pub.save()
 
         for field_name in self.request.GET:
             get_value = self.request.GET.get(field_name)
