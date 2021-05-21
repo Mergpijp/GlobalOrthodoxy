@@ -964,6 +964,14 @@ class SearchResultsView(ListView):
 
         print(publications)
 
+        search_title = self.request.GET.get('search title')
+        search_title_translation = self.request.GET.get('search title translation')
+        search_author = self.request.GET.get('search author')
+        search_keywords = self.request.GET.get('search keywords')
+        search_image_content = self.request.GET.get('search image content')
+        search_description = self.request.GET.get('search description')
+
+
         exclude = ['csrfmiddlewaretoken','search', 'order_by', 'direction']
         in_variables = [('authors', authors), ('translators', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
         , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by),\
@@ -977,15 +985,34 @@ class SearchResultsView(ListView):
             if query_string.lower() in countries_dict.keys():
                 query_string = countries_dict[query_string.lower()]
 
+            search_fields = []
 
-            search_fields = ['title', 'title_subtitle_transcription', 'title_translation', 'authors__name', 'authors__name_original_language', 'authors__extra_info', \
-                  'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translators__name', 'translators__name_original_language', 'translators__extra_info', \
-                  'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
-                  'nr_of_pages', 'uploadedfiles__filecategory__name', 'uploadedfiles__uploaded_at', 'uploadedfiles__image_contents', \
-                  'uploadedfiles__image_title', 'general_comments', 'team_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
-                  'title2', 'title_subtitle_transcription2', 'title_translation2', 'title3', 'title_subtitle_transcription3', 'title_translation3', \
-                  'title4', 'title_subtitle_transcription4', 'title_translation4', 'title5', 'title_subtitle_transcription5', 'title_translation5', \
-                  'currency', 'price', 'collection_context']
+            if((search_title == 'true' and search_title_translation == 'true' and search_author == 'true' and search_keywords == 'true' and \
+                    search_image_content == 'true' and search_description == 'true') or (search_title == 'false' and search_title_translation == 'false' and \
+                    search_author == 'false' and search_keywords == 'false' and search_image_content == 'false' and \
+                    search_description == 'false')):
+                search_fields = ['title', 'title_subtitle_transcription', 'title_translation', 'authors__name', 'authors__name_original_language', 'authors__extra_info', \
+                      'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translators__name', 'translators__name_original_language', 'translators__extra_info', \
+                      'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
+                      'nr_of_pages', 'uploadedfiles__filecategory__name', 'uploadedfiles__uploaded_at', 'uploadedfiles__image_contents', \
+                      'uploadedfiles__image_title', 'general_comments', 'team_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
+                      'title2', 'title_subtitle_transcription2', 'title_translation2', 'title3', 'title_subtitle_transcription3', 'title_translation3', \
+                      'title4', 'title_subtitle_transcription4', 'title_translation4', 'title5', 'title_subtitle_transcription5', 'title_translation5', \
+                      'currency', 'price', 'collection_context']
+
+            else:
+                if search_title == 'true':
+                    search_fields.extend(['title'])
+                if search_title_translation == 'true':
+                    search_fields.extend(['title_translation'])
+                if search_author == 'true':
+                    search_fields.extend(['authors__name', 'authors__name_original_language', 'authors__extra_info'])
+                if search_keywords == 'true':
+                    search_fields.extend(['keywords__name'])
+                if search_image_content == 'true':
+                    search_fields.extend(['uploadedfiles__image_contents'])
+                if search_description == 'true':
+                    search_fields.extend(['content_description'])
 
             if self.request.user.is_authenticated:
                 search_fields.extend(['collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', 'currently_owned_by__name'])

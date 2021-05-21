@@ -79,12 +79,90 @@
                 <img src="{% static 'logo/radboud2.png'%}" alt="">
             </a>
     </nav>
+    <div style="float:right;">
+        <div id="hover-search">
+                <form class="form-inline my-2 my-lg-0" action="{% url 'publication-show' %}" method="get">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar" name="q" style="Text-align: start;unicode-bidi: plaintext;" onkeyup='saveValue(this);'>
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                  <input type="hidden" id="title" name="search title" value="false" />
+                  <input type="hidden" id="title_translation" name="search title translation" value="false" />
+                  <input type="hidden" id="author" name="search author" value="false" />
+                  <input type="hidden" id="keywords" name="search keywords" value="false" />
+                  <input type="hidden" id="image_content" name="search image content" value="false" />
+                  <input type="hidden" id="description" name="search description" value="false" />
+                </form>
 
-    <form class="form-inline my-2 my-lg-0" action="{% url 'publication-show' %}" method="get">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar" name="q" style="Text-align: start;unicode-bidi: plaintext;" onkeyup='saveValue(this);'>
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+            <div id="below">
+                <button type="button" class="btn btn-outline-info highlight" id="highlight1">Title</button>
+                <button type="button" class="btn btn-outline-info highlight" id="highlight2">Title translation</button>
+                <button type="button" class="btn btn-outline-info highlight" id="highlight3">Author</button>
+                <button type="button" class="btn btn-outline-info highlight" id="highlight4">Keywords</button>
+                <button type="button" class="btn btn-outline-info highlight" id="highlight5">Image content</button>
+                <button type="button" class="btn btn-outline-info highlight" id="highlight6">description</button>
+            </div>
+        </div>
+    </div>
     <script>
+        $('#highlight1').on('click', function() {
+            if (document.getElementById('highlight1').classList.contains('active') ) {
+                $('#highlight1').removeClass('active');
+                $('#title').val('false');
+            }
+            else {
+                $(this).addClass('active');
+                $('#title').val('true');
+            }
+        });
+        $('#highlight2').on('click', function() {
+            if (document.getElementById('highlight2').classList.contains('active') ) {
+                $('#highlight2').removeClass('active');
+                $('#title_translation').val('false');
+            }
+            else {
+                $(this).addClass('active');
+                $('#title_translation').val('true');
+            }
+        });
+        $('#highlight3').on('click', function() {
+            if (document.getElementById('highlight3').classList.contains('active') ) {
+                $('#highlight3').removeClass('active');
+                $('#author').val('false');
+            }
+            else {
+                $(this).addClass('active');
+                $('#author').val('true');
+            }
+        });
+        $('#highlight4').on('click', function() {
+            if (document.getElementById('highlight4').classList.contains('active') ) {
+                $('#highlight4').removeClass('active');
+                $('#keywords').val('false');
+            }
+            else {
+                $(this).addClass('active');
+                $('#keywords').val('true');
+            }
+        });
+        $('#highlight5').on('click', function() {
+            if (document.getElementById('highlight5').classList.contains('active') ) {
+                $('#highlight5').removeClass('active');
+                $('#image_content').val('false');
+            }
+            else {
+                $(this).addClass('active');
+                $('#image_content').val('true');
+            }
+        });
+        $('#highlight6').on('click', function() {
+            if (document.getElementById('highlight6').classList.contains('active') ) {
+                $('#highlight6').removeClass('active');
+                $('#description').val('false');
+            }
+            else {
+                $(this).addClass('active');
+                $('#description').val('true');
+            }
+        });
         document.getElementById("search_bar").value = getSavedValue("search_bar");
 
         //Save the value function - save it to localStorage as (ID, VALUE)

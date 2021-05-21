@@ -148,3 +148,19 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 }
 
  */
+#below {
+    position:relative;
+    margin-top: 15px;
+    width: 335px;
+    display:none;
+}
+#hover-search:hover > #below{
+    display: block;
+}
+.active {
+    color: #2196F3;
+}
+.highlight:focus {
+  outline: none;
+  box-shadow: none;
+}
