@@ -51,7 +51,7 @@
     </thead>
     <tbody>
     <br />
-{% for publication, cover_image in zipped_data %}
+{% for publication, cover_image, search_term_appear_in in zipped_data %}
     <tr id="publications">
         <td>{{ publication.date_created }}</td>
         {% if cover_image %}
@@ -89,7 +89,7 @@
         {% endif %}
         </td>
         <td>
-            {{ publication.search_term_appear_in }}
+            {{ search_term_appear_in }}
         </td>
         <td>
             <a href="/publication/{{ publication.id }}/detail_view">View</a>
