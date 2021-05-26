@@ -93,7 +93,7 @@
                   <input type="hidden" id="page_name" name="page name" />
                   <script>
                     document.getElementById("page_name").value = window.location.pathname;
-                    if(window.location.pathname === '/uploadedfile/show/'){
+                    if(window.location.pathname.startsWith('/uploadedfile/')){
                         document.getElementById("search_form").action = "{% url 'uploadedfile-show' %}";
                     }
                     else {
