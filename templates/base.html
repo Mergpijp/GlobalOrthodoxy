@@ -81,7 +81,7 @@
     </nav>
     <div style="float:right;">
         <div id="hover-search">
-                <form class="form-inline my-2 my-lg-0" action="{% url 'publication-show' %}" method="get">
+                <form class="form-inline my-2 my-lg-0" action="{% url 'publication-show' %}" method="get" id='search_form'>
                   <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar" name="q" style="Text-align: start;unicode-bidi: plaintext;" onkeyup='saveValue(this);'>
                   <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                   <input type="hidden" id="title" name="search title" value="false" />
@@ -90,6 +90,16 @@
                   <input type="hidden" id="keywords" name="search keywords" value="false" />
                   <input type="hidden" id="image_content" name="search image content" value="false" />
                   <input type="hidden" id="description" name="search description" value="false" />
+                  <input type="hidden" id="page_name" name="page name" />
+                  <script>
+                    document.getElementById("page_name").value = window.location.pathname;
+                    if(window.location.pathname === '/uploadedfile/show/'){
+                        document.getElementById("search_form").action = "{% url 'uploadedfile-show' %}";
+                    }
+                    else {
+                        document.getElementById("search_form").action = "{% url 'publication-show' %}";
+                    }
+                  </script>
                 </form>
 
             <div id="below">
@@ -103,6 +113,9 @@
         </div>
     </div>
     <script>
+        $( document ).ready(function() {
+
+        });
         $('#highlight1').on('click', function() {
             if (document.getElementById('highlight1').classList.contains('active') ) {
                 $('#highlight1').removeClass('active');
@@ -163,6 +176,7 @@
                 $('#description').val('true');
             }
         });
+
         document.getElementById("search_bar").value = getSavedValue("search_bar");
 
         //Save the value function - save it to localStorage as (ID, VALUE)

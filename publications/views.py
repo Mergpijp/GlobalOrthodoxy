@@ -2190,10 +2190,20 @@ class UploadedFileShow(ListView):
 
     def get_queryset(self):
         uploadedfiles = UploadedFile.objects.filter(is_deleted=False)
+        if ('q' in self.request.GET) and self.request.GET['q'].strip():
+            query_string = self.request.GET['q']
+            search_fields = ['image_title', 'filecategory__name', 'image_contents', 'file', 'uploaded_at']
+            query_string = to_searchable(query_string)
+            entry_query = get_query(query_string, search_fields)
+            uploadedfiles = uploadedfiles.filter(Q(entry_query))
+
         ordering = self.get_ordering()
         if ordering is not None and ordering != "":
             uploadedfiles = uploadedfiles.order_by(ordering)
         return uploadedfiles
+
+    def post(self, request, *args, **kwargs):
+        return export_csv_file(request, self.get_queryset())
 
     def get_ordering(self):
         ordering = self.request.GET.get('order_by')
