@@ -1158,7 +1158,7 @@ class SearchResultsView(ListView):
         index = 0
         for pub in context['publications']:
             search_term_appear_in.append('')
-            if context['q'] == None or context['q'] == '':
+            if q == None or q == '':
                 continue
             for field in Publication._meta.get_fields():
                 if Publication._meta.get_field(field.name).get_internal_type() == 'ManyToManyField' or \
