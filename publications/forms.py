@@ -397,14 +397,18 @@ class NewCrispyForm(forms.ModelForm):
                     'ISBN_number',
                     'printed_by',
                     'published_by',
-                    'publication_year',
-                    'is_periodical',
-                    'start_year',
-                    'end_year',
-                    'ongoing',
-                    #Div('is_periodical', 'start_year', 'end_year', 'ongoing', css_class="phidden", css_id="hiddenp"),
-                    #Button('periodical', 'toggle periodical', css_class='btn-back btn-danger',
-                    #       onclick="$('.phidden').toggleClass('phidden');"),
+                    HTML("""
+                        <input type="checkbox" name="is_periodical" class="checkboxinput" id="id_is_periodical" onclick="togglePeriodical();">
+                        <label for=id_is_periodical">is periodical</label>
+                          <script>
+                            function togglePeriodical() {
+                                $('#hiddenp').toggleClass('phidden');
+                                $('#shownp').toggleClass('phidepubyear');
+                            }
+                         </script>
+                    """),
+                    Div('publication_year', css_id="shownp"),
+                    Div('start_year', 'end_year', 'ongoing', css_class="phidden", css_id="hiddenp"),
                     'publication_country',
                     #FieldWithButtons('publication_city', StrictButton('+', type='button', css_class='btn-danger',
                     #                                                  onClick="window.open('/city/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),

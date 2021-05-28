@@ -97,7 +97,10 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     display: none;
 }
 .phidden{
-    display: none;
+    display: none !important;
+}
+.phidepubyear{
+    display: none !important;
 }
 #my-drop-zone {
     background: white;
@@ -157,8 +160,8 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 #hover-search:hover > #below{
     display: block;
 }
-.active {
-    color: #2196F3;
+.active search_button {
+    color: #2196F3 !important;
 }
 .highlight:focus {
   outline: none;

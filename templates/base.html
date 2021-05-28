@@ -86,7 +86,7 @@
                   <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                   <input type="hidden" id="title" name="search title" value="false" />
                   <input type="hidden" id="title_translation" name="search title translation" value="false" />
-                  <input type="hidden" id="author" name="search author" value="false" />
+                  <input type="hidden" id="search_author" name="search author" value="false" />
                   <input type="hidden" id="keywords" name="search keywords" value="false" />
                   <input type="hidden" id="image_content" name="search image content" value="false" />
                   <input type="hidden" id="description" name="search description" value="false" />
@@ -113,66 +113,69 @@
         </div>
     </div>
     <script>
-        $( document ).ready(function() {
-
-        });
         $('#highlight1').on('click', function() {
-            if (document.getElementById('highlight1').classList.contains('active') ) {
-                $('#highlight1').removeClass('active');
+            var cList = document.getElementById('highlight1').classList;
+            if (cList.contains('active') && cList.contains('search_button')) {
+                $(this).removeClass('active search_button');
                 $('#title').val('false');
             }
             else {
-                $(this).addClass('active');
+                $(this).addClass('active search_button');
                 $('#title').val('true');
             }
         });
         $('#highlight2').on('click', function() {
-            if (document.getElementById('highlight2').classList.contains('active') ) {
-                $('#highlight2').removeClass('active');
+            var cList = document.getElementById('highlight2').classList;
+            if (cList.contains('active') && cList.contains('search_button')) {
+                $(this).removeClass('active search_button');
                 $('#title_translation').val('false');
             }
             else {
-                $(this).addClass('active');
+                $(this).addClass('active search_button');
                 $('#title_translation').val('true');
             }
         });
         $('#highlight3').on('click', function() {
-            if (document.getElementById('highlight3').classList.contains('active') ) {
-                $('#highlight3').removeClass('active');
-                $('#author').val('false');
+            var cList = document.getElementById('highlight3').classList;
+            if (cList.contains('active') && cList.contains('search_button')) {
+                $(this).removeClass('active search_button');
+                $('#search_author').val('false');
             }
             else {
-                $(this).addClass('active');
-                $('#author').val('true');
+                $(this).addClass('active search_button');
+                $('#search_author').val('true');
             }
         });
         $('#highlight4').on('click', function() {
-            if (document.getElementById('highlight4').classList.contains('active') ) {
-                $('#highlight4').removeClass('active');
+            var cList = document.getElementById('highlight4').classList;
+            if (cList.contains('active') && cList.contains('search_button')) {
+                $(this).removeClass('active search_button');
                 $('#keywords').val('false');
             }
             else {
-                $(this).addClass('active');
+                $(this).addClass('active search_button');
                 $('#keywords').val('true');
             }
         });
         $('#highlight5').on('click', function() {
-            if (document.getElementById('highlight5').classList.contains('active') ) {
-                $('#highlight5').removeClass('active');
+            var cList = document.getElementById('highlight5').classList;
+            if (cList.contains('active') && cList.contains('search_button')) {
+                $(this).removeClass('active search_button');
                 $('#image_content').val('false');
             }
             else {
-                $(this).addClass('active');
+                $(this).addClass('active search_button');
                 $('#image_content').val('true');
             }
         });
         $('#highlight6').on('click', function() {
-            if (document.getElementById('highlight6').classList.contains('active') ) {
-                $('#highlight6').removeClass('active');
+            var cList = document.getElementById('highlight6').classList;
+            if (cList.contains('active') && cList.contains('search_button')) {
+                $(this).removeClass('active search_button');
                 $('#description').val('false');
             }
             else {
-                $(this).addClass('active');
+                $(this).addClass('active search_button');
                 $('#description').val('true');
             }
         });
