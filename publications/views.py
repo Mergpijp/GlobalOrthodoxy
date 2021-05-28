@@ -722,27 +722,31 @@ class PublicationCreate(UpdateView):
     #    return
 
     def get_object(self):
-        pub = Publication(is_stub=True)
+        #pub = Publication(is_stub=True)
+        #pub.save()
+        pub = Publication.objects.create(is_stub=True, created_by=self.request.user)
         pub.save()
+        self.object = pub
         return pub
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.is_stub = False
-        # todo: temporal solution for double publication.
-        pub = Publication.objects.get(pk=self.object.id-1)
         #pdb.set_trace()
-        form.instance.authors.add(*pub.authors.all())
-        form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
+        # todo: temporal solution for double publication.
+        #pub = Publication.objects.get(pk=self.object.id-1)
+        #pdb.set_trace()
+        #form.instance.authors.add(*pub.authors.all())
+        #form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
 
-        form.instance.translators.add(*pub.translators.all())
+        #form.instance.translators.add(*pub.translators.all())
 
         if form.is_valid():
             #self.object = form.save()
             self.object = form.save()
             self.object.save()
 
-        pub.is_deleted = True
+       # pub.is_deleted = True
         return redirect(self.get_success_url())
 
     def get_success_url(self):
