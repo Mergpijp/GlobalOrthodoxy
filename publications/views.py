@@ -994,11 +994,6 @@ class SearchResultsView(ListView):
             #context['publications'] = publications
             return publications
 
-        pdb.set_trace()
-        for pub in Publication.objects.all():
-            pub.search_term_appear_in = ''
-            pub.save()
-
         for field_name in self.request.GET:
             get_value = self.request.GET.get(field_name)
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
@@ -1163,6 +1158,8 @@ class SearchResultsView(ListView):
         index = 0
         for pub in context['publications']:
             search_term_appear_in.append('')
+            if context['q'] == None or context['q'] == '':
+                continue
             for field in Publication._meta.get_fields():
                 if Publication._meta.get_field(field.name).get_internal_type() == 'ManyToManyField' or \
                         Publication._meta.get_field(field.name).get_internal_type() == 'ForeignKey':
@@ -1192,7 +1189,7 @@ class SearchResultsView(ListView):
                                         search_term_appear_in[index] = 'translator__'+translator_field.name
                                     elif not (translator_field.name in search_term_appear_in):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', translator__' + translator_field.name
-                    elif field.name == 'publication_city':
+                    elif field.name == 'publication_city' and pub.publication_city:
                         if not isinstance(pub.publication_city.name, str) \
                                 and not isinstance(pub.publication_city.name, int):
                             continue
@@ -1346,7 +1343,7 @@ class SearchResultsView(ListView):
                     elif field.name == 'created_by':
                         user_fields = ['username', 'first_name', 'last_name']
                         for created_by_field in user_fields:
-                            if not isinstance(getattr(pub.created_by, created_by_field), str) \
+                            if not pub.created_by or not isinstance(getattr(pub.created_by, created_by_field), str) \
                                     and not isinstance(getattr(pub.created_by, created_by_field), int):
                                 continue
                             if regexp.search(str(getattr(pub.created_by, created_by_field))):
