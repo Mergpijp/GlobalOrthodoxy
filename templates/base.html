@@ -80,10 +80,18 @@
             </a>
     </nav>
     <div style="float:right;">
-        <div id="hover-search">
+        <div id="hover-search" onmouseover="setCSS();" onmouseout="hideCSS();">
                 <form class="form-inline my-2 my-lg-0" action="{% url 'publication-show' %}" method="get" id='search_form'>
                   <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_bar" name="q" style="Text-align: start;unicode-bidi: plaintext;" onkeyup='saveValue(this);'>
-                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search_button"></button>
+                  <script>
+                      if(window.location.pathname.startsWith('/uploadedfile/')){
+                          $("#search_button").html("Search uploaded files");
+                      }
+                      else {
+                          $("#search_button").html("Search publications");
+                      }
+                  </script>
                   <input type="hidden" id="title" name="search title" value="false" />
                   <input type="hidden" id="title_translation" name="search title translation" value="false" />
                   <input type="hidden" id="search_author" name="search author" value="false" />
@@ -113,6 +121,17 @@
         </div>
     </div>
     <script>
+        function setCSS(){
+            if(window.location.pathname.startsWith('/uploadedfile/')) {
+                document.getElementById("below").style.display = "none";
+            }
+            else {
+                document.getElementById("below").style.display = "block";
+            }
+        }
+        function hideCSS(){
+            document.getElementById("below").style.display = "none";
+        }
         $('#highlight1').on('click', function() {
             var cList = document.getElementById('highlight1').classList;
             if (cList.contains('active') && cList.contains('search_button')) {

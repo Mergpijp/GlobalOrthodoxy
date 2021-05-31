@@ -157,9 +157,6 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     width: 335px;
     display:none;
 }
-#hover-search:hover > #below{
-    display: block;
-}
 .active search_button {
     color: #2196F3 !important;
 }
