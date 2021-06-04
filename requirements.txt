@@ -1,4 +1,4 @@
-django==2.2.20
+django==2.2.21
 django-bootstrap4==1.0.1
 django-forms-bootstrap==3.1.0
 django-countries==5.5
