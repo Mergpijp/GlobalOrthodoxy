@@ -298,7 +298,6 @@ class Publication(models.Model):
     created_by = models.ForeignKey('auth.User', related_name='publications', on_delete=models.CASCADE, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
-
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)
     illustration_and_layout_type = models.ManyToManyField(IllustrationLayoutType, blank=True, null=True)
