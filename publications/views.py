@@ -1291,7 +1291,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(author, author_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'author ' + author_field.name
-                                    elif not ('author ' + author_field.name in search_term_appear_in):
+                                    elif not ('author ' + author_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', author ' + author_field.name
                     elif field.name == 'translators':
                         for translator in pub.translators.all():
@@ -1304,7 +1304,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(translator, translator_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'translator '+ translator_field.name
-                                    elif not ('translator ' + translator_field.name in search_term_appear_in):
+                                    elif not ('translator ' + translator_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', translator ' + translator_field.name
                     elif field.name == 'publication_city' and pub.publication_city:
                         if not isinstance(pub.publication_city.name, str) \
@@ -1336,7 +1336,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(form_of_publication, form_of_publication_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'form_of_publication '+form_of_publication_field.name
-                                    elif not ('form_of_publication' + form_of_publication_field.name in search_term_appear_in):
+                                    elif not ('form_of_publication' + form_of_publication_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', form_of_publication ' + form_of_publication_field.name
                     elif field.name == 'affiliated_church':
                         for affiliated_church in pub.affiliated_church.all():
@@ -1350,7 +1350,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(affiliated_church, affiliated_church_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'affiliated_church ' + affiliated_church_field.name
-                                    elif not ('affiliated_church ' + affiliated_church_field.name in search_term_appear_in):
+                                    elif not ('affiliated_church ' + affiliated_church_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', affiliated_church ' + affiliated_church_field.name
                     elif field.name == 'language':
                         for language in pub.language.all():
@@ -1363,7 +1363,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(language, language_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'language '+language_field.name
-                                    elif not ('language ' + language_field.name in search_term_appear_in):
+                                    elif not ('language ' + language_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', language ' + language_field.name
                     elif field.name == 'translated_from' and pub.translated_from:
                         for translated_from_field in Language._meta.get_fields():
@@ -1375,7 +1375,7 @@ class SearchResultsView(ListView):
                             if regexp.search(str(getattr(pub.translated_from, translated_from_field.name))):
                                 if search_term_appear_in[index] == '':
                                     search_term_appear_in[index] = 'translated_from '+translated_from_field.name
-                                elif not ('translated_from ' + translated_from_field.name in search_term_appear_in):
+                                elif not ('translated_from ' + translated_from_field.name in search_term_appear_in[index]):
                                     search_term_appear_in[index] = search_term_appear_in[
                                                                        index] + ', translated_form ' + translated_from_field.name
                     elif field.name == 'content_genre':
@@ -1389,7 +1389,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(genre, content_genre_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'content_genre '+content_genre_field.name
-                                    elif not ('content_genre '+content_genre_field.name in search_term_appear_in):
+                                    elif not ('content_genre '+content_genre_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', content_genre ' + content_genre_field.name
                     elif field.name == 'connected_to_special_occasion':
                         for special_occasion in pub.connected_to_special_occasion.all():
@@ -1402,7 +1402,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(special_occasion, special_occasion_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'special_occasion '+special_occasion_field.name
-                                    elif not ('special_occasion '+special_occasion_field.name in search_term_appear_in):
+                                    elif not ('special_occasion '+special_occasion_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', special_occasion ' + special_occasion_field.name
                     elif field.name == 'collection_country' and pub.collection_country:
                         if not isinstance(pub.collection_country.name, str) \
@@ -1411,7 +1411,7 @@ class SearchResultsView(ListView):
                         if regexp.search(str(pub.collection_country.name)):
                             if search_term_appear_in[index] == '':
                                 search_term_appear_in[index] = 'collection_country name'
-                            elif not ('collection_country name' in search_term_appear_in):
+                            elif not ('collection_country name' in search_term_appear_in[index]):
                                 search_term_appear_in[index] = search_term_appear_in[
                                                                    index] + ', ' + 'collection_country name'
                     elif field.name == 'currently_owned_by':
@@ -1426,7 +1426,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(currently_owned_by, currently_owned_by_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'currently_owned_by_field '+currently_owned_by_field.name
-                                    elif not ('currently_owned_by_field '+currently_owned_by_field.name in search_term_appear_in):
+                                    elif not ('currently_owned_by_field '+currently_owned_by_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', currently_owned_by_field ' + currently_owned_by_field.name
                     elif field.name == 'keywords':
                         for keyword in pub.keywords.all():
@@ -1439,7 +1439,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(keyword, keyword_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'keyword '+keyword_field.name
-                                    elif not ('keyword '+keyword_field.name in search_term_appear_in):
+                                    elif not ('keyword '+keyword_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', keyword ' + keyword_field.name
                     elif field.name == 'uploadedfiles':
                         for uploadedfile in pub.uploadedfiles.all():
@@ -1452,7 +1452,7 @@ class SearchResultsView(ListView):
                                 if regexp.search(str(getattr(uploadedfile, uploadedfile_field.name))):
                                     if search_term_appear_in[index] == '':
                                         search_term_appear_in[index] = 'uploadedfile '+uploadedfile_field.name
-                                    elif not ('uploadedfile '+uploadedfile_field.name in search_term_appear_in):
+                                    elif not ('uploadedfile '+uploadedfile_field.name in search_term_appear_in[index]):
                                         search_term_appear_in[index] = search_term_appear_in[index] + ', uploadedfile ' + uploadedfile_field.name
                     elif field.name == 'created_by':
                         user_fields = ['username', 'first_name', 'last_name']
@@ -1463,7 +1463,7 @@ class SearchResultsView(ListView):
                             if regexp.search(str(getattr(pub.created_by, created_by_field))):
                                 if search_term_appear_in[index] == '':
                                     search_term_appear_in[index] = 'created_by '+created_by_field
-                                elif not ('created_by '+created_by_field in search_term_appear_in):
+                                elif not ('created_by '+created_by_field in search_term_appear_in[index]):
                                     search_term_appear_in[index] = search_term_appear_in[
                                                                        index] + ', created_by ' + created_by_field
                 if not isinstance(getattr(pub, field.name), str) and not isinstance(getattr(pub, field.name), int):
@@ -1471,7 +1471,7 @@ class SearchResultsView(ListView):
                 elif regexp.search(str(getattr(pub, field.name))):
                     if search_term_appear_in[index] == '':
                         search_term_appear_in[index] = field.name
-                    elif not (field.name in search_term_appear_in):
+                    elif not (field.name in search_term_appear_in[index]):
                         search_term_appear_in[index] = search_term_appear_in[index] + ', ' + field.name
             index += 1
         context['search_term_appear_in'] = search_term_appear_in
