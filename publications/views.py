@@ -880,7 +880,6 @@ class SearchResultsView(ListView):
             url += '&direction=' + self.request.GET.get('direction')
         if self.request.GET.get('q'):
             url += '&q' + self.request.GET.get('q')
-
         return url
     '''
 
@@ -896,6 +895,7 @@ class SearchResultsView(ListView):
         #return render(request, self.template_name, {'publications': pubs, 'q': q})
 
     def get_ordering(self):
+        #pdb.set_trace()
         ordering = self.request.GET.get('order_by')
         direction = self.request.GET.get('direction')
         if ordering is not None and ordering != "" and direction is not None and direction != "":
@@ -909,7 +909,7 @@ class SearchResultsView(ListView):
         #form = PublicationForm(self.request.GET)
         authors = self.request.GET.getlist('authors')
         translators = self.request.GET.getlist('translators')
-        #pdb.set_trace()
+       #pdb.set_trace()
         if not authors == ['']:
             authors = Author.objects.filter(pk__in=authors).all()
         if not translators == ['']:
@@ -995,7 +995,8 @@ class SearchResultsView(ListView):
             if((search_title == 'true' and search_title_translation == 'true' and search_author == 'true' and search_keywords == 'true' and \
                     search_image_content == 'true' and search_description == 'true') or (search_title == 'false' and search_title_translation == 'false' and \
                     search_author == 'false' and search_keywords == 'false' and search_image_content == 'false' and \
-                    search_description == 'false')):
+                    search_description == 'false') or (not search_title and not search_title_translation and not search_author and not search_keywords and \
+                    not search_image_content and not search_description)):
                 search_fields = ['title', 'title_subtitle_transcription', 'title_translation', 'authors__name', 'authors__name_original_language', 'authors__extra_info', \
                       'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translators__name', 'translators__name_original_language', 'translators__extra_info', \
                       'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
@@ -1044,7 +1045,7 @@ class SearchResultsView(ListView):
                 publications = publications.order_by(ordering)
             publications = publications.distinct()
 
-
+            #pdb.set_trace()
 
             #context['publications'] = publications
             return publications
@@ -1474,6 +1475,7 @@ class SearchResultsView(ListView):
                         search_term_appear_in[index] = search_term_appear_in[index] + ', ' + field.name
             index += 1
         context['search_term_appear_in'] = search_term_appear_in
+        #pdb.set_trace()
         context['zipped_data'] = zip(context['publications'], context['cover_images'], context['search_term_appear_in'])
         return context
 
