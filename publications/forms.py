@@ -261,17 +261,17 @@ class NewCrispyForm(forms.ModelForm):
     '''
     authors = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Author,
-        search_fields=['name__icontains'],
+        search_fields=['name__startswith'],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Author.objects.all(), required=False)
     translators = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Translator,
-        search_fields=['name__icontains'],
+        search_fields=['name__startswith'],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Translator.objects.all(), required=False)
     form_of_publication = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=FormOfPublication,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=FormOfPublication.objects.all(), required=False)
     publication_country = forms.ModelChoiceField(
@@ -280,60 +280,60 @@ class NewCrispyForm(forms.ModelForm):
         required=False,
         widget=ModelSelect2Widget(
             model=Country,
-            search_fields=['name__icontains'],
+            search_fields=['name__startswith'],
             attrs={'data-minimum-input-length': 0},
             dependent_fields={'publication_city': 'cities'},
         )
     )
     publication_city = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=City,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         dependent_fields={'publication_country': 'country'},
         attrs={'data-minimum-input-length': 0},
     ), queryset=City.objects.all(), required=False)
     affiliated_church = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Church,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Church.objects.all(), required=False)
     language = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Language,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Language.objects.all(), required=False)
     content_genre = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Genre,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Genre.objects.all(), required=False)
     connected_to_special_occasion = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=SpecialOccasion,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=SpecialOccasion.objects.all(), required=False)
     collection_country = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=Country,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Country.objects.all(), required=False)
     currently_owned_by = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=Owner,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Owner.objects.all(), required=False)
     keywords = forms.ModelMultipleChoiceField(widget=KeywordSelect2TagWidget(
         model=Keyword,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0, "data-token-separators": '[";"]', },
     ), queryset=Keyword.objects.all(), required=False)
     uploadedfiles = forms.ModelMultipleChoiceField(widget=ModelSelect2MultipleWidget(
         model=UploadedFile,
-        search_fields=['description__icontains', ],
+        search_fields=['description__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=UploadedFile.objects.all(), required=False)
     translated_from = forms.ModelChoiceField(widget=ModelSelect2Widget(
         model=Language,
-        search_fields=['name__icontains', ],
+        search_fields=['name__startswith', ],
         attrs={'data-minimum-input-length': 0},
     ), queryset=Language.objects.all(), required=False)
     '''
