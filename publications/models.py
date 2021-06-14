@@ -61,7 +61,7 @@ class Genre(models.Model):
     name = models.CharField(max_length=100, blank=True)
 	
     def __str__(self):
-        return 'Genre: ' + self.name
+        return self.name
  
 def current_year():
     '''
@@ -82,7 +82,7 @@ class Language(models.Model):
     name = models.CharField(max_length=100, blank=True)
     direction = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in WritingDirection])
     def __str__(self):
-        return 'name: ' + self.name
+        return self.name
 
 class Author(models.Model):
     '''
@@ -94,7 +94,7 @@ class Author(models.Model):
     extra_info = models.CharField(max_length=400, blank=True)
 	
     def __str__(self):
-        return 'name: ' + self.name +  ' name original language: ' + self.name_original_language
+        return self.name +  ' ' + self.name_original_language
 
 class Translator(models.Model):
     '''
@@ -105,7 +105,7 @@ class Translator(models.Model):
     extra_info = models.CharField(max_length=400, blank=True)
    
     def __str__(self):
-        return 'name: ' + self.name +  'name original language: ' + self.name_original_language
+        return self.name +  ' ' + self.name_original_language
 
 class Location(models.Model):
     '''
