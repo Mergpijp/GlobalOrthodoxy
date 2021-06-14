@@ -20,6 +20,10 @@
         <!-- Unlink author buttons -->
         <button type="button" class="author-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-author' publication.pk author.pk %}">
           <span class="fa fa-trash"></span> Unlink
+         </button>
+        <!-- update author buttons -->
+        <button type="button" id='init-btn{{ author.pk }}' class="btn btn-primary btn-danger" onclick="window.open('{% url 'author-update' author.pk %}','_blank')">
+          <span class="fa fa-pencil"></span>
         </button>
       </td>
     </tr>

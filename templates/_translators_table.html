@@ -21,6 +21,10 @@
         <button type="button" class="translator-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-translator' publication.pk translator.pk %}">
           <span class="fa fa-trash"></span> Unlink
         </button>
+        <!-- update translator buttons -->
+        <button type="button" id='init-btn{{ translator.pk }}' class="btn btn-primary btn-danger" onclick="window.open('{% url 'translator-update' translator.pk %}','_blank')">
+          <span class="fa fa-pencil"></span>
+        </button>
       </td>
     </tr>
   {% endfor %}

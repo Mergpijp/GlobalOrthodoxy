@@ -19,12 +19,255 @@
         <button type="button" class="uploadedfile-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-file' publication.pk uploadedfile.pk %}">
           <span class="fa fa-trash"></span> Unlink File
         </button>
+        <!-- Update UploadedFile buttons -->
+        <button type="button" id='init-btn{{ uploadedfile.pk }}' class="btn btn-primary btn-danger" onclick="window.open('{% url 'uploadedfile-update' uploadedfile.pk %}','_blank')">
+          <span class="fa fa-pencil"></span>
+        </button>
       </td>
     </tr>
-  {% endfor %}
+        <!-- Modal -->
+        <div id="UpdateUploadedFileModal{{ uploadedfile.pk }}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title col-md-10">Update Uploadedfile</h5>
+                <button type="button" class="close" id="close-btn" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div id="div_id_image_title {{ uploadedfile.pk }}" class="form-group">
+                   <label for="id_image_title{{ uploadedfile.pk }}" class="">
+                   Image title
+                   </label>
+                   <div class=""> <input type="text" name="image_title" maxlength="255" class="textinput textInput form-control" id="id_image_title{{ uploadedfile.pk }}" value="{{ uploadedfile.image_title }}"> </div>
+                </div>
+                <div class="form-group" >
+                   <label for="id_filecategory{{ uploadedfile.pk }}" class="">
+                   Filecategory
+                   </label>
+                   <div class="">
+                      <div class="input-group">
+                         <select name="filecategory" id="id_filecategory {{ uploadedfile.pk }}">
+                             <option value="{{ uploadedfile.filecategory }}" selected></option>
+                         </select>
+                            <br/>
+                            <br/>
+
+                          <a data-toggle="modal" href="#FilecategoryModal" class="btn btn-primary btn-danger" id="filecategory-btn">Add Filecategory</a>
+
+                   </div>
+                </div>
+                </div>
+                <div id="div_id_image_contents {{ uploadedfile.pkl }}" class="form-group">
+                   <label for="id_image_contents{{ uploadedfile.pk }}" class="">
+                   Image contents
+                   </label>
+                   <div class=""> <input type="text" name="image contents" maxlength="1000" class="textinput textInput form-control" id="id_image_contents{{ uploadedfile.pk }}" value="{{ uploadedfile.image_contents }}"> </div>
+                </div>
+                File
+                <div id='my-drop-zone{{ uploadedfile.pk }}' class='needsclick'>
+                   <div class="dz-message needsclick">
+                      Drop file here or click to upload.
+                   </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="close-btn{{ uploadedfile.pk }}" data-dismiss="modal">Close</button>
+                <button type="button" id="update-file-btn{{ uploadedfile.pk }}" class="submit-btn btn btn-danger" data-dismiss="modal">Update</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+<script>
+$(function () {
+
+$("#update-btn{{ author.pk }}").click(function(e) {
+    var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+        name: $('#id_name{{ author.pk }}').val(),
+        name_original_language: $('#id_name_original_language{{ author.pk }}').val(),
+        extra_info: $('#id_extra_info{{ author.pk }}').val()
+    }
+    $.post($(this).attr('data-form-url'), data, function(data,status){
+        if(status === 'success') {
+            $('#id_search_authors').val('');
+            $("#authors-div").html(data["table"]);
+        }
+    });
+})
+$("#uploadedfile-btn").click(function(e) {
+    document.getElementById('id_image_title').value = '';
+    document.getElementById('id_image_contents').value = '';
+    $("#id_filecategory").select2("val", "0");
+});
+Dropzone.autoDiscover = false;
+var myDropzone = new Dropzone("div#my-drop-zone{{ uploadedfile.pk }}", {
+    url: "{% url 'uploadedfile-proces' uploadedfile.pk publication.pk %}",
+    method: "post",
+    autoProcessQueue: false,
+    maxFiles: 1,
+    timeout: 0,
+    addRemoveLinks: true,
+    maxfilesexceeded: function(file) {
+        this.removeAllFiles();
+        console.log(file)
+        this.addFile(file);
+    },
+    init: function () {
+        var myDropzone = this;
+        var addButton = $("#update-file-btn{{ uploadedfile.pk }}");
+        var closeButton =  $("#close-btn{{ uploadedfile.pk }}");
+
+        //var urlCreator = window.URL || window.webkitURL;
+        // var imageUrl = urlCreator.createObjectURL( blob );
+
+        var parts = ["{{ uploadedfile.chunks }}", new ArrayBuffer()];
+        file = new File(parts, "{{ uploadedfile.file.name }}",
+            {
+                name: "{{ uploadedfile.file.name }}",
+                size: {{ uploadedfile.file.size }},
+                type: "image/" + "{{ uploadedfile.extension }}",
+                path: "/media/{{ uploadedfile.file }}",
+            });
+        myDropzone.options.addedfile.call(myDropzone, file);
+        myDropzone.options.thumbnail.call(myDropzone, file, "/media/{{ uploadedfile.file }}");
+
+        //myDropzone.addFile(file);
+        closeButton.click(function (e) {
+            Dropzone.forElement("#my-drop-zone{{ uploadedfile.pk }}").removeAllFiles(true);
+        });
+        var closeButton2 =  $("#close-btn2");
+        closeButton2.click(function (e) {
+            Dropzone.forElement("#my-drop-zone{{ uploadedfile.pk }}").removeAllFiles(true);
+        });
+        addButton.click(function (e) {
+            console.log(myDropzone.getQueuedFiles().length)   ;
+        if (myDropzone.getQueuedFiles().length > 0) {
+            e.preventDefault();
+            e.stopPropagation();
+            myDropzone.processQueue();
+        }
+        });
+
+    },
+    sending: function (file, xhr, formData) {
+        formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+        formData.append("image_title", $('#id_image_title{{ uploadedfile.pk }}').val());
+        if ($('#id_filecategory{{ uploadedfile.pk }}').val() == null) {
+            formData.append('filecategory', "");
+        }
+        else {
+            formData.append('filecategory', $('#id_filecategory{{ uploadedfile.pk }}').val());
+        }
+        formData.append('image_contents', $('#id_image_contents{{ uploadedfile.pk }}').val());
+    },
+    success: function (file, response) {
+        $("#uploadedfiles-div").html(response["table"]);
+        $('#UpdateUploadedFileModal{{ uploadedfile.pk }}').modal('toggle');
+    }
+});
+$("#my-drop-zone{{ uploadedfile.pk }}").addClass("dropzone");
+Dropzone.options.myDropzone = {
+  thumbnailWidth: 200,
+  thumbnailHeight: 200,
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+});
+</script>
+{% endfor %}
   </tbody>
 </table>
+<!-- Modal -->
+<div id="FilecategoryModal" class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title col-md-10">Create Filecategory</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="id_filecategory_name">Name</label>
+            <input type="text" name="name" maxlength="255" placeholder="Name" class="form-control" id="id_filecategory_name">
+            <div class="">
+            </div>
+        </div>
+        <div id="div_id_order_index" class="form-group"> <label for="id_order_index" class="">
+            Order index
+        </label> <div class=""> <input type="number" name="order_index" class="numberinput form-control" id="id_order_index"> </div>
+        </div>
+        <div id="div_id_list_view_priority" class="form-group"> <label for="id_list_view_priority" class="">
+            List view priority
+        </label> <div class=""> <input type="number" name="list_view_priority" class="numberinput form-control" id="id_list_view_priority"> </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" id="filecategory-create" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+      </div>
+  </div>
+</div>
+</div>
 <script>
+$("#filecategory-btn").click(function(e) {
+    document.getElementById('id_filecategory_name').value = '';
+    document.getElementById('id_list_view_priority').value = 0;
+    document.getElementById('id_order_index').value = 0;
+});
+$("#filecategory-create").click(function(e) {
+var fd = new FormData();
+fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+fd.append("name", $('#id_filecategory_name').val());
+fd.append("list_view_priority", $('#id_list_view_priority').val());
+fd.append("order_index", $('#id_order_index').val());
+
+$.ajax({
+  url: "{% url 'filecategory-proces' %}",
+  data: fd,
+  processData: false,
+  contentType: false,
+  type: 'POST',
+});
+});
+    $(document).ready(function(){
+        $("#id_filecategory").select2({
+    minimumInputLength: 0,
+    allowClear: true,
+    placeholder: "--------",
+    ajax: {
+        url: "/select2_filecategory",
+        dataType: "json",
+        type: "GET",
+
+    },
+    processResults: function (data) {
+        return {
+            results: data
+        };
+    }
+});
+
+});
  $( ".uploadedfile-unlink" ).click(function() {
     var data = {
         csrfmiddlewaretoken: getCookie('csrftoken'),

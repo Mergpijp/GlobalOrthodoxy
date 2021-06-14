@@ -7,6 +7,7 @@ from countries_plus.models import Country
 from time import gmtime, strftime
 import datetime
 from django.utils import timezone
+import os
 
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
@@ -204,6 +205,13 @@ class UploadedFile(models.Model):
     def __str__(self):
         return self.image_title
 
+    def extension(self):
+        name, extension = os.path.splitext(self.file.name)
+        return extension
+
+    def chunks(self):
+        chunks = [c for c in self.file.chunks()]
+        return chunks
     class Meta:
         ordering = ('filecategory__order_index',)
 
