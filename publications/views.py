@@ -977,12 +977,12 @@ class SearchResultsView(ListView):
 
         print(publications)
 
-        search_title = self.request.GET.get('search title')
-        search_title_translation = self.request.GET.get('search title translation')
-        search_author = self.request.GET.get('search author')
-        search_keywords = self.request.GET.get('search keywords')
-        search_image_content = self.request.GET.get('search image content')
-        search_description = self.request.GET.get('search description')
+        search_title = self.request.GET.get('search_title')
+        search_title_translation = self.request.GET.get('search_title_translation')
+        search_author = self.request.GET.get('search_author')
+        search_keywords = self.request.GET.get('search_keywords')
+        search_image_content = self.request.GET.get('search_image_content')
+        search_description = self.request.GET.get('search_description')
 
 
         exclude = ['csrfmiddlewaretoken','search', 'order_by', 'direction']
