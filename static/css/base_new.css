@@ -1,0 +1,183 @@
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #40465E;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 5px;}
+  .sidenav a {font-size: 18px;}
+}
+#mySidenav {
+    width : 80px;
+}
+#publications {
+	position: absolute;
+	top: 0px;
+	right: 5px;
+}
+#churches {
+	position: absolute;
+	top: 65px;
+	right: 7px;
+}
+#languages {
+	position: absolute;
+	top: 135px;
+	right: 15px;
+}
+/* Add a black background color to the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background-color: #F2F2F2;
+}
+/* Style the search box inside the navigation bar */
+.topnav input[type=text] {
+  float: right;
+  padding: 6px;
+  border: none;
+  margin-top: 15px;
+  margin-right: 16px;
+  font-size: 17px;
+}
+
+/* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
+@media screen and (max-width: 600px) {
+  .topnav a, .topnav input[type=text] {
+    float: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+  .topnav input[type=text] {
+    border: 1px solid #ccc;
+  }
+}
+body {
+	background-color: #F2F2F2;
+}
+#right
+{
+    position:absolute;
+    right:0px;
+	top: 10px;
+
+}
+#header {
+  color: #575757;
+}
+a:visited{
+  color: #9b9ba6;
+}
+a:hover{
+  color: #e1afaf;
+}
+a {
+  color : #9b9ba6;
+}
+#creation {
+  color: #e1afaf;
+  text-decoration: underline;
+}
+#sub-head {
+  color : #9b9ba6;
+}
+.btn-rounded {
+  border-radius: 20px;
+  background: #A21B1B;
+  color: white;
+  top: 875px;
+  left: 400px;
+  position: absolute;
+}
+#publication_content {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-right: 50px;
+  margin-left: 50px;
+  width:500px;
+  position: relative;
+}
+#cover_image {
+  display: inline-block;
+  position: relative;
+  left: 0;
+}
+#right-element {
+    background: white;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    left: 200px;
+    width: 600px;
+}
+#bottom_right-element {
+  background: #ededed;
+  position: absolute;
+  //left: 300px;
+  top: 150px;
+  width : 600px;
+  height: 50px;
+}
+#text-element {
+  position: absolute;
+  width : 600px;
+  height : 150px;
+
+  background: white;
+}
+#title_text {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  right: 15px;
+}
+#title_translation {
+  position: absolute;
+  left: 15px;
+  top: 75px;
+}
+#publication_place_year{
+  position: absolute;
+  left: 320px;
+  top: 10px;
+}
+#author_name{
+  position: absolute;
+  left:  15px;
+  top: 10px;
+}

@@ -1,0 +1,198 @@
+{% extends "new_base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <br />
+    <form action="{% url 'publication-show' %}?{{ request.GET.urlencode }}" method="post">
+        {% csrf_token %}
+            <!-- Modal -->
+        <div id="CsvModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title col-md-10">Instructions for opening CSV</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <ol>
+                  <li>Open Microsoft Excel</li>
+                  <li>Go to tab 'Data'</li>
+                  <li>Click on 'From text'</li>
+                  <li>Select the CSV file which has just been downloaded</li>
+                  <li>Choose delimited for tab seperation</li>
+                  <li>Set File origin to: 65001 : Unicode (UTF-8) for all characters</li>
+                  <li>Press next under delimiters select Tab only</li>
+                  <li>Press next and then press finish</li>
+                </ol>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+    </form>
+<div id="header">
+    <h1><b>PUBLICATIONS</b></h1>
+    <div id="sub-head">SORT BY <a href="?q={{ q }}&order_by=date_created&direction=asc" class="asearch" id="creation">Creation date</a>
+        <a href="?q={{ q }}&order_by=title&direction=asc" class="asearch" id="title">Title</a>
+        <a href="?q={{ q }}&order_by=author_name&direction=asc" class="asearch" id="author">Author</a>
+        <a href="?q={{ q }}&order_by=publication_year&direction=asc" class="asearch" id="year">Year</a>
+    </div>
+    <script>
+    $('#creation').click(function() {
+        var color = $('#creation').css('color');
+        if (color === 'rgb(155, 155, 166)')
+            $('#creation').css({
+                'color': '#e1afaf',
+                'text-decoration': 'underline',
+            });
+        else {
+            $('#creation').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+        }
+        $('#title').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        $('#author').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        $('#year').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        return false;
+    });
+    $('#title').click(function() {
+        var color = $('#title').css('color');
+        if (color === 'rgb(155, 155, 166)')
+            $('#title').css({
+                'color': '#e1afaf',
+                'text-decoration': 'underline',
+            });
+        else {
+            $('#title').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+        }
+        $('#creation').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        $('#author').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        $('#year').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        return false;
+    });
+    $('#author').click(function() {
+        var color = $('#author').css('color');
+        if (color === 'rgb(155, 155, 166)')
+            $('#author').css({
+                'color': '#e1afaf',
+                'text-decoration': 'underline',
+            });
+        else {
+            $('#author').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+        }
+        $('#creation').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        $('#title').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        $('#year').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        return false;
+    });
+    $('#year').click(function() {
+        var color = $('#year').css('color');
+        if (color === 'rgb(155, 155, 166)')
+            $('#year').css({
+                'color': '#e1afaf',
+                'text-decoration': 'underline',
+            });
+        else {
+            $('#year').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+        }
+        $('#creation').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        $('#title').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        $('#author').css({
+            'color': '#9b9ba6',
+            'text-decoration': 'none',
+        });
+        return false;
+    });
+    </script>
+</div>
+<div id="content" class="infinite-container">
+    {% for publication, cover_image, search_term_appear_in in zipped_data %}
+        <div id="publication_content" class="infinite-item">
+         <div id="content">
+            <a id="cover_image" href="/publication/{{ publication.id }}/detail_view"><img src="/media/{{ cover_image }}" width="200" height="200" id="crop_image"></a>
+            <div id="right-element">
+                <div id="text-element">
+                    <div id="title_text">{{ publication.get_truncated_title }}</div>
+                    <div id="title_translation">{{ publication.get_truncated_title_translation }}</div>
+                </div>
+                <div id="bottom_right-element">
+                    <div id="author_name">{{ publication.get_truncated_author_name_new }}</div>
+                    <div id="publication_place_year">{{ publication.publication_city.name }} ({{ publication.publication_country }}), {{ publication.start_year }}</div>
+                </div>
+            </div>
+         </div>
+        </div>
+    {% endfor %}
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_next %}
+            <a class="infinite-more-link" href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}&order_by={{order_by}}&direction={{ direction }}&affiliated_church={{ affiliated_church }}&authors={{ authors }}&translators={{ translators }}&form_of_publication={{ form_of_publication }}&publication_city={{ publication_city }}&languages={{ languages }}&content_genre={{ content_genre }}&connected_to_special_occasion={{ connected_to_special_occasion }}&currently_owned_by={{ currently_owned_by }}&keywords={{ keywords }}&uploadedfiles={{ uploadedfiles }}&filecategory={{ filecategory }}">next</a>
+        {% endif %}
+    </span>
+</div>
+<input type="submit" value="      EXPORT      " data-toggle="modal" data-target="#CsvModal" style="margin:0px auto; display:block;" class="btn btn-rounded"/>
+
+<script src="{% static 'js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/waypoints/infinite.min.js' %}"></script>
+<script>
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        offset: 'bottom-in-view',
+
+        onBeforePageLoad: function () {
+
+        },
+        onAfterPageLoad: function () {
+
+        },
+    });
+</script>
+{% endblock %}

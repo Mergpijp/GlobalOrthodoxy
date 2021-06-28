@@ -12,6 +12,7 @@ import os
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
 MAX_CHARS = 100
+MAX_CHARS_NEW = 35
 
 class FormOfPublication(models.Model):
     ''''
@@ -350,6 +351,14 @@ class Publication(models.Model):
         x = ', '.join([author.name for author in authors.all()])
         if len(x) > MAX_CHARS:
             x = x[:MAX_CHARS] + '...'
+        return x
+
+    @property
+    def get_truncated_author_name_new(self):
+        authors = self.authors
+        x = ', '.join([author.name for author in authors.all()])
+        if len(x) > MAX_CHARS_NEW:
+            x = x[:MAX_CHARS_NEW] + '...'
         return x
 
     @property
