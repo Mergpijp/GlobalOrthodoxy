@@ -977,12 +977,12 @@ class SearchResultsView(ListView):
 
         print(publications)
 
-        search_title = self.request.GET.get('search title')
-        search_title_translation = self.request.GET.get('search title translation')
-        search_author = self.request.GET.get('search author')
-        search_keywords = self.request.GET.get('search keywords')
-        search_image_content = self.request.GET.get('search image content')
-        search_description = self.request.GET.get('search description')
+        search_title = self.request.GET.get('search_title')
+        search_title_translation = self.request.GET.get('search_title_translation')
+        search_author = self.request.GET.get('search_author')
+        search_keywords = self.request.GET.get('search_keywords')
+        search_image_content = self.request.GET.get('search_image_content')
+        search_description = self.request.GET.get('search_description')
 
 
         exclude = ['csrfmiddlewaretoken','search', 'order_by', 'direction']
@@ -1246,6 +1246,36 @@ class SearchResultsView(ListView):
             context['filecategory'] = filecategory
         else:
             context['filecategory'] = ''
+        search_title = self.request.GET.get('search_title')
+        if search_title is not None and search_title != "":
+            context['search_title'] = search_title
+        else:
+            context['search_title'] = ''
+        search_title_translation = self.request.GET.get('search_title_translation')
+        if search_title_translation is not None and search_title_translation != "":
+            context['search_title_translation'] = search_title_translation
+        else:
+            context['search_title_translation'] = ''
+        search_author = self.request.GET.get('search_author')
+        if search_author is not None and search_author != "":
+            context['search_author'] = search_author
+        else:
+            context['search_author'] = ''
+        search_keywords = self.request.GET.get('search_keywords')
+        if search_keywords is not None and search_keywords != "":
+            context['search_keywords'] = search_keywords
+        else:
+            context['search_keywords'] = ''
+        search_image_content = self.request.GET.get('search_image_content')
+        if search_image_content is not None and search_image_content != "":
+            context['search_image_content'] = search_image_content
+        else:
+            context['search_image_content'] = ''
+        search_description = self.request.GET.get('search_description')
+        if search_description is not None and search_description != "":
+            context['search_description'] = search_description
+        else:
+            context['search_description'] = ''
 
         cover_images = []
         for pub in context['publications']:

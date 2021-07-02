@@ -92,13 +92,13 @@
                           $("#search_button").html("Search publications");
                       }
                   </script>
-                  <input type="hidden" id="title" name="search title" value="false" />
-                  <input type="hidden" id="title_translation" name="search title translation" value="false" />
-                  <input type="hidden" id="search_author" name="search author" value="false" />
-                  <input type="hidden" id="keywords" name="search keywords" value="false" />
-                  <input type="hidden" id="image_content" name="search image content" value="false" />
-                  <input type="hidden" id="description" name="search description" value="false" />
-                  <input type="hidden" id="page_name" name="page name" />
+                  <input type="hidden" id="title" name="search_title" value="false" />
+                  <input type="hidden" id="title_translation" name="search_title_translation" value="false" />
+                  <input type="hidden" id="search_author" name="search_author" value="false" />
+                  <input type="hidden" id="keywords" name="search_keywords" value="false" />
+                  <input type="hidden" id="image_content" name="search_image_content" value="false" />
+                  <input type="hidden" id="description" name="search_description" value="false" />
+                  <input type="hidden" id="page_name" name="page_name" />
                   <script>
                     document.getElementById("page_name").value = window.location.pathname;
                     if(window.location.pathname.startsWith('/uploadedfile/')){
