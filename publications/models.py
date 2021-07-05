@@ -222,17 +222,20 @@ CHOICES = (
     (False, "No")
 )
 
-CURRENCIES = ['USD: United States Dollar', 'CAD: Canadian Dollar', 'AUD: Australian Dollar', 'EUR: Euro', 'GBP: Pound sterling', \
-              'SEK: Swedish krona', 'EGP: Egyptian pound', 'LBP: Libanese pound', 'ETB: Ethopian birr', 'ERN: Eritrean nakfa', \
-              'ILS: Israeli shekel', 'AMD: Armenian dram', 'NLD: Dutch gulden', 'AUS: Austrian Schiling','GRM: German Mark',\
+CURRENCIES = ['unknown', 'EUR: Euro', 'GBP: Pound sterling', \
+              'SEK: Swedish krona', \
+              'NLD: Dutch gulden', 'AUS: Austrian Schiling','GRM: German Mark',\
               'MAL: Maltese Lira', 'BEF: Belgian Franc', 'GRD: Greek Drachma', 'CYP: Cypriot Pound', 'IRP: Irish Pound,' \
               'PTE: Portugese Escudo', 'ESK: Estonian Kroon', 'ITL: Italian Lira', 'SLK: Slovak Koruna', 'FNM: Finnish Markka'\
               'LAL: Latvian Lats', 'SLT: Slovenian Tolar', 'FRF: French Franc', 'LIL: Lituanian Litas', 'SPP: Spanish Peseta',\
-              'LXF: Luxembourgian Franc', 'ALL: Albanian Lek', 'BYN: Belarusian Ruble', 'BAM: Bosnia and Herzegovina convertible mark',\
-              'BGN: Bulgarian Lev', 'HRK: Croatian Kuna', 'CZK: Czech Koruna', 'DKK: Danish Krone', 'GEL: Geogrian Lari',\
+              'LXF: Luxembourgian Franc', 'ALL: Albanian Lek', 'BAM: Bosnia and Herzegovina convertible mark',\
+              'BGN: Bulgarian Lev', 'HRK: Croatian Kuna', 'CZK: Czech Koruna', 'DKK: Danish Krone',\
               'HUF: Hungarian Forint', 'ISK: Icelandic Krona', 'CHF: Swiss Franc', 'MDL: Moldovan Leu', 'MKD: Second Macedonian Denar',\
-              'NOK: Norwegian Krone', 'PLN: Polish Zloty', 'RON: Romanian Leu', 'RUB: Russian Ruble', 'RSD: Serbian Dinar',\
-              'SEK: Swedish Kronar', 'CHF: Swiss Franc', 'TRY: Turkish Lira', 'UAH: Ukrainian Hryvnia', 'unknown']
+              'NOK: Norwegian Krone', 'PLN: Polish Zloty', 'RON: Romanian Leu', 'RSD: Serbian Dinar',\
+              'SEK: Swedish Kronar', 'CHF: Swiss Franc', 'TRY: Turkish Lira', 'UAH: Ukrainian Hryvnia', \
+              'USD: United States Dollar', 'CAD: Canadian Dollar', 'AUD: Australian Dollar', 'EGP: Egyptian pound',\
+              'LBP: Libanese pound', 'ETB: Ethopian birr', 'ERN: Eritrean nakfa', 'ILS: Israeli shekel', 'AMD: Armenian dram', \
+              'GEL: Geogrian Lari', 'BYN: Belarusian Ruble', 'RUB: Russian Ruble']
 
 CURRENCY_CHOICES = [(str(i), CURRENCIES[i]) for i in range(0,12)]
 
