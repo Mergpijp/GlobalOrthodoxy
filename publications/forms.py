@@ -363,6 +363,17 @@ class NewCrispyForm(forms.ModelForm):
         self.helper.layout = Layout(
             TabHolder(
                 Tab('Titles',
+                    HTML("""
+                    <script>
+                    $(document).ready(function() {
+                      $(window).keydown(function(event){
+                        if(event.keyCode == 13) {
+                          event.preventDefault();
+                          return false;
+                        }
+                      });
+                    });
+                    </script>            """),
                     'title',
                     'title_subtitle_transcription',
                     'title_translation',

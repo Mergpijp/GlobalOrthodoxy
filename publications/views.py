@@ -621,6 +621,7 @@ class PublicationUpdate(UpdateView):
         elif self.request.POST.get("save_and_continue_editing") :
             return '/publication/' + str(self.object.id) + '/edit/'
         elif self.request.POST.get("save"):
+        #else:
             url = self.request.GET.get('next')
             if url == None:
                 return '/publication/' + str(self.object.id) + '/edit/'
@@ -648,9 +649,17 @@ class PublicationUpdate(UpdateView):
             self.object.save()
             #self.object = form.save(commit=False)
             #self.object.save()
+
         return redirect(self.get_success_url())
         #pdb.set_trace()
-        #return super().form_valid(form)
+        '''
+        red = self.get_success_url()
+        if red:
+         return redirect(red)
+        else:
+            return HttpResponse('')
+        #pdb.set_trace()
+        '''
 @login_required(login_url='/accounts/login/')
 def PublicationDelete(request, pk):
     '''
