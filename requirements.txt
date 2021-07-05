@@ -17,3 +17,5 @@ django-widget-tweaks==1.4.8
 Markdown
 django-gitlog==0.2
 googletrans
+openpyxl==2.6.2
+django-excel-response==2.0.5

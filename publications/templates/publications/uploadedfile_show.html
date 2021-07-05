@@ -3,7 +3,7 @@
     <br />
     <form action="{% url 'uploadedfile-show' %}?{{ request.GET.urlencode }}" method="post">
         {% csrf_token %}
-        <input type="submit" value="Export CSV" data-toggle="modal" data-target="#CsvModal" style="margin:0px auto; display:block;"/>
+        <input type="submit" value="Export Excel" data-toggle="modal" data-target="#CsvModal_void" style="margin:0px auto; display:block;"/>
             <!-- Modal -->
         <div id="CsvModal" class="modal fade" role="dialog">
           <div class="modal-dialog">

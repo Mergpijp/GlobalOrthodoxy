@@ -145,7 +145,7 @@
 </div>
     <form action="{% url 'publication-show-new' %}?{{ request.GET.urlencode }}" method="post">
         {% csrf_token %}
-        <input type="submit" value="      EXPORT      " data-toggle="modal" data-target="#CsvModal" style="margin:0px auto; display:block; position: fixed; right:550px;" class="btn btn-rounded"/>
+        <input type="submit" value="      EXPORT      " data-toggle="modal" data-target="#CsvModal_void" style="margin:0px auto; display:block; position: fixed; right:550px;" class="btn btn-rounded"/>
             <!-- Modal -->
         <div id="CsvModal" class="modal fade" role="dialog">
           <div class="modal-dialog">

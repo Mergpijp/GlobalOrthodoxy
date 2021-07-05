@@ -55,6 +55,9 @@ from bootstrap_modal_forms.generic import (
 )
 import csv
 
+from excel_response import ExcelResponse
+
+
 utc=pytz.UTC
 
 
@@ -842,7 +845,8 @@ def to_searchable(s):
     #s = re.sub(x, s, s)
     return s
 
-def export_csv_file(request, queryset):
+def export_xlsx_file(request, queryset):
+    '''
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment;filename=export.csv'
 
@@ -863,6 +867,17 @@ def export_csv_file(request, queryset):
             fields.append(getattr(pub, field_name))
         writer.writerow(fields)
     return response
+    '''
+    '''
+    workbook = Workbook()
+    worksheet = workbook.active
+
+    response = HttpResponse(content=save_virtual_workbook(workbook),
+                            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=myexport.xlsx'
+    return response
+    '''
+    return ExcelResponse(queryset)
 
 class SearchResultsView(ListView):
     '''
@@ -897,7 +912,7 @@ class SearchResultsView(ListView):
         return ['publications/show.html']
 
     def post(self, request, *args, **kwargs):
-        return export_csv_file(request, self.get_queryset())
+        return export_xlsx_file(request, self.get_queryset())
         #q = request.POST.get('q')
         #pubs= self.get_queryset()
         #return render(request, self.template_name, {'publications': pubs, 'q': q})
@@ -1553,7 +1568,7 @@ class SearchResultsViewNew(ListView):
         return ['publications/show_new.html']
 
     def post(self, request, *args, **kwargs):
-        return export_csv_file(request, self.get_queryset())
+        return export_xlsx_file(request, self.get_queryset())
         #q = request.POST.get('q')
         #pubs= self.get_queryset()
         #return render(request, self.template_name, {'publications': pubs, 'q': q})
@@ -3088,7 +3103,7 @@ class UploadedFileShow(ListView):
         return uploadedfiles
 
     def post(self, request, *args, **kwargs):
-        return export_csv_file(request, self.get_queryset())
+        return export_xlsx_file(request, self.get_queryset())
 
     def get_ordering(self):
         ordering = self.request.GET.get('order_by')
