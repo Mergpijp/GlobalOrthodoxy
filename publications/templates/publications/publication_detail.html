@@ -627,7 +627,7 @@
     </tr>
     </tbody>
 </table>
-{% if object.currently_owned_by.all %}
+{% if object.currently_owned_by.all and user.is_authenticated %}
 <p><b>Currently owned by</b></p>
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
@@ -704,7 +704,7 @@
     </tbody>
 </table>
 {% endif %}
-{% if object.team_comments %}
+{% if object.team_comments and user.is_authenticated %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">
     <tr>
