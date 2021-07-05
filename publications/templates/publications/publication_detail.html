@@ -8,7 +8,8 @@
     <tr>  
         <th>Title</th>
         <th>Title subtitle transcription</th>
-        <th>Title translation</th>  
+        <th>Title translation</th>
+        <th>PDF url</th>
     </tr>
     </thead>
     <tbody>  
@@ -16,6 +17,7 @@
         <td style="text-align: start;unicode-bidi: plaintext;">{{ object.title }}</td>
         <td>{{ object.title_subtitle_transcription}}</td>
         <td>{{ object.title_translation }}</td>
+        <td><a href="{{ object.pdf_url }}">{{ object.pdf_url }}</a></td>
     </tr>
     </tbody>
 </table>

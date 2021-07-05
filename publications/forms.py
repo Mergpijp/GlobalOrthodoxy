@@ -341,6 +341,7 @@ class NewCrispyForm(forms.ModelForm):
         uploadedfiles = self.cleaned_data['uploadedfiles']
         return uploadedfiles
     '''
+    pdf_url = forms.URLField()
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -366,6 +367,7 @@ class NewCrispyForm(forms.ModelForm):
                     'title',
                     'title_subtitle_transcription',
                     'title_translation',
+                    'pdf_url',
                     Div('title2', 'title_subtitle_transcription2', 'title_translation2', css_class="hidden"),
                     Div('title3', 'title_subtitle_transcription3', 'title_translation3', css_class="hidden"),
                     Div('title4', 'title_subtitle_transcription4', 'title_translation4', css_class="hidden"),
@@ -485,7 +487,7 @@ class NewCrispyForm(forms.ModelForm):
         model = Publication
         # See note here: https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.form
         fields = ('title', 'title_subtitle_transcription', 'title_translation', 'title2',
-                  'title_subtitle_transcription2', 'title_translation2', \
+                  'title_subtitle_transcription2', 'title_translation2', 'pdf_url', \
                   'form_of_publication', 'editor', 'printed_by', 'published_by', 'publication_year',
                   'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre',
