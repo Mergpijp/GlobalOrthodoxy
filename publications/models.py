@@ -225,8 +225,8 @@ CHOICES = (
 CURRENCIES = ['unknown', 'EUR: Euro', 'GBP: Pound sterling', \
               'SEK: Swedish krona', \
               'NLD: Dutch gulden', 'AUS: Austrian Schiling','GRM: German Mark',\
-              'MAL: Maltese Lira', 'BEF: Belgian Franc', 'GRD: Greek Drachma', 'CYP: Cypriot Pound', 'IRP: Irish Pound,' \
-              'PTE: Portugese Escudo', 'ESK: Estonian Kroon', 'ITL: Italian Lira', 'SLK: Slovak Koruna', 'FNM: Finnish Markka'\
+              'MAL: Maltese Lira', 'BEF: Belgian Franc', 'GRD: Greek Drachma', 'CYP: Cypriot Pound', 'IRP: Irish Pound', \
+              'PTE: Portugese Escudo', 'ESK: Estonian Kroon', 'ITL: Italian Lira', 'SLK: Slovak Koruna', 'FNM: Finnish Markka',\
               'LAL: Latvian Lats', 'SLT: Slovenian Tolar', 'FRF: French Franc', 'LIL: Lituanian Litas', 'SPP: Spanish Peseta',\
               'LXF: Luxembourgian Franc', 'ALL: Albanian Lek', 'BAM: Bosnia and Herzegovina convertible mark',\
               'BGN: Bulgarian Lev', 'HRK: Croatian Kuna', 'CZK: Czech Koruna', 'DKK: Danish Krone',\
@@ -237,7 +237,7 @@ CURRENCIES = ['unknown', 'EUR: Euro', 'GBP: Pound sterling', \
               'LBP: Libanese pound', 'ETB: Ethopian birr', 'ERN: Eritrean nakfa', 'ILS: Israeli shekel', 'AMD: Armenian dram', \
               'GEL: Geogrian Lari', 'BYN: Belarusian Ruble', 'RUB: Russian Ruble']
 
-CURRENCY_CHOICES = [(str(i), CURRENCIES[i]) for i in range(0,12)]
+CURRENCY_CHOICES = [(str(i), CURRENCIES[i]) for i in range(0, len(CURRENCIES))]
 
 
 class ImageDetails(models.Model):
