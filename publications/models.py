@@ -309,7 +309,7 @@ class Publication(models.Model):
     currently_owned_by = models.ManyToManyField(Owner)
     contact_telephone_number = models.CharField(max_length=100, blank=True)
     contact_email = models.CharField(max_length=100, blank=True)
-    contact_website = models.CharField(max_length=100, blank=True)
+    contact_website = models.URLField(max_length=200, blank=True)
     keywords = models.ManyToManyField(Keyword)
     uploadedfiles = models.ManyToManyField(UploadedFile, blank=True, null=True)
     general_comments = models.TextField(max_length=3000, blank=True)
