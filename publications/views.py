@@ -1061,7 +1061,7 @@ class SearchResultsView(ListView):
             #publications = publications.filter(Q(entry_query) | Q(arabic_query))
             publications = publications.filter(Q(entry_query))
             #for (idx, apin) in enumerate(appears_in):
-
+            '''
             print(publications)
             ordering = self.get_ordering()
             if ordering is not None and ordering != "":
@@ -1072,8 +1072,10 @@ class SearchResultsView(ListView):
 
             #context['publications'] = publications
             return publications
-
+            '''
         for field_name in self.request.GET:
+            if field_name == 'q' or field_name.startswith('search_') or field_name == 'page_name':
+                continue
             get_value = self.request.GET.get(field_name)
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
                not field_name in special_case:

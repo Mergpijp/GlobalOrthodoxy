@@ -361,6 +361,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['keywords'].required = False
         self.fields['translated_from'].required = False
         self.fields['currency'].required = False
+        self.fields['pdf_url'].required = False
 
         self.helper.layout = Layout(
             TabHolder(
