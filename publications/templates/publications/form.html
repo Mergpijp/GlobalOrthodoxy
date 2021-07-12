@@ -8,4 +8,14 @@
     {% csrf_token %}
     {% crispy form form.helper %}
 </form>
+<script>
+$( document ).ready(function() {
+    var url = window.location.href;
+    var lastPart = url.substr(url.lastIndexOf('/') + 1);
+
+    if (lastPart === "None") {
+       close();
+    }
+});
+</script>
 {% endblock %}
