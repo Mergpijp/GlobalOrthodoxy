@@ -150,6 +150,7 @@ class Church(models.Model):
     Manytomany field class with just one charfield name
     '''
     name = models.CharField(max_length=100, blank=True)
+    authors = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author_churches_list', null=True, blank=True)
     
     class Meta:
         verbose_name_plural = "churches"

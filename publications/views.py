@@ -2355,6 +2355,13 @@ class AuthorShow(ListView):
     def get_queryset(self):
         authors = Author.objects.all()
         ordering = self.get_ordering()
+        for author in authors:
+            author.author_churches_list.set(Church.objects.none())
+            for pub in author.publication_set.all():
+                for church in pub.affiliated_church.all():
+                    if church not in author.author_churches_list.all():
+                        author.author_churches_list.add(church)
+                        author.save()
         if ordering is not None and ordering != "":
             authors = authors.order_by(ordering)
         return authors
