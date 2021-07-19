@@ -143,39 +143,6 @@
         {% endif %}
     </span>
 </div>
-    <form action="{% url 'publication-show-new' %}?{{ request.GET.urlencode }}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="      EXPORT      " data-toggle="modal" data-target="#CsvModal_void" style="margin:0px auto; display:block; position: fixed; right:550px;" class="btn btn-rounded"/>
-            <!-- Modal -->
-        <div id="CsvModal" class="modal fade" role="dialog">
-          <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title col-md-10">Instructions for opening CSV</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-              </div>
-              <div class="modal-body">
-                <ol>
-                  <li>Open Microsoft Excel</li>
-                  <li>Go to tab 'Data'</li>
-                  <li>Click on 'From text'</li>
-                  <li>Select the CSV file which has just been downloaded</li>
-                  <li>Choose delimited for tab seperation</li>
-                  <li>Set File origin to: 65001 : Unicode (UTF-8) for all characters</li>
-                  <li>Press next under delimiters select Tab only</li>
-                  <li>Press next and then press finish</li>
-                </ol>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-    </form>
 
 <script src="{% static 'js/waypoints/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/waypoints/infinite.min.js' %}"></script>

@@ -1,6 +1,4 @@
-body {
-  font-family: "Lato", sans-serif;
-}
+
 
 .sidenav {
   height: 100%;
@@ -92,10 +90,9 @@ body {
 }
 #right
 {
-    position:absolute;
+    position:fixed;
     right:0px;
 	top: 10px;
-
 }
 #header {
   color: #575757;
@@ -180,4 +177,11 @@ a {
   position: absolute;
   left:  15px;
   top: 10px;
+}
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+#example-search-input {
+
+
 }
