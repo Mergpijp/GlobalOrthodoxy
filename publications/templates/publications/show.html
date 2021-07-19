@@ -75,7 +75,7 @@
                 {% elif publication.end_year and publication.start_year %}
                     {{ publication.start_year }}-{{ publication.end_year }}
                 {% elif publication.start_year and not publication.end_year %}
-                    {{ publication.start_year }}-?
+                    {{ publication.start_year }}
                 {% elif publication.end_year and not publication.start_year  %}
                     ?-{{ publication.end_year }}
                 {% else %}
