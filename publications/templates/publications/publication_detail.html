@@ -8,7 +8,8 @@
     <tr>  
         <th>Title</th>
         <th>Title subtitle transcription</th>
-        <th>Title translation</th>  
+        <th>Title translation</th>
+        <th>PDF url</th>
     </tr>
     </thead>
     <tbody>  
@@ -16,6 +17,7 @@
         <td style="text-align: start;unicode-bidi: plaintext;">{{ object.title }}</td>
         <td>{{ object.title_subtitle_transcription}}</td>
         <td>{{ object.title_translation }}</td>
+        <td><a href="{{ object.pdf_url }}">{{ object.pdf_url }}</a></td>
     </tr>
     </tbody>
 </table>
@@ -627,7 +629,7 @@
     </tr>
     </tbody>
 </table>
-{% if object.currently_owned_by.all %}
+{% if object.currently_owned_by.all and user.is_authenticated %}
 <p><b>Currently owned by</b></p>
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
@@ -704,7 +706,7 @@
     </tbody>
 </table>
 {% endif %}
-{% if object.team_comments %}
+{% if object.team_comments and user.is_authenticated %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light">
     <tr>

@@ -137,10 +137,12 @@
             if (cList.contains('active') && cList.contains('search_button')) {
                 $(this).removeClass('active search_button');
                 $('#title').val('false');
+                localStorage.setItem("selected_title", null);
             }
             else {
                 $(this).addClass('active search_button');
                 $('#title').val('true');
+                localStorage.setItem("selected_title", $(this).text());
             }
         });
         $('#highlight2').on('click', function() {
@@ -148,10 +150,12 @@
             if (cList.contains('active') && cList.contains('search_button')) {
                 $(this).removeClass('active search_button');
                 $('#title_translation').val('false');
+                localStorage.setItem("selected_title_translation", null);
             }
             else {
                 $(this).addClass('active search_button');
                 $('#title_translation').val('true');
+                localStorage.setItem("selected_title_translation", $(this).text());
             }
         });
         $('#highlight3').on('click', function() {
@@ -159,10 +163,12 @@
             if (cList.contains('active') && cList.contains('search_button')) {
                 $(this).removeClass('active search_button');
                 $('#search_author').val('false');
+                localStorage.setItem("selected_author", null);
             }
             else {
                 $(this).addClass('active search_button');
                 $('#search_author').val('true');
+                localStorage.setItem("selected_author", $(this).text());
             }
         });
         $('#highlight4').on('click', function() {
@@ -170,10 +176,12 @@
             if (cList.contains('active') && cList.contains('search_button')) {
                 $(this).removeClass('active search_button');
                 $('#keywords').val('false');
+                localStorage.setItem("selected_keywords", null);
             }
             else {
                 $(this).addClass('active search_button');
                 $('#keywords').val('true');
+                localStorage.setItem("selected_keywords", $(this).text());
             }
         });
         $('#highlight5').on('click', function() {
@@ -181,10 +189,12 @@
             if (cList.contains('active') && cList.contains('search_button')) {
                 $(this).removeClass('active search_button');
                 $('#image_content').val('false');
+                localStorage.setItem("selected_image_content", null);
             }
             else {
                 $(this).addClass('active search_button');
                 $('#image_content').val('true');
+                localStorage.setItem("selected_image_content", $(this).text());
             }
         });
         $('#highlight6').on('click', function() {
@@ -192,14 +202,17 @@
             if (cList.contains('active') && cList.contains('search_button')) {
                 $(this).removeClass('active search_button');
                 $('#description').val('false');
+                localStorage.setItem("selected_description", null);
             }
             else {
                 $(this).addClass('active search_button');
                 $('#description').val('true');
+                localStorage.setItem("selected_description", $(this).text());
             }
         });
 
         document.getElementById("search_bar").value = getSavedValue("search_bar");
+
 
         //Save the value function - save it to localStorage as (ID, VALUE)
         function saveValue(e){
@@ -215,6 +228,32 @@
             }
             return localStorage.getItem(v);
         }
+        $(document).ready(function () {
+            var selected_title = localStorage.getItem('selected_title');
+            if (selected_title !== null) {
+                $("#highlight1:contains('" + selected_title + "')").addClass("active search_button");
+            }
+            var selected_title_translation = localStorage.getItem('selected_title_translation');
+            if (selected_title_translation !== null) {
+                $("#highlight2:contains('" + selected_title_translation + "')").addClass("active search_button");
+            }
+            var selected_author = localStorage.getItem('selected_author');
+            if (selected_author !== null) {
+                $("#highlight3:contains('" + selected_author + "')").addClass("active search_button");
+            }
+            var selected_keywords = localStorage.getItem('selected_keywords');
+            if (selected_keywords !== null) {
+                $("#highlight4:contains('" + selected_keywords + "')").addClass("active search_button");
+            }
+            var selected_image_content = localStorage.getItem('selected_image_content');
+            if (selected_image_content !== null) {
+                $("#highlight5:contains('" + selected_image_content + "')").addClass("active search_button");
+            }
+            var selected_description = localStorage.getItem('selected_description');
+            if (selected_description !== null) {
+                $("#highlight6:contains('" + selected_description + "')").addClass("active search_button");
+            }
+        });
     </script>
     </nav>
    <div class="container">

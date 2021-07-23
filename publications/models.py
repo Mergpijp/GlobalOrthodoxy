@@ -150,6 +150,7 @@ class Church(models.Model):
     Manytomany field class with just one charfield name
     '''
     name = models.CharField(max_length=100, blank=True)
+    authors = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author_churches_list', null=True, blank=True)
     
     class Meta:
         verbose_name_plural = "churches"
@@ -222,19 +223,22 @@ CHOICES = (
     (False, "No")
 )
 
-CURRENCIES = ['USD: United States Dollar', 'CAD: Canadian Dollar', 'AUD: Australian Dollar', 'EUR: Euro', 'GBP: Pound sterling', \
-              'SEK: Swedish krona', 'EGP: Egyptian pound', 'LBP: Libanese pound', 'ETB: Ethopian birr', 'ERN: Eritrean nakfa', \
-              'ILS: Israeli shekel', 'AMD: Armenian dram', 'NLD: Dutch gulden', 'AUS: Austrian Schiling','GRM: German Mark',\
-              'MAL: Maltese Lira', 'BEF: Belgian Franc', 'GRD: Greek Drachma', 'CYP: Cypriot Pound', 'IRP: Irish Pound,' \
-              'PTE: Portugese Escudo', 'ESK: Estonian Kroon', 'ITL: Italian Lira', 'SLK: Slovak Koruna', 'FNM: Finnish Markka'\
+CURRENCIES = ['unknown', 'EUR: Euro', 'GBP: Pound sterling', \
+              'SEK: Swedish krona', \
+              'NLD: Dutch gulden', 'AUS: Austrian Schiling','GRM: German Mark',\
+              'MAL: Maltese Lira', 'BEF: Belgian Franc', 'GRD: Greek Drachma', 'CYP: Cypriot Pound', 'IRP: Irish Pound', \
+              'PTE: Portugese Escudo', 'ESK: Estonian Kroon', 'ITL: Italian Lira', 'SLK: Slovak Koruna', 'FNM: Finnish Markka',\
               'LAL: Latvian Lats', 'SLT: Slovenian Tolar', 'FRF: French Franc', 'LIL: Lituanian Litas', 'SPP: Spanish Peseta',\
-              'LXF: Luxembourgian Franc', 'ALL: Albanian Lek', 'BYN: Belarusian Ruble', 'BAM: Bosnia and Herzegovina convertible mark',\
-              'BGN: Bulgarian Lev', 'HRK: Croatian Kuna', 'CZK: Czech Koruna', 'DKK: Danish Krone', 'GEL: Geogrian Lari',\
+              'LXF: Luxembourgian Franc', 'ALL: Albanian Lek', 'BAM: Bosnia and Herzegovina convertible mark',\
+              'BGN: Bulgarian Lev', 'HRK: Croatian Kuna', 'CZK: Czech Koruna', 'DKK: Danish Krone',\
               'HUF: Hungarian Forint', 'ISK: Icelandic Krona', 'CHF: Swiss Franc', 'MDL: Moldovan Leu', 'MKD: Second Macedonian Denar',\
-              'NOK: Norwegian Krone', 'PLN: Polish Zloty', 'RON: Romanian Leu', 'RUB: Russian Ruble', 'RSD: Serbian Dinar',\
-              'SEK: Swedish Kronar', 'CHF: Swiss Franc', 'TRY: Turkish Lira', 'UAH: Ukrainian Hryvnia', 'unknown']
+              'NOK: Norwegian Krone', 'PLN: Polish Zloty', 'RON: Romanian Leu', 'RSD: Serbian Dinar',\
+              'SEK: Swedish Kronar', 'CHF: Swiss Franc', 'TRY: Turkish Lira', 'UAH: Ukrainian Hryvnia', \
+              'USD: United States Dollar', 'CAD: Canadian Dollar', 'AUD: Australian Dollar', 'EGP: Egyptian pound',\
+              'LBP: Libanese pound', 'ETB: Ethopian birr', 'ERN: Eritrean nakfa', 'ILS: Israeli shekel', 'AMD: Armenian dram', \
+              'GEL: Geogrian Lari', 'BYN: Belarusian Ruble', 'RUB: Russian Ruble']
 
-CURRENCY_CHOICES = [(str(i), CURRENCIES[i]) for i in range(0,12)]
+CURRENCY_CHOICES = [(str(i), CURRENCIES[i]) for i in range(0, len(CURRENCIES))]
 
 
 class ImageDetails(models.Model):
@@ -269,6 +273,7 @@ class Publication(models.Model):
     title5 = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription5 = models.CharField(max_length=300, blank=True)
     title_translation5 = models.CharField(max_length=300, blank=True)
+    pdf_url = models.URLField(max_length=200, blank=True)
     authors = models.ManyToManyField(Author)
     translators = models.ManyToManyField(Translator)
     form_of_publication = models.ManyToManyField(FormOfPublication)
@@ -305,7 +310,7 @@ class Publication(models.Model):
     currently_owned_by = models.ManyToManyField(Owner)
     contact_telephone_number = models.CharField(max_length=100, blank=True)
     contact_email = models.CharField(max_length=100, blank=True)
-    contact_website = models.CharField(max_length=100, blank=True)
+    contact_website = models.URLField(max_length=200, blank=True)
     keywords = models.ManyToManyField(Keyword)
     uploadedfiles = models.ManyToManyField(UploadedFile, blank=True, null=True)
     general_comments = models.TextField(max_length=3000, blank=True)

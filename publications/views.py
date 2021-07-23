@@ -55,6 +55,9 @@ from bootstrap_modal_forms.generic import (
 )
 import csv
 
+from excel_response import ExcelResponse
+
+
 utc=pytz.UTC
 
 
@@ -851,7 +854,8 @@ def to_searchable(s):
     #s = re.sub(x, s, s)
     return s
 
-def export_csv_file(request, queryset):
+def export_xlsx_file(request, queryset):
+    '''
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment;filename=export.csv'
 
@@ -872,6 +876,17 @@ def export_csv_file(request, queryset):
             fields.append(getattr(pub, field_name))
         writer.writerow(fields)
     return response
+    '''
+    '''
+    workbook = Workbook()
+    worksheet = workbook.active
+
+    response = HttpResponse(content=save_virtual_workbook(workbook),
+                            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=myexport.xlsx'
+    return response
+    '''
+    return ExcelResponse(queryset)
 
 class SearchResultsView(ListView):
     '''
@@ -906,7 +921,7 @@ class SearchResultsView(ListView):
         return ['publications/show.html']
 
     def post(self, request, *args, **kwargs):
-        return export_csv_file(request, self.get_queryset())
+        return export_xlsx_file(request, self.get_queryset())
         #q = request.POST.get('q')
         #pubs= self.get_queryset()
         #return render(request, self.template_name, {'publications': pubs, 'q': q})
@@ -1055,7 +1070,7 @@ class SearchResultsView(ListView):
             #publications = publications.filter(Q(entry_query) | Q(arabic_query))
             publications = publications.filter(Q(entry_query))
             #for (idx, apin) in enumerate(appears_in):
-
+            '''
             print(publications)
             ordering = self.get_ordering()
             if ordering is not None and ordering != "":
@@ -1066,8 +1081,10 @@ class SearchResultsView(ListView):
 
             #context['publications'] = publications
             return publications
-
+            '''
         for field_name in self.request.GET:
+            if field_name == 'q' or field_name.startswith('search_') or field_name == 'page_name':
+                continue
             get_value = self.request.GET.get(field_name)
             if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
                not field_name in special_case:
@@ -1562,7 +1579,7 @@ class SearchResultsViewNew(ListView):
         return ['publications/show_new.html']
 
     def post(self, request, *args, **kwargs):
-        return export_csv_file(request, self.get_queryset())
+        return export_xlsx_file(request, self.get_queryset())
         #q = request.POST.get('q')
         #pubs= self.get_queryset()
         #return render(request, self.template_name, {'publications': pubs, 'q': q})
@@ -2347,6 +2364,13 @@ class AuthorShow(ListView):
     def get_queryset(self):
         authors = Author.objects.all()
         ordering = self.get_ordering()
+        for author in authors:
+            author.author_churches_list.set(Church.objects.none())
+            for pub in author.publication_set.all():
+                for church in pub.affiliated_church.all():
+                    if church not in author.author_churches_list.all():
+                        author.author_churches_list.add(church)
+                        author.save()
         if ordering is not None and ordering != "":
             authors = authors.order_by(ordering)
         return authors
@@ -3097,7 +3121,7 @@ class UploadedFileShow(ListView):
         return uploadedfiles
 
     def post(self, request, *args, **kwargs):
-        return export_csv_file(request, self.get_queryset())
+        return export_xlsx_file(request, self.get_queryset())
 
     def get_ordering(self):
         ordering = self.request.GET.get('order_by')

@@ -6,6 +6,7 @@
         <th>Name <a href="?order_by=name&direction=asc" class="arrow up"></a> <a href="?order_by=name&direction=desc" class="arrow down"></a> </th>
         <th>Name original language <a href="?order_by=name_original_language&direction=asc" class="arrow up"></a> <a href="?order_by=name_original_language&direction=desc" class="arrow down"></a> </th>
         <th>Extra info <a href=?order_by=extra_info&direction=asc" class="arrow up"></a> <a href="?order_by=extra_info&direction=desc" class="arrow down"></a> </th>
+        <th>Churches <a href=?order_by=author_churches_list__name&direction=asc" class="arrow up"></a> <a href="?order_by=author_churches_list__name&direction=desc" class="arrow down"></a> </th>
         <th>Actions</th>  
     </tr>  
     </thead> 
@@ -18,6 +19,11 @@
         <td><a href="{% url 'publication-show' %}?authors={{author.id}}">{{ author.name }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{author.name_original_language}}">{{ author.name_original_language }}</a></td>
         <td><a href="{% url 'publication-show' %}?q={{author.extra_info}}">{{ author.extra_info }}</a></td>
+        <td>
+        {% if author.author_churches_list.all %}
+            {{ author.author_churches_list.all|join:", " }}.
+        {% endif %}
+        </td>
         <td>  
             <a href="/author/{{ author.id }}/edit?next={{ request.get_full_path }}"><span class="glyphicon glyphicon-pencil" >Edit</span></a>
             <a class="confirm-delete" href="/author/{{ author.id }}/delete">Delete</a>
