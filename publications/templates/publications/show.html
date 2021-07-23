@@ -68,14 +68,14 @@
             {% if publication.publication_year and not is_periodical %}
                 {{ publication.publication_year }}
             {% else %}
-                {% if on_going and publication.start_year %}
+                {% if publication.ongoing and publication.start_year %}
                     {{ publication.start_year }}-now
-                {% elif on_going %}
+                {% elif publication.ongoing %}
                     ?-now
                 {% elif publication.end_year and publication.start_year %}
                     {{ publication.start_year }}-{{ publication.end_year }}
                 {% elif publication.start_year and not publication.end_year %}
-                    {{ publication.start_year }}
+                    {{ publication.start_year }}-?
                 {% elif publication.end_year and not publication.start_year  %}
                     ?-{{ publication.end_year }}
                 {% else %}
