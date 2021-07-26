@@ -132,7 +132,7 @@ a {
 #cover_image {
   display: inline-block;
   position: relative;
-  left: 0;
+  left: 33px;
 }
 #right-element {
     background: white;
