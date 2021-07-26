@@ -65,7 +65,7 @@
             {{ publication.get_truncated_author_name }}
         </td>
         <td>
-            {% if publication.publication_year and not is_periodical %}
+            {% if publication.publication_year and not publication.is_periodical %}
                 {{ publication.publication_year }}
             {% else %}
                 {% if publication.ongoing and publication.start_year %}
