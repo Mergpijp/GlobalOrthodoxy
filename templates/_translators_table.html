@@ -22,7 +22,7 @@
           <span class="fa fa-trash"></span> Unlink
         </button>
         <!-- update translator buttons -->
-        <button type="button" id='init-btn{{ translator.pk }}' class="btn btn-primary btn-danger" onclick="window.open('{% url 'translator-update' translator.pk %}','_blank')">
+        <button type="button" id='init-btn{{ translator.pk }}' class="btn btn-primary btn-danger" onclick="window.open('/translator/{{ translator.pk }}/edit?next=/translator/{{ translator.pk }}/edit/close','_blank')">
           <span class="fa fa-pencil"></span>
         </button>
       </td>

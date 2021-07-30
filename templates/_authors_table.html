@@ -22,7 +22,7 @@
           <span class="fa fa-trash"></span> Unlink
          </button>
         <!-- update author buttons -->
-        <button type="button" id='init-btn{{ author.pk }}' class="btn btn-primary btn-danger" onclick="window.open('{% url 'author-update' author.pk %}','_blank')">
+        <button type="button" id='init-btn{{ author.pk }}' class="btn btn-primary btn-danger" onclick="window.open('/author/{{ author.pk }}/edit?next=/author/{{ author.pk }}/edit/close','_blank')">
           <span class="fa fa-pencil"></span>
         </button>
       </td>
