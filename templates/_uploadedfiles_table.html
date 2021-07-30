@@ -4,6 +4,7 @@
   <tr>
     <th class="text-center" scope="col">ID</th>
     <th class="text-center" scope="col">Image Title</th>
+    <th class="text-center" scope="col">Image Contents</th>
     <th class="text-center" scope="col">Picture</th>
     <th class="text-center" scope="col">Unlink</th>
   </tr>
@@ -13,6 +14,7 @@
     <tr>
       <th class="text-center" scope="row">{{ uploadedfile.pk }}</th>
       <td class="text-center">{{ uploadedfile.image_title }}</td>
+      <td class="text-center">{{ uploadedfile.image_contents }}</td>
       <td style="text-align: center;"><img src="/media/{{ uploadedfile.file }}" width="200" height="200" id="crop_image"></td>
       <td class="text-center">
         <!-- Unlink Uploadedfile buttons -->
