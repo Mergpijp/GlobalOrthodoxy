@@ -22,7 +22,7 @@
           <span class="fa fa-trash"></span> Unlink File
         </button>
         <!-- Update UploadedFile buttons -->
-        <button type="button" id='init-btn{{ uploadedfile.pk }}' class="btn btn-primary btn-danger" onclick="window.open('/uploadedfile/{{ uploadedfile.pk }}/edit?next=/uploadedfile/{{ uploadedfile.pk }}/edit/close','_blank')">
+        <button type="button" id='init-btn{{ uploadedfile.pk }}' class="btn btn-primary btn-danger" data-toggle="modal" data-target="#UpdateUploadedFileModal{{ uploadedfile.pk }}">
           <span class="fa fa-pencil"></span>
         </button>
       </td>
@@ -50,8 +50,7 @@
                    </label>
                    <div class="">
                       <div class="input-group">
-                         <select name="filecategory" id="id_filecategory {{ uploadedfile.pk }}">
-                             <option value="{{ uploadedfile.filecategory }}" selected></option>
+                         <select name="filecategory" id="id_filecategory{{ uploadedfile.pk }}">
                          </select>
                             <br/>
                             <br/>
@@ -61,7 +60,7 @@
                    </div>
                 </div>
                 </div>
-                <div id="div_id_image_contents {{ uploadedfile.pkl }}" class="form-group">
+                <div id="div_id_image_contents {{ uploadedfile.pk }}" class="form-group">
                    <label for="id_image_contents{{ uploadedfile.pk }}" class="">
                    Image contents
                    </label>
@@ -76,7 +75,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="close-btn{{ uploadedfile.pk }}" data-dismiss="modal">Close</button>
-                <button type="button" id="update-file-btn{{ uploadedfile.pk }}" class="submit-btn btn btn-danger" data-dismiss="modal">Update</button>
+                <button type="button" id="update-file-btn{{ uploadedfile.pk }}" class="submit-btn btn btn-danger" data-form-url="{% url 'uploadedfile-proces' uploadedfile.pk publication.pk %}" data-dismiss="modal">Update</button>
               </div>
             </div>
 
@@ -85,18 +84,72 @@
 
 <script>
 $(function () {
+$("#filecategory-btn").click(function(e) {
+var fd = new FormData();
+fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+fd.append("name", $('#id_filecategory_name').val());
+fd.append("list_view_priority", $('#id_list_view_priority').val());
+fd.append("order_index", $('#id_order_index').val());
 
-$("#update-btn{{ author.pk }}").click(function(e) {
+$.ajax({
+  url: "{% url 'filecategory-proces' %}",
+  data: fd,
+  processData: false,
+  contentType: false,
+  type: 'POST',
+});
+});
+$(document).ready(function(){
+if ($("#id_filecategory{{ uploadedfile.pk }}").val() == null)
+{
+
+
+     $("#id_filecategory{{ uploadedfile.pk }}").select2({
+    minimumInputLength: 0,
+    allowClear: true,
+    data: {
+        {% if uploadedfile.filecategory %}
+            id: "{{ uploadedfile.filecategory.pk }}",
+            text: "{{ uploadedfile.filecategory }}"
+        {% endif %}
+    },
+    placeholder: {
+      {% if uploadedfile.filecategory %}
+          id: '{{ uploadedfile.filecategory.pk }}',
+          text: '{{ uploadedfile.filecategory }}'
+      {% else %}
+          id: '-1',
+          text: 'Select an option'
+      {% endif %}
+    },
+    ajax: {
+        url: "/select2_filecategory",
+        dataType: "json",
+        type: "GET",
+
+    },
+    processResults: function (data) {
+        return {
+            results: data
+        };
+    }
+    });
+}
+});
+$("#update-file-btn{{ uploadedfile.pk }}").click(function(e) {
     var data = {
         csrfmiddlewaretoken: getCookie('csrftoken'),
-        name: $('#id_name{{ author.pk }}').val(),
-        name_original_language: $('#id_name_original_language{{ author.pk }}').val(),
-        extra_info: $('#id_extra_info{{ author.pk }}').val()
+        image_title: $('#id_image_title{{ uploadedfile.pk }}').val(),
+        filecategory: $('#id_filecategory{{ uploadedfile.pk }}').val(),
+        image_contents: $('#id_image_contents{{ uploadedfile.pk }}').val(),
+        //file: "{{ uploadedfile.file }}",
     }
     $.post($(this).attr('data-form-url'), data, function(data,status){
         if(status === 'success') {
-            $('#id_search_authors').val('');
-            $("#authors-div").html(data["table"]);
+            $("#uploadedfiles-div").html(data["table"]);
+            $('#UpdateUploadedFileModal{{ uploadedfile.pk }}').modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
         }
     });
 })
@@ -146,12 +199,24 @@ var myDropzone = new Dropzone("div#my-drop-zone{{ uploadedfile.pk }}", {
             Dropzone.forElement("#my-drop-zone{{ uploadedfile.pk }}").removeAllFiles(true);
         });
         addButton.click(function (e) {
-            console.log(myDropzone.getQueuedFiles().length)   ;
-        if (myDropzone.getQueuedFiles().length > 0) {
-            e.preventDefault();
-            e.stopPropagation();
-            myDropzone.processQueue();
-        }
+                    //e.preventDefault();
+                    //e.stopPropagation();
+
+                    //var form = $(this).closest('#my-drop-zone{{ uploadedfile.pk }}');
+
+                    //if (form.valid() == true) {
+                    if (myDropzone.getQueuedFiles().length > 0) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        myDropzone.processQueue();
+                    }
+
+            //console.log(myDropzone.getQueuedFiles().length) ;
+        //if (myDropzone.getQueuedFiles().length > 0) {
+            //e.preventDefault();
+            //e.stopPropagation();
+            //myDropzone.processQueue();
+        //}
         });
 
     },
@@ -167,6 +232,7 @@ var myDropzone = new Dropzone("div#my-drop-zone{{ uploadedfile.pk }}", {
         formData.append('image_contents', $('#id_image_contents{{ uploadedfile.pk }}').val());
     },
     success: function (file, response) {
+        console.log("komtin");
         $("#uploadedfiles-div").html(response["table"]);
         $('#UpdateUploadedFileModal{{ uploadedfile.pk }}').modal('toggle');
     }
@@ -251,8 +317,8 @@ $.ajax({
   type: 'POST',
 });
 });
-    $(document).ready(function(){
-        $("#id_filecategory").select2({
+$(document).ready(function(){
+  $("#id_filecategory").select2({
     minimumInputLength: 0,
     allowClear: true,
     placeholder: "--------",

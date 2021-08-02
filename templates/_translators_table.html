@@ -21,13 +21,86 @@
         <button type="button" class="translator-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-translator' publication.pk translator.pk %}">
           <span class="fa fa-trash"></span> Unlink
         </button>
-        <!-- update translator buttons -->
-        <button type="button" id='init-btn{{ translator.pk }}' class="btn btn-primary btn-danger" onclick="window.open('/translator/{{ translator.pk }}/edit?next=/translator/{{ translator.pk }}/edit/close','_blank')">
+         <!-- Update translator buttons -->
+        <button type="button" id='init-btn{{ translator.pk }}' class="btn btn-primary btn-danger" data-toggle="modal" data-target="#UpdateTranslatorModal{{ translator.pk }}">
           <span class="fa fa-pencil"></span>
         </button>
       </td>
     </tr>
-  {% endfor %}
+    <!-- Modal -->
+    <div id="UpdateTranslatorModal{{ translator.pk }}" class="modal fade" tabindex="-1">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title col-md-10">Update Translator</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+                <label for="id_name_t{{ translator.pk }}">Name</label>
+                <input type="text" name="name" maxlength="100" value="{{ translator.name }}" class="form-control name" id="id_name_t{{ translator.pk }}">
+                <div class="">
+
+                </div>
+            </div>
+              <div class="form-group">
+                <label for="id_name_original_language_t{{ translator.pk }}">Name original language</label>
+                <input type="text" name="name_original_language" maxlength="100" value="{{ translator.name_original_language }}" class="form-control name_original_language" id="id_name_original_language_t{{ translator.pk }}">
+                <div class="">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="id_extra_info_t{{ translator.pk }}">Extra info</label>
+                <input type="text" name="extra_info" maxlength="400" value="{{ translator.extra_info }}" class="form-control extra_info" id="id_extra_info_t{{ translator.pk }}">
+                <div class="">
+
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="close-btn{{ translator.pk }}" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="update-btn_t{{ translator.pk }}" class="submit-btn btn btn-primary" data-form-url="{% url 'translator-proces' publication.pk translator.pk %}" data-dismiss="modal">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<script>
+$(function () {
+$("#update-btn_t{{ translator.pk }}").click(function(e) {
+    var data = {
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+        name: $('#id_name_t{{ translator.pk }}').val(),
+        name_original_language: $('#id_name_original_language_t{{ translator.pk }}').val(),
+        extra_info: $('#id_extra_info_t{{ translator.pk }}').val()
+    }
+    $.post($(this).attr('data-form-url'), data, function(data,status){
+        if(status === 'success') {
+            $("#translators-div").html(data["table"]);
+            $('#UpdateTranslatorModal{{ translator.pk }}').modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+        }
+    });
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+});
+</script>
+{% endfor %}
   </tbody>
 </table>
 <script>

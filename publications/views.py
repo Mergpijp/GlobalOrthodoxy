@@ -133,6 +133,7 @@ def process_file(request, pk=None, pkb=None):
     # '''
 
     form = UploadedFileForm(post_mutable or None, request.FILES or None, instance=obj)
+    #pdb.set_trace()
     if request.method == 'POST':
         if form.is_valid():
             form.save()
@@ -743,9 +744,18 @@ class PublicationCreate(UpdateView):
     #    return
 
     def get_object(self):
-        pub = Publication.objects.create(is_stub=True, created_by=self.request.user)
-        pub.save()
-        return pub
+        pubs = Publication.objects.filter(Q(created_by = self.request.user) and Q(is_stub=True) and Q(is_deleted=False))
+        pk = 0
+        if pubs:
+            for pub in pubs:
+                if pub.pk > pk:
+                    pk = pub.pk
+                    publication = pub
+            return publication
+        else:
+            pub = Publication.objects.create(is_stub=True, created_by=self.request.user)
+            pub.save()
+            return pub
 
     def form_valid(self, form):
         # todo: temporal solution for double publication.
@@ -760,12 +770,13 @@ class PublicationCreate(UpdateView):
         form.instance.authors.add(*pub.authors.all())
         form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
         form.instance.translators.add(*pub.translators.all())
-
+        form.instance.title = pub.title
         if form.is_valid():
             self.object = form.save()
             self.object.save()
 
         pub.is_deleted = True
+        #pdb.set_trace()
         return redirect(self.get_success_url())
 
     def get_success_url(self):
