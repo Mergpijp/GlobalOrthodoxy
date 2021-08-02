@@ -35,7 +35,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title col-md-10">Update Uploadedfile</h5>
-                <button type="button" class="close" id="close-btn" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" id="close-btn_update{{ uploadedfile.pk }}" data-dismiss="modal">&times;</button>
               </div>
               <div class="modal-body">
                 <div id="div_id_image_title {{ uploadedfile.pk }}" class="form-group">
@@ -51,11 +51,12 @@
                    <div class="">
                       <div class="input-group">
                          <select name="filecategory" id="id_filecategory{{ uploadedfile.pk }}">
+                             <option value="{{ uploadedfile.filecategory.pk }}"></option>
                          </select>
                             <br/>
                             <br/>
 
-                          <a data-toggle="modal" href="#FilecategoryModal" class="btn btn-primary btn-danger" id="filecategory-btn">Add Filecategory</a>
+                          <a data-toggle="modal" href="#FilecategoryModal{{ uploadedfile.pk }}" class="btn btn-primary btn-danger" id="filecategory-btn">Add Filecategory</a>
 
                    </div>
                 </div>
@@ -84,12 +85,12 @@
 
 <script>
 $(function () {
-$("#filecategory-btn").click(function(e) {
+$("#filecategory-btn{{ uploadedfile.pk }}").click(function(e) {
 var fd = new FormData();
 fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
-fd.append("name", $('#id_filecategory_name').val());
-fd.append("list_view_priority", $('#id_list_view_priority').val());
-fd.append("order_index", $('#id_order_index').val());
+fd.append("name", $('#id_filecategory_name{{ uploadedfile.pk }}').val());
+fd.append("list_view_priority", $('#id_list_view_priority{{ uploadedfile.pk }}').val());
+fd.append("order_index", $('#id_order_index{{ uploadedfile.pk }}').val());
 
 $.ajax({
   url: "{% url 'filecategory-proces' %}",
@@ -100,23 +101,14 @@ $.ajax({
 });
 });
 $(document).ready(function(){
-if ($("#id_filecategory{{ uploadedfile.pk }}").val() == null)
-{
 
-
-     $("#id_filecategory{{ uploadedfile.pk }}").select2({
+$("#id_filecategory{{ uploadedfile.pk }}").select2({
     minimumInputLength: 0,
     allowClear: true,
-    data: {
-        {% if uploadedfile.filecategory %}
-            id: "{{ uploadedfile.filecategory.pk }}",
-            text: "{{ uploadedfile.filecategory }}"
-        {% endif %}
-    },
     placeholder: {
       {% if uploadedfile.filecategory %}
           id: '{{ uploadedfile.filecategory.pk }}',
-          text: '{{ uploadedfile.filecategory }}'
+          text: '{{ uploadedfile.filecategory.name }}'
       {% else %}
           id: '-1',
           text: 'Select an option'
@@ -133,30 +125,32 @@ if ($("#id_filecategory{{ uploadedfile.pk }}").val() == null)
             results: data
         };
     }
-    });
-}
 });
+
+});
+
 $("#update-file-btn{{ uploadedfile.pk }}").click(function(e) {
     var data = {
         csrfmiddlewaretoken: getCookie('csrftoken'),
         image_title: $('#id_image_title{{ uploadedfile.pk }}').val(),
         filecategory: $('#id_filecategory{{ uploadedfile.pk }}').val(),
         image_contents: $('#id_image_contents{{ uploadedfile.pk }}').val(),
-        //file: "{{ uploadedfile.file }}",
+
     }
     $.post($(this).attr('data-form-url'), data, function(data,status){
         if(status === 'success') {
-            $("#uploadedfiles-div").html(data["table"]);
+
             $('#UpdateUploadedFileModal{{ uploadedfile.pk }}').modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
+            $("#uploadedfiles-div").html(data["table"]);
         }
     });
 })
 $("#uploadedfile-btn").click(function(e) {
     document.getElementById('id_image_title').value = '';
     document.getElementById('id_image_contents').value = '';
-    $("#id_filecategory").select2("val", "0");
+    //$("#id_filecategory").select2("val", "0");
 });
 Dropzone.autoDiscover = false;
 var myDropzone = new Dropzone("div#my-drop-zone{{ uploadedfile.pk }}", {
@@ -194,7 +188,7 @@ var myDropzone = new Dropzone("div#my-drop-zone{{ uploadedfile.pk }}", {
         closeButton.click(function (e) {
             Dropzone.forElement("#my-drop-zone{{ uploadedfile.pk }}").removeAllFiles(true);
         });
-        var closeButton2 =  $("#close-btn2");
+        var closeButton2 =  $("#close-btn_update{{ uploadedfile.pk }}");
         closeButton2.click(function (e) {
             Dropzone.forElement("#my-drop-zone{{ uploadedfile.pk }}").removeAllFiles(true);
         });
@@ -260,11 +254,11 @@ function getCookie(name) {
 }
 });
 </script>
-{% endfor %}
-  </tbody>
-</table>
+<script>
+$('#id_filecategory{{ uploadedfile.pk }}').select2('data', {id: {{ uploadedfile.filecategory.pk }}, text: '{{ uploadedfile.filecategory.name }}'});
+</script>
 <!-- Modal -->
-<div id="FilecategoryModal" class="modal fade" role="dialog" data-backdrop="static">
+<div id="FilecategoryModal{{ uploadedfile.pk }}" class="modal fade" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -275,67 +269,32 @@ function getCookie(name) {
       </div>
       <div class="modal-body">
         <div class="form-group">
-            <label for="id_filecategory_name">Name</label>
-            <input type="text" name="name" maxlength="255" placeholder="Name" class="form-control" id="id_filecategory_name">
+            <label for="id_filecategory_name{{ uploadedfile.pk }}">Name</label>
+            <input type="text" name="name" maxlength="255" placeholder="Name" class="form-control" id="id_filecategory_name{{ uploadedfile.pk }}">
             <div class="">
             </div>
         </div>
-        <div id="div_id_order_index" class="form-group"> <label for="id_order_index" class="">
+        <div id="div_id_order_index{{ uploadedfile.pk }}" class="form-group"> <label for="id_order_index{{ uploadedfile.pk }}" class="">
             Order index
-        </label> <div class=""> <input type="number" name="order_index" class="numberinput form-control" id="id_order_index"> </div>
+        </label> <div class=""> <input type="number" name="order_index" class="numberinput form-control" id="id_order_index{{ uploadedfile.pk }}"> </div>
         </div>
-        <div id="div_id_list_view_priority" class="form-group"> <label for="id_list_view_priority" class="">
+        <div id="div_id_list_view_priority{{ uploadedfile.pk }}" class="form-group"> <label for="id_list_view_priority{{ uploadedfile.pk }}" class="">
             List view priority
-        </label> <div class=""> <input type="number" name="list_view_priority" class="numberinput form-control" id="id_list_view_priority"> </div>
+        </label> <div class=""> <input type="number" name="list_view_priority" class="numberinput form-control" id="id_list_view_priority{{ uploadedfile.pk }}"> </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" id="filecategory-create" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
+        <button type="submit" id="filecategory-create{{ uploadedfile.pk }}" class="submit-btn btn btn-primary" data-dismiss="modal">Create</button>
       </div>
   </div>
 </div>
 </div>
+{% endfor %}
+  </tbody>
+</table>
+
 <script>
-$("#filecategory-btn").click(function(e) {
-    document.getElementById('id_filecategory_name').value = '';
-    document.getElementById('id_list_view_priority').value = 0;
-    document.getElementById('id_order_index').value = 0;
-});
-$("#filecategory-create").click(function(e) {
-var fd = new FormData();
-fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
-fd.append("name", $('#id_filecategory_name').val());
-fd.append("list_view_priority", $('#id_list_view_priority').val());
-fd.append("order_index", $('#id_order_index').val());
-
-$.ajax({
-  url: "{% url 'filecategory-proces' %}",
-  data: fd,
-  processData: false,
-  contentType: false,
-  type: 'POST',
-});
-});
-$(document).ready(function(){
-  $("#id_filecategory").select2({
-    minimumInputLength: 0,
-    allowClear: true,
-    placeholder: "--------",
-    ajax: {
-        url: "/select2_filecategory",
-        dataType: "json",
-        type: "GET",
-
-    },
-    processResults: function (data) {
-        return {
-            results: data
-        };
-    }
-});
-
-});
  $( ".uploadedfile-unlink" ).click(function() {
     var data = {
         csrfmiddlewaretoken: getCookie('csrftoken'),
