@@ -1203,6 +1203,8 @@ class SearchResultsView(ListView):
                 publications = publications.order_by(ordering)
         elif self.request.path == '/publication/show/' or self.request.path == '/':
             publications = publications.order_by('-date_created')
+
+        publications = publications.distinct()
         return publications
 
     def make_human_friendly(self, field):
