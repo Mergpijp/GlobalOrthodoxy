@@ -1,6 +1,7 @@
 from django.urls import path, include, re_path
 
-from .views import SearchResultsView, SearchResultsViewNew, render_search, PublicationCreate, PublicationUpdate, PublicationDelete, PublicationDetailView#, UploadedfileUpdateView
+from .views import SearchResultsView, SearchResultsViewNew, render_search, PublicationCreate, PublicationUpdate,\
+    PublicationDelete, PublicationDetailView, SearchResultsViewImages#, UploadedfileUpdateView
 from . import views
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -53,6 +54,7 @@ urlpatterns = [
     path('uploadedfile/proces2/<int:pkb>', views.process_file2, name='uploadedfile-proces2'),
     path('uploadedfile/proces/', views.process_file, name='uploadedfile-proces'),
     path('publication/show/', login_required(SearchResultsView.as_view()), name='publication-show'),
+    path('new/grid/', login_required(SearchResultsViewImages.as_view()), name='images'),
     path('publication/<int:pk>/detail_view/', login_required(PublicationDetailView.as_view()), name='publication-detail'),
     path('publication/<int:pk>/detail_view/', login_required(PublicationDetailView.as_view()), name='publication-detail'),
     path('publication/<int:pk>/edit/', login_required(PublicationUpdate.as_view()), name='publication-update'),

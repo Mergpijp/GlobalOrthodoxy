@@ -1559,6 +1559,666 @@ class SearchResultsView(ListView):
         context['zipped_data'] = zip(context['publications'], context['cover_images'], context['search_term_appear_in'])
         return context
 
+class SearchResultsViewImages(ListView):
+    '''
+    ListView of the initial search page.
+    The function get_queryset works for the search bar and the search form home page.
+    The search bar typically uses q for query otherwise a id for list search.
+    Use a countries_dict to convert for example Netherlands to NL so that search succeeds.
+    If a normal field is searched use __icontains if a list element is searched use: __in.
+    '''
+    model = Publication
+    #template_name = 'publications/show.html'
+    context_object_name = 'publications'
+    publications = Publication.objects.filter(is_deleted=False, is_stub=False)
+    #ordering = 'title'
+
+    '''
+    def get_success_url(self):
+        url = self.request.GET.get('')
+        if self.request.GET.get('order_by'):
+            url += '&order_by=' + self.request.GET.get('order_by')
+        if self.request.GET.get('direction'):
+            url += '&direction=' + self.request.GET.get('direction')
+        if self.request.GET.get('q'):
+            url += '&q' + self.request.GET.get('q')
+        return url
+    '''
+
+    def get_template_names(self):
+        if self.request.path == 'uploadedfile_new/' or self.request.path == 'uploadedfile_unlink/<int:pk>':
+            return ['publications/form_create.html']
+        return ['publications/images.html']
+
+    def post(self, request, *args, **kwargs):
+        return export_xlsx_file(request, self.get_queryset())
+        #q = request.POST.get('q')
+        #pubs= self.get_queryset()
+        #return render(request, self.template_name, {'publications': pubs, 'q': q})
+
+    def get_ordering(self):
+        #pdb.set_trace()
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_queryset(self):
+
+            #pub.save()
+        #form = PublicationForm(self.request.GET)
+        authors = self.request.GET.getlist('authors')
+        translators = self.request.GET.getlist('translators')
+       #pdb.set_trace()
+        if not authors == ['']:
+            authors = Author.objects.filter(pk__in=authors).all()
+        if not translators == ['']:
+            translators = Translator.objects.filter(pk__in=translators).all()
+        form_of_publications = self.request.GET.getlist('form_of_publication')
+        if not form_of_publications == ['']:
+            form_of_publications = FormOfPublication.objects.filter(pk__in=form_of_publications).all()
+        languages = self.request.GET.getlist('language')
+        if not languages == ['']:
+            languages = Language.objects.filter(pk__in=languages).all()
+        affiliated_churches = self.request.GET.getlist('affiliated_church')
+        if not affiliated_churches == ['']:
+            affiliated_churches = Church.objects.filter(pk__in=affiliated_churches).all()
+        content_genres = self.request.GET.getlist('content_genre')
+        if not content_genres == ['']:
+            content_genres = Genre.objects.filter(pk__in=content_genres).all()
+        connected_to_special_occasions = self.request.GET.getlist('connected_to_special_occasion')
+        if not connected_to_special_occasions == ['']:
+            connected_to_special_occasions = SpecialOccasion.objects.filter(pk__in=connected_to_special_occasions).all()
+        currently_owned_by = self.request.GET.getlist('currently_owned_by')
+        if not currently_owned_by == ['']:
+            currently_owned_by = Owner.objects.filter(pk__in=currently_owned_by).all()
+        copyrights = self.request.GET.get('copyrights')
+        is_a_translation = self.request.GET.get('is_a_translation')
+
+        publications = Publication.objects.filter(is_deleted=False, is_stub=False)
+
+        #publications = Publication.objects.filter(is_deleted=False).values('id').distinct()
+        #publications = publications.filter(is_deleted=False)
+        uploadedfiles = self.request.GET.getlist('uploadedfiles')
+        #files = UploadedFile.objects.filter(is_deleted=False)
+        #uploadedfiles = files.filter(pk__in=uploadedfiles).all()
+        if not uploadedfiles == ['']:
+            uploadedfiles = UploadedFile.objects.filter(pk__in=uploadedfiles).all()
+        keywords = self.request.GET.getlist('keywords')
+        if not keywords == ['']:
+            keywords = Keyword.objects.filter(pk__in=keywords).all()
+        translated_from = self.request.GET.getlist('translated_From')
+        if not translated_from == ['']:
+            translated_from = Language.objects.filter(pk__in=translated_from).all()
+        city = self.request.GET.getlist('publication_city')
+        country = self.request.GET.getlist('publication_country')
+        collection_country = self.request.GET.getlist('collection_country')
+        filecategory = self.request.GET.getlist('filecategory')
+        if not filecategory == ['']:
+            filecategory = FileCategory.objects.filter(pk__in=filecategory).all()
+
+        if list(collection_country) != ['']:
+            collection_country = Country.objects.filter(pk__in=city).all()
+
+        if list(country) != ['']:
+            country = Country.objects.filter(pk__in=country).all()
+
+        print('....', city)
+        if list(city) != ['']:
+            city = City.objects.filter(pk__in=city).all()
+
+        print(publications)
+
+        search_title = self.request.GET.get('search_title')
+        search_title_translation = self.request.GET.get('search_title_translation')
+        search_author = self.request.GET.get('search_author')
+        search_keywords = self.request.GET.get('search_keywords')
+        search_image_content = self.request.GET.get('search_image_content')
+        search_description = self.request.GET.get('search_description')
+
+
+        exclude = ['csrfmiddlewaretoken','search', 'order_by', 'direction']
+        in_variables = [('authors', authors), ('translators', translators), ('form_of_publication', form_of_publications), ('language',languages), ('affiliated_church', affiliated_churches) \
+        , ('content_genre', content_genres), ('connected_to_special_occasion', connected_to_special_occasions), ('currently_owned_by', currently_owned_by),\
+        ('uploadedfiles', uploadedfiles), ('publication_country', country), ('publication_city', city), ('collection_country', collection_country), \
+        ('keywords', keywords), ('translated_from',translated_from), ('uploadedfiles__filecategory', filecategory),
+                    ]
+        special_case = ['copyrights', 'page', 'is_a_translation', 'filecategory']
+
+        if ('q' in self.request.GET) and self.request.GET['q'].strip():
+            query_string = self.request.GET['q']
+            if query_string.lower() in countries_dict.keys():
+                query_string = countries_dict[query_string.lower()]
+
+            search_fields = []
+
+            if((search_title == 'true' and search_title_translation == 'true' and search_author == 'true' and search_keywords == 'true' and \
+                    search_image_content == 'true' and search_description == 'true') or (search_title == 'false' and search_title_translation == 'false' and \
+                    search_author == 'false' and search_keywords == 'false' and search_image_content == 'false' and \
+                    search_description == 'false') or (not search_title and not search_title_translation and not search_author and not search_keywords and \
+                    not search_image_content and not search_description)):
+                search_fields = ['title', 'title_subtitle_transcription', 'title_translation', 'authors__name', 'authors__name_original_language', 'authors__extra_info', \
+                      'form_of_publication__name', 'editor', 'printed_by', 'published_by', 'publication_year', 'publication_country__name', 'publication_city__name', 'publishing_organisation', 'translators__name', 'translators__name_original_language', 'translators__extra_info', \
+                      'language__name', 'language__direction', 'affiliated_church__name', 'extra_info', 'content_genre__name', 'connected_to_special_occasion__name', 'donor', 'content_description', 'description_of_illustration', \
+                      'nr_of_pages', 'uploadedfiles__filecategory__name', 'uploadedfiles__uploaded_at', 'uploadedfiles__image_contents', \
+                      'uploadedfiles__image_title', 'general_comments', 'team_comments', 'keywords__name', 'is_a_translation', 'ISBN_number', 'translated_from__name', 'translated_from__direction', \
+                      'title2', 'title_subtitle_transcription2', 'title_translation2', 'title3', 'title_subtitle_transcription3', 'title_translation3', \
+                      'title4', 'title_subtitle_transcription4', 'title_translation4', 'title5', 'title_subtitle_transcription5', 'title_translation5', \
+                      'currency', 'price', 'collection_context']
+
+            else:
+                if search_title == 'true':
+                    search_fields.extend(['title'])
+                if search_title_translation == 'true':
+                    search_fields.extend(['title_translation'])
+                if search_author == 'true':
+                    search_fields.extend(['authors__name', 'authors__name_original_language', 'authors__extra_info'])
+                if search_keywords == 'true':
+                    search_fields.extend(['keywords__name'])
+                if search_image_content == 'true':
+                    search_fields.extend(['uploadedfiles__image_contents'])
+                if search_description == 'true':
+                    search_fields.extend(['content_description'])
+
+            if self.request.user.is_authenticated:
+                search_fields.extend(['collection_date', 'collection_country__name', 'collection_venue_and_city', 'contact_telephone_number', 'contact_email', 'contact_website', 'currently_owned_by__name'])
+
+            print(query_string)
+            #arabic_query = translator.translate(query_string, dest='ar').text
+            query_string = to_searchable(query_string)
+
+            #arabic_query = to_searchable(arabic_query)
+            entry_query = get_query(query_string, search_fields)
+            #publications
+
+            #arabic_query = get_query(arabic_query, search_fields)
+            print('&&&&&&', query_string)
+            #publications = publications.filter(entry_query)
+            #pdb.set_trace()
+            #publications = publications.filter(Q(entry_query) | Q(arabic_query))
+            publications = publications.filter(Q(entry_query))
+            #for (idx, apin) in enumerate(appears_in):
+            '''
+            print(publications)
+            ordering = self.get_ordering()
+            if ordering is not None and ordering != "":
+                publications = publications.order_by(ordering)
+            publications = publications.distinct()
+
+            #pdb.set_trace()
+
+            #context['publications'] = publications
+            return publications
+            '''
+        for field_name in self.request.GET:
+            if field_name == 'q' or field_name.startswith('search_') or field_name == 'page_name':
+                continue
+            get_value = self.request.GET.get(field_name)
+            if get_value != "" and not field_name in exclude and not field_name in [i[0] for i in in_variables] and\
+               not field_name in special_case:
+                print('******', field_name)
+                #arabic_query = translator.translate(get_value, dest='ar').text
+                get_value = to_searchable(get_value)
+                get_value = get_query(get_value, [field_name])
+                #arabic_query = get_query(arabic_query, [field_name])
+                print('444444444', get_value)
+                publications.filter(Q(get_value))
+                #publications = publications.filter(Q(get_value) | Q(arabic_query))
+                print('55555555555', publications)
+                #publications = publications.filter(Q(**{field_name+'__regex':get_value}) | Q(**{field_name+'__icontains':arabic_query}) )
+
+        for field_name, list_object in in_variables:
+            print('****', list_object)
+            if list_object:
+                print('------', field_name)
+                if list(list_object) != ['']:
+
+                    publications = publications.filter(**{field_name+'__in': list_object})
+
+        if str(copyrights) != "unknown" and str(copyrights) != "None":
+            val = False
+            if str(copyrights) == "yes":
+                val = True
+            print('11111', str(copyrights))
+            publications = publications.filter(copyrights=val)
+
+        print('666666', publications)
+
+        if str(is_a_translation) != "unknown" and str(is_a_translation) != "None":
+            val = False
+            if str(is_a_translation) == "yes":
+                val = True
+            print('11111', str(is_a_translation))
+            publications = publications.filter(is_a_translation=val)
+
+        #publications = publications.distinct('id')
+        print('777777', publications)
+        #publications = Publication.objects.values_list('id', flat=True).distinct()
+        #print(list(publications))
+        #publications = Publication.objects.filter(id__in=publications)
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            if ordering == "author_name" or ordering == "-author_name":
+                if ordering == "author_name":
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('name').values('name')
+                else:
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('-name').values('name')
+                publications = Publication.objects.annotate(author_name=Subquery(author_subquery)).order_by(ordering)
+            elif ordering == "author_name_original_langauge" or ordering == "-author_name_original_langauge":
+                if ordering == "author_name_original_langauge":
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('name_original_language').values('name_original_langauge')
+                else:
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('-name_original_language').values('name_original_language')
+                publications = Publication.objects.annotate(author_name_original_language=Subquery(author_subquery)).order_by(ordering)
+            elif ordering == "author_extra_info" or ordering == "-author_extra_info":
+                if ordering == "author_extra_info":
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('extra_info').values('extra_info')
+                else:
+                    author_subquery = Author.objects.filter(publication=OuterRef('pk')).order_by('-extra_info').values('extra_info')
+                publications = Publication.objects.annotate(author_extra_info=Subquery(author_subquery)).order_by(ordering)
+            elif ordering == "translator_name" or ordering == "-translator_name":
+                if ordering == "translator_name":
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('name').values(
+                        'name')
+                else:
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('-name').values(
+                        'name')
+                publications = Publication.objects.annotate(translator_name=Subquery(translator_subquery)).order_by(ordering)
+            elif ordering == "translator_name_original_language" or ordering == "-translator_name_original_language":
+                if ordering == "translator_name_original_langauge":
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('name_original_language').values(
+                        'name_original_language')
+                else:
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('-name_original_language').values(
+                        'name_original_language')
+                publications = Publication.objects.annotate(translator_original_language=Subquery(translator_subquery)).order_by(ordering)
+            elif ordering == "translator_extra_info" or ordering == "-translator_extra_info":
+                if ordering == "translator_extra_info":
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('extra_info').values(
+                        'extra_info')
+                else:
+                    translator_subquery = Translator.objects.filter(publication=OuterRef('pk')).order_by('-extra_info').values(
+                        'extra_info')
+                publications = Publication.objects.annotate(translator_extra_info=Subquery(translator_subquery)).order_by(ordering)
+            elif ordering == "language_name" or ordering == "-language_name":
+                if ordering == "language_name":
+                    language_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('name').values(
+                        'name')
+                else:
+                    language_subquery = Language.objects.filter(publication=OuterRef('pk')).order_by('-name').values(
+                        'name')
+                publications = Publication.objects.annotate(language_name=Subquery(language_subquery)).order_by(ordering)
+            elif ordering == "content_genre_name" or ordering == "-content_genre_name":
+                if ordering == "content_genre_name":
+                    content_genre_subquery = Genre.objects.filter(publication=OuterRef('pk')).order_by('name').values(
+                        'name')
+                else:
+                    content_genre_subquery = Genre.objects.filter(publication=OuterRef('pk')).order_by('-name').values(
+                        'name')
+                publications = Publication.objects.annotate(content_genre_name=Subquery(content_genre_subquery)).order_by(ordering)
+            else:
+                publications = publications.order_by(ordering)
+        elif self.request.path == '/publication/show/' or self.request.path == '/':
+            publications = publications.order_by('-date_created')
+
+        publications = publications.distinct()
+        return publications
+
+    def make_human_friendly(self, field):
+        return field.replace("_", " ")
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchResultsViewImages, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        #pdb.set_trace()
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        q = self.request.GET.get('q')
+        if q is not None and q != "":
+            context['q'] = q
+        else:
+            context['q'] = ''
+        affiliated_church = self.request.GET.get('affiliated_church')
+        if affiliated_church is not None and affiliated_church != "":
+            context['affiliated_church'] = affiliated_church
+        else:
+            context['affiliated_church'] = ''
+        authors = self.request.GET.get('authors')
+        if authors is not None and authors != "":
+            context['authors'] = authors
+        else:
+            context['authors'] = ''
+        translators = self.request.GET.get('translators')
+        if translators is not None and translators != "":
+            context['translators'] = translators
+        else:
+            context['translators'] = ''
+        form_of_publication = self.request.GET.get('form_of_publication')
+        if form_of_publication is not None and form_of_publication != "":
+            context['form_of_publication'] = form_of_publication
+        else:
+            context['form_of_publication'] = ''
+        publication_city = self.request.GET.get('publication_city')
+        if publication_city is not None and publication_city != "":
+            context['publication_city'] = publication_city
+        else:
+            context['publication_city'] = ''
+        language = self.request.GET.get('language')
+        if language is not None and language != "":
+            context['language'] = language
+        else:
+            context['language'] = ''
+        content_genre = self.request.GET.get('content_genre')
+        if content_genre is not None and content_genre != "":
+            context['content_genre'] = content_genre
+        else:
+            context['content_genre'] = ''
+        connected_to_special_occasion = self.request.GET.get('connected_to_special_occasion')
+        if connected_to_special_occasion is not None and connected_to_special_occasion != "":
+            context['connected_to_special_occasion'] = connected_to_special_occasion
+        else:
+            context['connected_to_special_occasion'] = ''
+        currently_owned_by = self.request.GET.get('currently_owned_by')
+        if currently_owned_by is not None and currently_owned_by != "":
+            context['currently_owned_by'] = currently_owned_by
+        else:
+            context['currently_owned_by'] = ''
+        keywords = self.request.GET.get('keywords')
+        if keywords is not None and keywords != "":
+            context['keywords'] = keywords
+        else:
+            context['keywords'] = ''
+        uploadedfiles = self.request.GET.get('uploadedfiles')
+        if uploadedfiles is not None and uploadedfiles != "":
+            context['uploadedfiles'] = uploadedfiles
+        else:
+            context['uploadedfiles'] = ''
+        filecategory = self.request.GET.get('filecategory')
+        if filecategory is not None and filecategory != "":
+            context['filecategory'] = filecategory
+        else:
+            context['filecategory'] = ''
+        search_title = self.request.GET.get('search_title')
+        if search_title is not None and search_title != "":
+            context['search_title'] = search_title
+        else:
+            context['search_title'] = ''
+        search_title_translation = self.request.GET.get('search_title_translation')
+        if search_title_translation is not None and search_title_translation != "":
+            context['search_title_translation'] = search_title_translation
+        else:
+            context['search_title_translation'] = ''
+        search_author = self.request.GET.get('search_author')
+        if search_author is not None and search_author != "":
+            context['search_author'] = search_author
+        else:
+            context['search_author'] = ''
+        search_keywords = self.request.GET.get('search_keywords')
+        if search_keywords is not None and search_keywords != "":
+            context['search_keywords'] = search_keywords
+        else:
+            context['search_keywords'] = ''
+        search_image_content = self.request.GET.get('search_image_content')
+        if search_image_content is not None and search_image_content != "":
+            context['search_image_content'] = search_image_content
+        else:
+            context['search_image_content'] = ''
+        search_description = self.request.GET.get('search_description')
+        if search_description is not None and search_description != "":
+            context['search_description'] = search_description
+        else:
+            context['search_description'] = ''
+
+        cover_images = []
+        for pub in context['publications']:
+            min = 9
+            length = len(cover_images)
+            inside = False
+            for uploadedfile in pub.uploadedfiles.all():
+                if uploadedfile.filecategory and uploadedfile.filecategory.list_view_priority:
+                    compare = int(uploadedfile.filecategory.list_view_priority)
+                    if compare < min:
+                        min = compare
+                        if inside:
+                            cover_images = cover_images[:-1]
+                        inside = True
+                        cover_images.append(uploadedfile.file)
+            if length == len(cover_images):
+                date = datetime.datetime.now()
+                date = date.replace(tzinfo=utc)
+                inside = False
+                for uploadedfile in pub.uploadedfiles.all():
+                    if uploadedfile.uploaded_at and uploadedfile.uploaded_at < date and uploadedfile.file:
+                        try:
+                            im = Image.open(uploadedfile.file)
+                            date = uploadedfile.uploaded_at
+                            if inside:
+                                cover_images = cover_images[:-1]
+                            cover_images.append(uploadedfile.file)
+                            inside = True
+                        except IOError:
+                            continue
+            if length == len(cover_images):
+                cover_images.append(None)
+        print(context['publications'])
+        context['cover_images'] = cover_images
+        context['request'] = self.request
+        regexp = re.compile(context['q'], re.IGNORECASE)
+        search_term_appear_in = []
+        index = 0
+        for pub in context['publications']:
+            search_term_appear_in.append('')
+            if q == None or q == '':
+                continue
+            for field in Publication._meta.get_fields():
+                if Publication._meta.get_field(field.name).get_internal_type() == 'ManyToManyField' or \
+                        Publication._meta.get_field(field.name).get_internal_type() == 'ForeignKey':
+                    if field.name == 'authors':
+                        for author in pub.authors.all():
+                            for author_field in Author._meta.get_fields():
+                                if author_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(author, author_field.name), str) \
+                                        and not isinstance(getattr(author, author_field.name), int):
+                                    continue
+                                if regexp.search(str(getattr(author, author_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'author ' + self.make_human_friendly(author_field.name)
+                                    elif not ('author ' + self.make_human_friendly(author_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', author ' + self.make_human_friendly(author_field.name)
+                    elif field.name == 'translators':
+                        for translator in pub.translators.all():
+                            for translator_field in Translator._meta.get_fields():
+                                if translator_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(translator, translator_field.name), str) \
+                                        and not isinstance(getattr(translator, translator_field.name), int):
+                                    continue
+                                if regexp.search(str(getattr(translator, translator_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'translator '+ self.make_human_friendly(translator_field.name)
+                                    elif not ('translator ' + self.make_human_friendly(translator_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', translator ' + self.make_human_friendly(translator_field.name)
+                    elif field.name == 'publication_city' and pub.publication_city:
+                        if not isinstance(pub.publication_city.name, str) \
+                                and not isinstance(pub.publication_city.name, int):
+                            continue
+                        if regexp.search(str(pub.publication_city.name)):
+                            if search_term_appear_in[index] == '':
+                                search_term_appear_in[index] = 'publication city name'
+                            elif not ('publication city name' in search_term_appear_in[index]):
+                                search_term_appear_in[index] = search_term_appear_in[index] + ', ' + 'publication city name'
+                    elif field.name == 'publication_country' and pub.publication_country:
+                        if not isinstance(pub.publication_country.name, str) \
+                                and not isinstance(pub.publication_country.name, int):
+                            continue
+                        if regexp.search(str(pub.publication_country.name)):
+                            if search_term_appear_in[index] == '':
+                                search_term_appear_in[index] = 'publication country name'
+                            elif not ('publication country name' in search_term_appear_in[index]):
+                                search_term_appear_in[index] = search_term_appear_in[index] + ', ' + 'publication country name'
+                    elif field.name == 'form_of_publication':
+                        for form_of_publication in pub.form_of_publication.all():
+                            for form_of_publication_field in FormOfPublication._meta.get_fields():
+                                if form_of_publication_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(form_of_publication, form_of_publication_field.name), str) \
+                                        and not isinstance(getattr(form_of_publication, form_of_publication_field.name),
+                                                           int):
+                                    continue
+                                if regexp.search(str(getattr(form_of_publication, form_of_publication_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'form of publication ' + self.make_human_friendly(form_of_publication_field.name)
+                                    elif not ('form of publication' + self.make_human_friendly(form_of_publication_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', form of publication ' + self.make_human_friendly(form_of_publication_field.name)
+                    elif field.name == 'affiliated_church':
+                        for affiliated_church in pub.affiliated_church.all():
+                            for affiliated_church_field in Church._meta.get_fields():
+                                if affiliated_church_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(affiliated_church, affiliated_church_field.name), str) \
+                                        and not isinstance(getattr(affiliated_church, affiliated_church_field.name),
+                                                           int):
+                                    continue
+                                if regexp.search(str(getattr(affiliated_church, affiliated_church_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'affiliated church ' + self.make_human_friendly(affiliated_church_field.name)
+                                    elif not ('affiliated church ' + self.make_human_friendly(affiliated_church_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', affiliated church ' + self.make_human_friendly(affiliated_church_field.name)
+                    elif field.name == 'language':
+                        for language in pub.language.all():
+                            for language_field in Language._meta.get_fields():
+                                if language_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(language, language_field.name), str) \
+                                        and not isinstance(getattr(language, language_field.name), int):
+                                    continue
+                                if regexp.search(str(getattr(language, language_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'language '+ self.make_human_friendly(language_field.name)
+                                    elif not ('language ' + self.make_human_friendly(language_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', language ' + self.make_human_friendly(language_field.name)
+                    elif field.name == 'translated_from' and pub.translated_from:
+                        for translated_from_field in Language._meta.get_fields():
+                            if translated_from_field.name == 'publication':
+                                continue
+                            if not isinstance(getattr(pub.translated_from, translated_from_field.name), str) \
+                                    and not isinstance(getattr(pub.translated_from, translated_from_field.name), int):
+                                continue
+                            if regexp.search(str(getattr(pub.translated_from, translated_from_field.name))):
+                                if search_term_appear_in[index] == '':
+                                    search_term_appear_in[index] = 'translated from '+ self.make_human_friendly(translated_from_field.name)
+                                elif not ('translated from ' + self.make_human_friendly(translated_from_field.name) in search_term_appear_in[index]):
+                                    search_term_appear_in[index] = search_term_appear_in[
+                                                                       index] + ', translated from ' + self.make_human_friendly(translated_from_field.name)
+                    elif field.name == 'content_genre':
+                        for genre in pub.content_genre.all():
+                            for content_genre_field in Genre._meta.get_fields():
+                                if content_genre_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(genre, content_genre_field.name), str) \
+                                        and not isinstance(getattr(genre, content_genre_field.name), int):
+                                    continue
+                                if regexp.search(str(getattr(genre, content_genre_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'content genre '+ self.make_human_friendly(content_genre_field.name)
+                                    elif not ('content genre '+ self.make_human_friendly(content_genre_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', content genre ' + self.make_human_friendly(content_genre_field.name)
+                    elif field.name == 'connected_to_special_occasion':
+                        for special_occasion in pub.connected_to_special_occasion.all():
+                            for special_occasion_field in SpecialOccasion._meta.get_fields():
+                                if special_occasion_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(special_occasion, special_occasion_field.name), str) \
+                                        and not isinstance(getattr(special_occasion, special_occasion_field.name), int):
+                                    continue
+                                if regexp.search(str(getattr(special_occasion, special_occasion_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'special_occasion '+ self.make_human_friendly(special_occasion_field.name)
+                                    elif not ('special_occasion '+ self.make_human_friendly(special_occasion_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', special_occasion ' + self.make_human_friendly(special_occasion_field.name)
+                    elif field.name == 'collection_country' and pub.collection_country:
+                        if not isinstance(pub.collection_country.name, str) \
+                                and not isinstance(pub.collection_country.name, int):
+                            continue
+                        if regexp.search(str(pub.collection_country.name)):
+                            if search_term_appear_in[index] == '':
+                                search_term_appear_in[index] = 'collection country name'
+                            elif not ('collection country name' in search_term_appear_in[index]):
+                                search_term_appear_in[index] = search_term_appear_in[
+                                                                   index] + ', ' + 'collection country name'
+                    elif field.name == 'currently_owned_by':
+                        for currently_owned_by in pub.currently_owned_by.all():
+                            for currently_owned_by_field in Owner._meta.get_fields():
+                                if currently_owned_by_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(currently_owned_by, currently_owned_by_field.name), str) \
+                                        and not isinstance(getattr(currently_owned_by, currently_owned_by_field.name),
+                                                           int):
+                                    continue
+                                if regexp.search(str(getattr(currently_owned_by, currently_owned_by_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'currently_owned_by_field '+ self.make_human_friendly(currently_owned_by_field.name)
+                                    elif not ('currently_owned_by_field '+ self.make_human_friendly(currently_owned_by_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', currently_owned_by_field ' + self.make_human_friendly(currently_owned_by_field.name)
+                    elif field.name == 'keywords':
+                        for keyword in pub.keywords.all():
+                            for keyword_field in Keyword._meta.get_fields():
+                                if keyword_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(keyword, keyword_field.name), str) \
+                                        and not isinstance(getattr(keyword, keyword_field.name), int):
+                                    continue
+                                if regexp.search(str(getattr(keyword, keyword_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'keyword '+ self.make_human_friendly(keyword_field.name)
+                                    elif not ('keyword '+ self.make_human_friendly(keyword_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', keyword ' + self.make_human_friendly(keyword_field.name)
+                    elif field.name == 'uploadedfiles':
+                        for uploadedfile in pub.uploadedfiles.all():
+                            for uploadedfile_field in UploadedFile._meta.get_fields():
+                                if uploadedfile_field.name == 'publication':
+                                    continue
+                                if not isinstance(getattr(uploadedfile, uploadedfile_field.name), str) \
+                                        and not isinstance(getattr(uploadedfile, uploadedfile_field.name), int):
+                                    continue
+                                if regexp.search(str(getattr(uploadedfile, uploadedfile_field.name))):
+                                    if search_term_appear_in[index] == '':
+                                        search_term_appear_in[index] = 'uploadedfile '+ self.make_human_friendly(uploadedfile_field.name)
+                                    elif not ('uploadedfile '+ self.make_human_friendly(uploadedfile_field.name) in search_term_appear_in[index]):
+                                        search_term_appear_in[index] = search_term_appear_in[index] + ', uploadedfile ' + self.make_human_friendly(uploadedfile_field.name)
+                    elif field.name == 'created_by':
+                        user_fields = ['username', 'first_name', 'last_name']
+                        for created_by_field in user_fields:
+                            if not pub.created_by or not isinstance(getattr(pub.created_by, created_by_field), str) \
+                                    and not isinstance(getattr(pub.created_by, created_by_field), int):
+                                continue
+                            if regexp.search(str(getattr(pub.created_by, created_by_field))):
+                                if search_term_appear_in[index] == '':
+                                    search_term_appear_in[index] = 'created_by '+ created_by_field
+                                elif not ('created_by '+created_by_field in search_term_appear_in[index]):
+                                    search_term_appear_in[index] = search_term_appear_in[
+                                                                       index] + ', created_by ' + created_by_field
+                if not isinstance(getattr(pub, field.name), str) and not isinstance(getattr(pub, field.name), int):
+                    continue
+                elif regexp.search(str(getattr(pub, field.name))):
+                    if search_term_appear_in[index] == '':
+                        search_term_appear_in[index] = self.make_human_friendly(field.name)
+                    elif not (field.name in search_term_appear_in[index]):
+                        search_term_appear_in[index] = search_term_appear_in[index] + ', ' + self.make_human_friendly(field.name)
+            index += 1
+        context['search_term_appear_in'] = search_term_appear_in
+        #pdb.set_trace()
+        context['zipped_data'] = zip(context['publications'], context['cover_images'], context['search_term_appear_in'])
+        return context
+
+
 class SearchResultsViewNew(ListView):
     '''
     ListView of the initial search page.

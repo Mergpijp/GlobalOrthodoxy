@@ -1,0 +1,21 @@
+{% extends "new_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<br />
+<br />
+<div class=”app”>
+  <h1>Scrollable grid books</h1>
+  <br/>
+{% for publication, cover_image, search_term_appear_in in zipped_data %}
+  {% if forloop.counter0 == 0 %}
+  <ul class="hs full">
+  {% endif %}
+    <li class="item" style="background-image: url('/media/{{ cover_image }}');">
+    </li>
+  {% if forloop.counter|divisibleby:10 %}
+  </ul>
+  <ul class="hs full">
+  {% endif %}
+{%  endfor %}
+</div>
+{% endblock content %}
