@@ -110,6 +110,12 @@ a {
   color: #e1afaf;
   text-decoration: underline;
 }
+#church_name{
+  color: #9b9ba6;
+}
+#language_name{
+  color: #9b9ba6;
+}
 #sub-head {
   color : #9b9ba6;
 }
@@ -122,6 +128,30 @@ a {
   position: absolute;
 }
 #publication_content {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-right: 50px;
+  margin-left: 50px;
+  width:500px;
+  position: relative;
+}
+#church_content {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-right: 50px;
+  margin-left: 50px;
+  width:500px;
+  position: relative;
+}
+#language_content {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-right: 50px;
+  margin-left: 50px;
+  width:500px;
+  position: relative;
+}
+.content-new{
   margin-top: 50px;
   margin-bottom: 50px;
   margin-right: 50px;
@@ -151,7 +181,7 @@ a {
   height: 50px;
 }
 #text-element {
-  position: absolute;
+  position: relative;
   width : 600px;
   height : 150px;
 
@@ -280,4 +310,7 @@ h3 {
   background-size:     cover;                      /* <------ */
   background-repeat:   no-repeat;
   margin-top: 20px;
+}
+@function white($opacity) {
+  @return rgba(white, $opacity)
 }

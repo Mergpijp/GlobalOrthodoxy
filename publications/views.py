@@ -3428,6 +3428,45 @@ class GenreUpdate(UpdateView):
             url += '&direction=' + self.request.GET.get('direction')
         return url
         
+class ChurchShowNew(ListView):
+    '''
+    Inherits ListView.
+    Uses Church as model.
+    Uses church_show.html as template_name.
+    Set context_object_name to churches.
+    '''
+    model = Church
+    template_name = 'publications/church_show_new.html'
+    context_object_name = 'churches'
+    paginate_by = 6
+
+    def get_queryset(self):
+        churches = Church.objects.all()
+        ordering = self.get_ordering()
+        #pdb.set_trace()
+        if ordering is not None and ordering != "":
+            churches = churches.order_by(ordering)
+        return churches
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(ChurchShowNew, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 class ChurchCreate(CreateView):
     '''
     Inherits CreateView. Uses ChurchForm as layout.
@@ -3508,7 +3547,45 @@ class ChurchUpdate(UpdateView):
         if self.request.GET.get('direction'):
             url += '&direction=' + self.request.GET.get('direction')
         return url
-      
+
+class LanguageShowNew(ListView):
+    '''
+    Inherits ListView.
+    Uses Language as model.
+    Uses language_show.html as template_name.
+    Set context_object_name to languages.
+    '''
+    model = Language
+    template_name = 'publications/language_show_new.html'
+    context_object_name = 'languages'
+    paginate_by = 10
+
+    def get_queryset(self):
+        languages = Language.objects.all()
+        ordering = self.get_ordering()
+        if ordering is not None and ordering != "":
+            languages = languages.order_by(ordering)
+        return languages
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+        if ordering is not None and ordering != "" and direction is not None and direction != "":
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+        return ordering
+
+    def get_context_data(self, **kwargs):
+        context = super(LanguageShowNew, self).get_context_data(**kwargs)
+        order_by = self.request.GET.get('order_by')
+        if order_by is not None and order_by != "":
+            context['order_by'] = order_by
+            context['direction'] = self.request.GET.get('direction')
+        else:
+            context['order_by'] = ''
+            context['direction'] = ''
+        return context
+
 class LanguageCreate(CreateView):
     '''
     Inherits CreateView. Uses LanguageForm as layout.

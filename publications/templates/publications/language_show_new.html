@@ -1,0 +1,61 @@
+{% extends "new_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div id="header">
+    <h1><b>LANGUAGES</b></h1>
+    <div id="sub-head">SORT BY <a href="?order_by=name&direction=asc" class="asearch" id="language_name">Name</a>
+    </div>
+    <script>
+    $('#language_name').click(function() {
+        var color = $('#language_name').css('color');
+        if (color === 'rgb(155, 155, 166)')
+            $('#language_name').css({
+                'color': '#e1afaf',
+                'text-decoration': 'underline',
+            });
+        else {
+            $('#language_name').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+        }
+            return false;
+    });
+    </script>
+</div>
+<div id="content" class="infinite-container">
+    {% for lang in languages %}
+        <div id="language_content" class="infinite-item">
+            <div id="text-element">
+                <div id="title_text">
+                    Language name: {{ lang.name }} <br/>
+                    Language direction: {{ lang.direction }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_next %}
+            <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}&order_by={{order_by}}&direction={{ direction }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+<script src="{% static 'js/waypoints/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/waypoints/infinite.min.js' %}"></script>
+<script>
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        offset: 'bottom-in-view',
+
+        onBeforePageLoad: function () {
+
+        },
+        onAfterPageLoad: function () {
+
+        },
+    });
+</script>
+{% endblock %}

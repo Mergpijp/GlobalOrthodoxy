@@ -45,11 +45,65 @@
             </div>
         </div>
 
+<script>
+     $('#publications').click(function() {
+        var color = $('#publications').css('background-color');
+        if (color === '')
+            $('#publications').css({
+                'background-color': 'white',
+            });
+        $('#churches').css({
+             'background-color': '',
+        });
+        $('#languages').css({
+            'background-color': '',
+        });
+        return false;
+    });
+     $('#churches').click(function() {
 
+        var color = $('#churches').css('background-color');
+        if (color === '')
+            $('#churches').css({
+                'background-color': 'white',
+                 'opacity': '0.5',
+            });
+
+        else {
+               $('#churches').css({
+                'background-color': 'white',
+                 'opacity': '0.5',
+            });
+               document.getElementById("churches").style.opacity = "0.5";
+        }
+        $('#publications').css({
+             'background-color': '',
+        });
+        $('#languages').css({
+            'background-color': '',
+        });
+        $('#churches').css("opacity", "0.5");
+        return false;
+    });
+     $('#languages').click(function() {
+        var color = $('#languages').css('background-color');
+        if (color === '')
+            $('#languages').css({
+                'background-color': 'white',
+            });
+        $('#publications').css({
+             'background-color': '',
+        });
+        $('#churches').css({
+            'background-color': '',
+        });
+        return false;
+    });
+</script>
         <div id="mySidenav" class="sidenav">
-          <a href="#" id="publications"><img src="{%  static 'icons/publications.png' %}"></a>
-          <a href="#" id="churches"><img src="{%  static 'icons/churches.png' %}"></a>
-          <a href="#" id="languages"><img src="{% static 'icons/languages.png' %}"></a>
+          <a href="/new" id="publications" onclick=""><img id="publications_image" src="{%  static 'icons/publications.png' %}"></a>
+          <a href="/new_churches" id="churches"><img id="churches_image" src="{%  static 'icons/churches.png' %}"></a>
+          <a href="/new_languages" id="languages"><img id="languages_image" src="{% static 'icons/languages.png' %}"></a>
         </div>
       <div class="container">
           <div class="row">

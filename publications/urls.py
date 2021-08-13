@@ -117,5 +117,8 @@ urlpatterns = [
     path('', login_required(SearchResultsView.as_view()), name='publication-show'),
 
     path('publication/show/new/', login_required(SearchResultsViewNew.as_view()), name='publication-show-new'),
-    path('new/', login_required(SearchResultsViewNew.as_view()), name='publication-show-new'),
+    path('new/', SearchResultsViewNew.as_view(), name='publication-show-new'),
+    path('new_churches/', views.ChurchShowNew.as_view(), name='churches-show-new'),
+    path('new_languages/', views.LanguageShowNew.as_view(), name='languages-show-new'),
+    #path('new_languages/', views.LanguagesViewNew.as_view(), name='languages-show-new'),
 ]
