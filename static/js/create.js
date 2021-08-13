@@ -87,11 +87,13 @@ function getCookie(name) {
     return cookieValue;
 }
 $(document).ready(function(){
+    /*
     $('#id_title').on('input',function(){
         if ($("#id_title").val().length > 4) {
             update();
         }
     });
+     */
     $('#id_search_files').on('input',function(){
         if ($("#id_search_files").val().length > 0) {
             update_search_files();

@@ -770,7 +770,6 @@ class PublicationCreate(UpdateView):
         form.instance.authors.add(*pub.authors.all())
         form.instance.uploadedfiles.add(*pub.uploadedfiles.all())
         form.instance.translators.add(*pub.translators.all())
-        form.instance.title = pub.title
         if form.is_valid():
             self.object = form.save()
             self.object.save()

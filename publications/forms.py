@@ -377,6 +377,8 @@ class NewCrispyForm(forms.ModelForm):
                         }
                       });
                     });
+
+ 
                     </script>            """),
                     'title',
                     'title_subtitle_transcription',
@@ -481,13 +483,32 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Comments',
                     'general_comments',
                     'team_comments',
+                    HTML("""
+                    <script>
+                        function throttle(f, delay){
+                            var timer = null;
+                            return function(){
+                                var context = this, args = arguments;
+                                clearTimeout(timer);
+                                timer = window.setTimeout(function(){
+                                    f.apply(context, args);
+                                },
+                                delay || 2000);
+                            };
+                        }
+                        $(window).keyup(throttle(function(){
+                            $('.save_and_continue').trigger('click');
+                        }));                
+                    </script>
+                    """),
                     ),
+
             ),
             ButtonHolder(
                 #Button('cancel', 'Back', css_class='btn-back btn-danger', onclick="history.back()"),
                 #Submit('next', 'Next', css_class='btn-danger'),
                 Submit('save_add_another', 'Save & add', css_class='btn-save btn-danger'),
-                Submit('save_and_continue_editing', 'Save & continue editing', css_class='btn-save btn-danger'),
+                Submit('save_and_continue_editing', 'Save & continue editing', css_class='btn-save btn-danger save_and_continue'),
                 Submit('save', 'Save', css_class='btn-save btn-danger'),
             )
         )
