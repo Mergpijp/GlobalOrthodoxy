@@ -497,7 +497,7 @@ class NewCrispyForm(forms.ModelForm):
                             };
                         }
                         $(window).keyup(throttle(function(){
-                            $('.save_and_continue').trigger('click');
+                            //$('.save_and_continue').trigger('click');
                         }));                
                     </script>
                     """),
