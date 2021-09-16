@@ -744,6 +744,7 @@ class PublicationCreate(UpdateView):
     #    return
 
     def get_object(self):
+        '''
         pubs = Publication.objects.filter(Q(created_by = self.request.user) and Q(is_stub=True) and Q(is_deleted=False))
         pk = 0
         if pubs:
@@ -753,9 +754,10 @@ class PublicationCreate(UpdateView):
                     publication = pub
             return publication
         else:
-            pub = Publication.objects.create(is_stub=True, created_by=self.request.user)
-            pub.save()
-            return pub
+        '''
+        pub = Publication.objects.create(is_stub=True, created_by=self.request.user)
+        pub.save()
+        return pub
 
     def form_valid(self, form):
         # todo: temporal solution for double publication.
