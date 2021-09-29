@@ -2,120 +2,125 @@
 {% load staticfiles %}
 {% block content %}
 <div id="header">
+    <br/>
     <h1><b>PUBLICATIONS</b></h1>
     <div id="sub-head">SORT BY <a href="?q={{ q }}&order_by=date_created&direction=asc" class="asearch" id="creation">Creation date</a>
         <a href="?q={{ q }}&order_by=title&direction=asc" class="asearch" id="title">Title</a>
         <a href="?q={{ q }}&order_by=author_name&direction=asc" class="asearch" id="author">Author</a>
         <a href="?q={{ q }}&order_by=publication_year&direction=asc" class="asearch" id="year">Year</a>
     </div>
-    <script>
-    $('#creation').click(function() {
-        var color = $('#creation').css('color');
-        if (color === 'rgb(155, 155, 166)')
+        <script>
+   function getConfig(){
+     return localStorage.getItem('config');
+   }
+   function setSortConfig(e){
+     localStorage.setItem('config', e);
+   }
+    $('.asearch').click(function() {
+        var id = this.id;
+        switch(id) {
+            case "creation": {
+                state = getConfig()
+                if(state == '1000') {
+                    document.getElementById("creation").href = '?order_by=date_created&direction=desc'
+                    setSortConfig('2000')
+                }
+                else {
+                    document.getElementById("creation").href = '?order_by=date_created&direction=asc'
+                    setSortConfig('1000')
+                }
+            }break;
+            case "title": {
+                state = getConfig()
+                if(state == '0100') {
+                    document.getElementById("creation").href = '?order_by=title&direction=desc'
+                    setSortConfig('0200')
+                }
+                else {
+                    document.getElementById("creation").href = '?order_by=title&direction=asc'
+                    setSortConfig('0100')
+                }
+            }break;
+            case "author": {
+                state = getConfig()
+                if(state == '0010') {
+                    document.getElementById("creation").href = '?order_by=author_name&direction=desc'
+                    setSortConfig('0020')
+                }
+                else {
+                    document.getElementById("creation").href = '?order_by=author_name&direction=asc'
+                    setSortConfig('0010')
+                }
+            }break;
+            case "year": {
+                state = getConfig()
+                if(state == '0001') {
+                    document.getElementById("creation").href = '?order_by=publication_year&direction=desc'
+                    setSortConfig('0002')
+                }
+                else {
+                    document.getElementById("creation").href = '?order_by=publication_year&direction=asc'
+                    setSortConfig('0001')
+                }
+            }break;
+        }
+        return true;
+    });
+    $( document ).ready(function() {
+        if (getConfig() == "false") {
+            setSortConfig('2000')
+        }
+        state = getConfig()
+        switch(state) {
+            case "2000": {
+              $('#creation').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+            }break;
+            case "0200": {
+              $('#title').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+            }break;
+            case "0020": {
+              $('#author').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+            }break;
+            case "0002": {
+              $('#year').css({
+                'color': '#9b9ba6',
+                'text-decoration': 'none',
+            });
+            }break;
+            case "1000": {
             $('#creation').css({
                 'color': '#e1afaf',
                 'text-decoration': 'underline',
             });
-        else {
-            $('#creation').css({
-                'color': '#9b9ba6',
-                'text-decoration': 'none',
-            });
-        }
-        $('#title').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        $('#author').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        $('#year').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        return false;
-    });
-    $('#title').click(function() {
-        var color = $('#title').css('color');
-        if (color === 'rgb(155, 155, 166)')
+            }break;
+            case "0100": {
             $('#title').css({
                 'color': '#e1afaf',
                 'text-decoration': 'underline',
             });
-        else {
-            $('#title').css({
-                'color': '#9b9ba6',
-                'text-decoration': 'none',
-            });
-        }
-        $('#creation').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        $('#author').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        $('#year').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        return false;
-    });
-    $('#author').click(function() {
-        var color = $('#author').css('color');
-        if (color === 'rgb(155, 155, 166)')
+            }break;
+            case "0010": {
             $('#author').css({
                 'color': '#e1afaf',
                 'text-decoration': 'underline',
             });
-        else {
-            $('#author').css({
-                'color': '#9b9ba6',
-                'text-decoration': 'none',
-            });
-        }
-        $('#creation').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        $('#title').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        $('#year').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        return false;
-    });
-    $('#year').click(function() {
-        var color = $('#year').css('color');
-        if (color === 'rgb(155, 155, 166)')
+            }break;
+            case "0001": {
             $('#year').css({
                 'color': '#e1afaf',
                 'text-decoration': 'underline',
             });
-        else {
-            $('#year').css({
-                'color': '#9b9ba6',
-                'text-decoration': 'none',
-            });
+            }break;
         }
-        $('#creation').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        $('#title').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        $('#author').css({
-            'color': '#9b9ba6',
-            'text-decoration': 'none',
-        });
-        return false;
     });
     </script>
 </div>
@@ -125,8 +130,8 @@
             <a id="cover_image" href="/publication/{{ publication.id }}/detail_view"><img src="/media/{{ cover_image }}" width="200" height="200" id="crop_image"></a>
             <div id="right-element">
                 <div id="text-element">
-                    <div id="title_text">{{ publication.get_truncated_title }}</div>
-                    <div id="title_translation">{{ publication.get_truncated_title_translation }}</div>
+                    <div id="title_text">{{ publication.get_truncated_title_new }}</div>
+                    <div id="title_translation">{{ publication.get_truncated_title_translation_new }}</div>
                 </div>
                 <div id="bottom_right-element">
                     <div id="author_name">{{ publication.get_truncated_author_name_new }}</div>

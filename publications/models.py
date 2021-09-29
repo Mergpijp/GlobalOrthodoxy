@@ -12,7 +12,9 @@ import os
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
 MAX_CHARS = 100
-MAX_CHARS_NEW = 35
+MAX_CHARS_NEW_A = 35
+
+MAX_CHARS_NEW = 50
 
 class FormOfPublication(models.Model):
     ''''
@@ -344,6 +346,20 @@ class Publication(models.Model):
         return x
 
     @property
+    def get_truncated_title_new(self):
+        x = self.title
+        if len(x) > MAX_CHARS_NEW:
+            x = x[:MAX_CHARS_NEW] + '...'
+        return x
+
+    @property
+    def get_truncated_title_translation_new(self):
+        x = self.title_translation
+        if len(x) > MAX_CHARS_NEW:
+            x = x[:MAX_CHARS_NEW] + '...'
+        return x
+
+    @property
     def get_truncated_title_subtitle_transcription(self):
         x = self.title_subtitle_transcription
         if len(x) > MAX_CHARS:
@@ -362,8 +378,8 @@ class Publication(models.Model):
     def get_truncated_author_name_new(self):
         authors = self.authors
         x = ', '.join([author.name for author in authors.all()])
-        if len(x) > MAX_CHARS_NEW:
-            x = x[:MAX_CHARS_NEW] + '...'
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
         return x
 
     @property

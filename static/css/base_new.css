@@ -107,8 +107,7 @@ a {
   color : #9b9ba6;
 }
 #creation {
-  color: #e1afaf;
-  text-decoration: underline;
+  color: #9b9ba6;
 }
 #church_name{
   color: #9b9ba6;
@@ -197,16 +196,22 @@ a {
   position: absolute;
   left: 15px;
   top: 75px;
+  font-size: 20px;
 }
 #publication_place_year{
   position: absolute;
   left: 320px;
   top: 10px;
+  font-size: 13px;
 }
 #author_name{
   position: absolute;
   left:  15px;
   top: 10px;
+  font-size: 13px;
+}
+#important_field{
+  font-size: 20px;
 }
 body {
   font-family: 'Montserrat', sans-serif;
@@ -313,4 +318,72 @@ h3 {
 }
 @function white($opacity) {
   @return rgba(white, $opacity)
+}
+.publications > div
+{
+    background-image: url('../icons/publications_no_select.png');
+    background-repeat: no-repeat;
+  	top: 0px;
+	right: 5px;
+    width: 61px;
+    height: 54px;
+}
+
+.churches > div
+{
+    background-image: url('../icons/churches.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.languages > div
+{
+    background-image: url('../icons/languages.png');
+    background-repeat: no-repeat;
+    left:-9px;
+    position:absolute;
+}
+.publications.Down > div
+{
+    background-image: url('../icons/publications_selected.png');
+    background-repeat: no-repeat;
+    top: 0px;
+	right: 5px;
+}
+.churches.Down > div
+{
+    background-image: url('../icons/churches_selected.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.languages.Down > div
+{
+    background-image: url('../icons/languages_selected.png');
+    background-repeat: no-repeat;
+    left:-9px;
+    position:absolute;
+}
+.link > div
+{
+    width: 61px;
+    height: 54px;
+    display:inline-block;
+}
+#publications {
+	position: absolute;
+	top: 0px;
+	right: 5px;
+}
+#churches {
+	position: absolute;
+	top: 65px;
+	right: 7px;
+}
+#languages {
+	position: absolute;
+	top: 135px;
+	right: 15px;
 }

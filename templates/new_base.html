@@ -45,66 +45,94 @@
             </div>
         </div>
 
-<script>
-     $('#publications').click(function() {
-        var color = $('#publications').css('background-color');
-        if (color === '')
-            $('#publications').css({
-                'background-color': 'white',
-            });
-        $('#churches').css({
-             'background-color': '',
-        });
-        $('#languages').css({
-            'background-color': '',
-        });
-        return false;
-    });
-     $('#churches').click(function() {
-
-        var color = $('#churches').css('background-color');
-        if (color === '')
-            $('#churches').css({
-                'background-color': 'white',
-                 'opacity': '0.5',
-            });
-
-        else {
-               $('#churches').css({
-                'background-color': 'white',
-                 'opacity': '0.5',
-            });
-               document.getElementById("churches").style.opacity = "0.5";
-        }
-        $('#publications').css({
-             'background-color': '',
-        });
-        $('#languages').css({
-            'background-color': '',
-        });
-        $('#churches').css("opacity", "0.5");
-        return false;
-    });
-     $('#languages').click(function() {
-        var color = $('#languages').css('background-color');
-        if (color === '')
-            $('#languages').css({
-                'background-color': 'white',
-            });
-        $('#publications').css({
-             'background-color': '',
-        });
-        $('#churches').css({
-            'background-color': '',
-        });
-        return false;
-    });
-</script>
         <div id="mySidenav" class="sidenav">
-          <a href="/new" id="publications" onclick=""><img id="publications_image" src="{%  static 'icons/publications.png' %}"></a>
-          <a href="/new_churches" id="churches"><img id="churches_image" src="{%  static 'icons/churches.png' %}"></a>
-          <a href="/new_languages" id="languages"><img id="languages_image" src="{% static 'icons/languages.png' %}"></a>
+          <a class="link publications Down" href="/new" id="publications"><div></div></a>
+          <a class="link churches" href="/new_churches" id="churches"><div></div></a>
+          <a class="link languages" href="/new_languages" id="languages"><div></div></a>
         </div>
+<script>
+function isStart(){
+ return localStorage.getItem('start') == 'true';
+}
+function setStart(){
+ localStorage.setItem('start', 'true');
+}
+function setNotStart(){
+ localStorage.setItem('start', 'false');
+}
+
+function isPub(){
+ return localStorage.getItem('pub') == 'true';
+}
+function isChurch(){
+ return localStorage.getItem('church') == 'true';
+}
+function isLanguage(){
+ return localStorage.getItem('language') == 'true';
+}
+function setHighlight(highlight){
+ localStorage.setItem(highlight, 'true');
+}
+function setNoHighlight(highlight){
+ localStorage.setItem(highlight, 'false');
+}
+
+
+$(".link").click(function(e) {
+      //e.preventDefault();
+      //var mainButton = $(e.target).parent();
+      //$('.link').not(mainButton).removeClass('Down');
+      //mainButton.toggleClass('Down');
+
+      var id = this.id;
+      if(isPub() && id == "publications")
+          return false;
+      if(isChurch() && id == "churches")
+          return false;
+      if(isLanguage() && id == "languages")
+          return false;
+      if(id=="publications") {
+          setHighlight('pub');
+          setNoHighlight('church');
+          setNoHighlight('language');
+      }
+      if(id=="churches") {
+          setHighlight('church');
+          setNoHighlight('pub');
+          setNoHighlight('language');
+      }
+
+      if(id=="languages") {
+          setHighlight('language');
+          setNoHighlight('church');
+          setNoHighlight('pub');
+      }
+
+});
+
+
+$( document ).ready(function() {
+    //setStart();
+    //$(".link")[0].click();
+    //setNotStart();
+    if(isPub()) {
+        $('#publications').addClass('Down');
+        $('#churches').removeClass('Down');
+        $('#languages').removeClass('Down');
+    }
+    if(isLanguage()) {
+        $('#languages').addClass('Down');
+        $('#churches').removeClass('Down');
+        $('#publications').removeClass('Down');
+    }
+    if(isChurch()) {
+        $('#languages').removeClass('Down');
+        $('#churches').addClass('Down');
+        $('#publications').removeClass('Down');
+    }
+});
+
+</script>
       <div class="container">
           <div class="row">
             <div class="col-sm">
