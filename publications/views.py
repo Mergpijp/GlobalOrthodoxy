@@ -23,6 +23,7 @@ from django.utils import timezone
 import datetime
 import traceback
 from itertools import chain
+import itertools
 from django.core.exceptions import ImproperlyConfigured
 import json
 from django.urls import reverse
@@ -1977,6 +1978,7 @@ class SearchResultsViewImages(ListView):
             context['search_description'] = ''
 
         cover_images = []
+        context['publications'] = context['publications'].order_by('-date_created')
         for pub in context['publications']:
             min = 9
             length = len(cover_images)
@@ -2013,6 +2015,17 @@ class SearchResultsViewImages(ListView):
         regexp = re.compile(context['q'], re.IGNORECASE)
         search_term_appear_in = []
         index = 0
+        ids = []
+        context['publications'] = list(context['publications'])
+        for idx, im in enumerate(cover_images):
+            if not im:
+                ids.append(idx)
+                #context['cover_images'].pop(idx)
+                #context['publications'].pop(idx)
+                #pdb.set_trace()
+
+        context['publications'] = [pub for idx, pub in enumerate(context['publications']) if not idx in ids]
+        context['cover_images'] = [img for idx, img in enumerate(context['cover_images']) if not idx in ids]
         for pub in context['publications']:
             search_term_appear_in.append('')
             if q == None or q == '':
@@ -2216,6 +2229,8 @@ class SearchResultsViewImages(ListView):
             index += 1
         context['search_term_appear_in'] = search_term_appear_in
         #pdb.set_trace()
+        #for pub in context['publications']:
+
         context['zipped_data'] = zip(context['publications'], context['cover_images'], context['search_term_appear_in'])
         return context
 

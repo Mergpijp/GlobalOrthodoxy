@@ -1,21 +1,56 @@
-{% extends "new_base.html" %}
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Four Corners of the World Library</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="/static/css/netflix_grid.css">
+
+        <script type="text/javascript" src="/static/jquery/js/jquery-3.4.1.min.js">  </script>
+        <script type="text/javascript" src="/static/bootstrap/js/bootstrap-tab.js">  </script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="/static/css/select2-bootstrap4.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
+        <script type="text/javascript" src="/static/js/base.js">  </script>
+        <script src="/static/js/dropzone/dist/dropzone.js"></script>
+        <link rel="stylesheet" href="/static/js/dropzone/dist/basic.css">
+        <link rel="stylesheet" href="/static/js/dropzone/dist/dropzone.css">
+        <script src="/static/js/jquery.bootstrap.modal.forms.min.js"></script>
+
+        <link href="/static/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400&display=swap" rel="stylesheet">
+
+   </head>
+
+<body>
 {% load staticfiles %}
-{% block content %}
+
 <br />
 <br />
 <div class=”app”>
-  <h1>Scrollable grid books</h1>
+  <center><h1>Four Corners of the World Library</h1></center>
   <br/>
 {% for publication, cover_image, search_term_appear_in in zipped_data %}
-  {% if forloop.counter0 == 0 %}
-  <ul class="hs full">
-  {% endif %}
-    <li class="item" style="background-image: url('/media/{{ cover_image }}');">
-    </li>
-  {% if forloop.counter|divisibleby:10 %}
-  </ul>
-  <ul class="hs full">
-  {% endif %}
+
+      {% if forloop.counter0 == 0 %}
+      <ul class="hs full">
+      {% endif %}
+        <li class="item" style="background-image: url('/media/{{ cover_image }}');">
+        </li>
+      {% if forloop.counter|divisibleby:10 %}
+      </ul>
+      <ul class="hs full">
+      {% endif %}
+
 {%  endfor %}
 </div>
-{% endblock content %}
+</body>
+</html>
