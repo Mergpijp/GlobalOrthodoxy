@@ -99,6 +99,28 @@ class Author(models.Model):
     def __str__(self):
         return self.name +  ' ' + self.name_original_language
 
+    @property
+    def get_truncated_name_new(self):
+        x = self.name
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
+        return x
+
+    @property
+    def get_truncated_name_original_language_new(self):
+        x = self.name_original_language
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
+        return x
+
+    @property
+    def get_truncated_extra_info_new(self):
+        x = self.extra_info
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
+        return x
+
+
 class Translator(models.Model):
     '''
     Manytomany field class with two fields firstname and lastname both charfields.
@@ -110,6 +132,26 @@ class Translator(models.Model):
     def __str__(self):
         return self.name +  ' ' + self.name_original_language
 
+    @property
+    def get_truncated_name_new(self):
+        x = self.name
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
+        return x
+
+    @property
+    def get_truncated_name_original_language_new(self):
+        x = self.name_original_language
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
+        return x
+
+    @property
+    def get_truncated_extra_info_new(self):
+        x = self.extra_info
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
+        return x
 class Location(models.Model):
     '''
     Manytomany field class with two fields name and type both are charfields.
@@ -218,6 +260,29 @@ class UploadedFile(models.Model):
         return chunks
     class Meta:
         ordering = ('filecategory__order_index',)
+
+    @property
+    def get_truncated_image_title_new(self):
+        x = self.image_title
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
+        return x
+
+    @property
+    def get_truncated_filecategory_new(self):
+        if self.filecategory:
+            x = self.filecategory.name
+            if len(x) > MAX_CHARS_NEW_A:
+                x = x[:MAX_CHARS_NEW_A] + '...'
+            return x
+        return ''
+
+    @property
+    def get_truncated_image_contents_new(self):
+        x = self.image_contents
+        if len(x) > MAX_CHARS_NEW_A:
+            x = x[:MAX_CHARS_NEW_A] + '...'
+        return x
 
 CHOICES = (
     (None, "Unknown"),
@@ -375,14 +440,6 @@ class Publication(models.Model):
         return x
 
     @property
-    def get_truncated_author_name_new(self):
-        authors = self.authors
-        x = ', '.join([author.name for author in authors.all()])
-        if len(x) > MAX_CHARS_NEW_A:
-            x = x[:MAX_CHARS_NEW_A] + '...'
-        return x
-
-    @property
     def get_truncated_author_name_original_language(self):
         authors = self.authors
         x = ', '.join([author.name_original_language for author in authors.all()])
@@ -414,6 +471,7 @@ class Publication(models.Model):
             x = x[:MAX_CHARS] + '...'
         return x
 
+
     @property
     def get_truncated_translator_extra_info(self):
         translators = self.translators
@@ -421,4 +479,9 @@ class Publication(models.Model):
         if len(x) > MAX_CHARS:
             x = x[:MAX_CHARS] + '...'
         return x
+
+
+
+
+
 

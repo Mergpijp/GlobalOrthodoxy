@@ -2966,9 +2966,15 @@ class KeywordShow(ListView):
     Uses context_object_name keywords for all keywords.
     '''
     model = Keyword
-    template_name = 'publications/keyword_show.html'
+    #template_name = 'publications/keyword_show.html'
     context_object_name = 'keywords'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_keywords/':
+            return ['publications/keyword_show_new.html']
+        return ['publications/keyword_show.html']
+
 
     def get_queryset(self):
         keywords = Keyword.objects.all()
@@ -3046,9 +3052,14 @@ class AuthorShow(ListView):
     Uses context_object_name authors for all authors.
     '''
     model = Author
-    template_name = 'publications/author_show.html'
+    #template_name = 'publications/author_show.html'
     context_object_name = 'authors'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_authors/':
+            return ['publications/author_show_new.html']
+        return ['publications/author_Show.html']
 
     def get_queryset(self):
         authors = Author.objects.all()
@@ -3134,9 +3145,15 @@ class TranslatorShow(ListView):
     Set context_object_name to translators.
     '''
     model = Translator
-    template_name = 'publications/translator_show.html'
+    #template_name = 'publications/translator_show.html'
     context_object_name = 'translators'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_translators/':
+            return ['publications/translator_show_new.html']
+        return ['publications/translator_show.html']
+
 
     def get_queryset(self):
         translators = Translator.objects.all()
@@ -3215,9 +3232,14 @@ class FormOfPublicationShow(ListView):
     Set context_object_name to form_of_publications.
     '''
     model = FormOfPublication
-    template_name = 'publications/form_of_publication_show.html'
+    #template_name = 'publications/form_of_publication_show.html'
     context_object_name = 'form_of_publications'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_form_of_publications/':
+            return ['publications/form_of_publication_show_new.html']
+        return ['publications/form_of_publication_show.html']
 
     def get_queryset(self):
         form_of_publications = FormOfPublication.objects.all()
@@ -3300,9 +3322,15 @@ class CityShow(ListView):
     Set context_object_name to cities.
     '''
     model = City
-    template_name = 'publications/city_show.html'
+    #template_name = 'publications/city_show.html'
     context_object_name = 'cities'
     paginate_by = 10
+
+
+    def get_template_names(self):
+        if self.request.path == '/new_cities/':
+            return ['publications/city_show_new.html']
+        return ['publications/city_show.html']
 
     def get_queryset(self):
         cities = City.objects.all()
@@ -3383,9 +3411,14 @@ class GenreShow(ListView):
     Set context_object_name to genres.
     '''
     model = Genre
-    template_name = 'publications/genre_show.html'
+    #template_name = 'publications/genre_show.html'
     context_object_name = 'genres'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_genres/':
+            return ['publications/genre_show_new.html']
+        return ['publications/genre_show.html']
 
     def get_queryset(self):
         genres = Genre.objects.all()
@@ -3705,9 +3738,15 @@ class SpecialOccasionShow(ListView):
     Set context_object_name to specialoccasions.
     '''
     model = SpecialOccasion
-    template_name = 'publications/specialoccasion_show.html'
+    #template_name = 'publications/specialoccasion_show.html'
     context_object_name = 'specialoccasions'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_specialoccasions/':
+            return ['publications/specialoccasion_show_new.html']
+        return ['publications/specialoccasion_show.html']
+
 
     def get_queryset(self):
         specialoccasions = SpecialOccasion.objects.all()
@@ -3786,9 +3825,15 @@ class OwnerShow(ListView):
     Set context_object_name to owners.
     '''
     model = Owner
-    template_name = 'publications/owner_show.html'
+    #template_name = 'publications/owner_show.html'
     context_object_name = 'owners'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_owners/':
+            return ['publications/owner_show_new.html']
+        return ['publications/owner_show.html']
+
 
     def get_queryset(self):
         owners = Owner.objects.all()
@@ -3868,9 +3913,15 @@ class UploadedFileShow(ListView):
     Set context_object_name to uploadedfiles.
     '''
     model = UploadedFile
-    template_name = 'publications/uploadedfile_show.html'
+    #template_name = 'publications/uploadedfile_show.html'
     context_object_name = 'uploadedfiles'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_uploadedfiles/':
+            return ['publications/uploadedfile_show_new.html']
+        return ['publications/uploadedfile_show.html']
+
 
     def get_queryset(self):
         uploadedfiles = UploadedFile.objects.filter(is_deleted=False)
@@ -3962,9 +4013,15 @@ class FileCategoryShow(ListView):
     Set context_object_name to filecategories.
     '''
     model = FileCategory
-    template_name = 'publications/filecategory_show.html'
+    #template_name = 'publications/filecategory_show.html'
     context_object_name = 'filecategories'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.path == '/new_filecategories/':
+            return ['publications/filecategory_show_new.html']
+        return ['publications/filecategory_show.html']
+
 
     def get_queryset(self):
         filecategories = FileCategory.objects.all()

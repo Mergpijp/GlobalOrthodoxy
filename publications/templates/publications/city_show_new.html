@@ -3,10 +3,9 @@
 {% block content %}
 <div id="header">
     <br/>
-    <h1><b>TRANSLATORS</b></h1>
+    <h1><b>CITIES</b></h1>
     <div id="sub-head">SORT BY <a href="?q={{ q }}&order_by=name&direction=asc" class="asearch" id="name">Name</a>
-        <a href="?q={{ q }}&order_by=name_original_language&direction=asc" class="asearch" id="name_original_language">Name Original Language</a>
-        <a href="?q={{ q }}&order_by=extra_info&direction=asc" class="asearch" id="extra_info">Extra Info</a>
+        <a href="?q={{ q }}&order_by=country&direction=asc" class="asearch" id="country">Country</a>
     </div>
         <script>
    function getConfig(){
@@ -29,26 +28,15 @@
                     setSortConfig('1000')
                 }
             }break;
-            case "name_original_language": {
+            case "country": {
                 state = getConfig()
                 if(state == '0100') {
-                    document.getElementById("name_original_language").href = '?order_by=name_original_language&direction=desc'
+                    document.getElementById("country").href = '?order_by=country&direction=desc'
                     setSortConfig('0200')
                 }
                 else {
-                    document.getElementById("name_original_language").href = '?order_by=name_original_language&direction=asc'
+                    document.getElementById("country").href = '?order_by=country&direction=asc'
                     setSortConfig('0100')
-                }
-            }break;
-            case "extra_info": {
-                state = getConfig()
-                if(state == '0010') {
-                    document.getElementById("extra_info").href = '?order_by=extra_info&direction=desc'
-                    setSortConfig('0020')
-                }
-                else {
-                    document.getElementById("extra_info").href = '?order_by=extra_info&direction=asc'
-                    setSortConfig('0010')
                 }
             }break;
         }
@@ -67,13 +55,7 @@
             });
             }break;
             case "0200": {
-              $('#name_original_language').css({
-                'color': '#9b9ba6',
-                'text-decoration': 'none',
-            });
-            }break;
-            case "0020": {
-              $('#extra_info').css({
+              $('#country').css({
                 'color': '#9b9ba6',
                 'text-decoration': 'none',
             });
@@ -85,13 +67,7 @@
             });
             }break;
             case "0100": {
-            $('#name_original_language').css({
-                'color': '#e1afaf',
-                'text-decoration': 'underline',
-            });
-            }break;
-            case "0010": {
-            $('#extra_info').css({
+            $('#country').css({
                 'color': '#e1afaf',
                 'text-decoration': 'underline',
             });
@@ -101,12 +77,11 @@
     </script>
 </div>
 <div id="content" class="infinite-container">
-    {% for translator in translators %}
+    {% for city in cities %}
         <div class="infinite-item content-new">
                 <div id="text-element">
-                    <div id="name_t">{{ translator.get_truncated_name_new}}</div>
-                    <div id="original_name_t">{{ translator.get_truncated_name_original_language_new}}</div>
-                    <div id="extra_info_t">{{ translator.get_truncated_extra_info_new}}</div>
+                    <div id="name_t">{{ city.name }}</div>
+                    <div id="original_name_t">{{ city.country.name}}</div>
                 </div>
         </div>
     {% endfor %}
@@ -114,7 +89,7 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_next %}
-            <a class="infinite-more-link" href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}&order_by={{order_by}}&direction={{ direction }}&affiliated_church={{ affiliated_church }}&authors={{ authors }}&translators={{ translators }}&form_of_publication={{ form_of_publication }}&publication_city={{ publication_city }}&languages={{ languages }}&content_genre={{ content_genre }}&connected_to_special_occasion={{ connected_to_special_occasion }}&currently_owned_by={{ currently_owned_by }}&keywords={{ keywords }}&uploadedfiles={{ uploadedfiles }}&filecategory={{ filecategory }}">next</a>
+            <a class="infinite-more-link" href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}&order_by={{order_by}}&direction={{ direction }}">next</a>
         {% endif %}
     </span>
 </div>

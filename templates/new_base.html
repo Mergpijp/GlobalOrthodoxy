@@ -46,88 +46,49 @@
         </div>
 
         <div id="mySidenav" class="sidenav">
-          <a class="link publications Down" href="/new" id="publications"><div></div></a>
-          <a class="link churches" href="/new_churches" id="churches"><div></div></a>
-          <a class="link languages" href="/new_languages" id="languages"><div></div></a>
+          <a class="link publications Down" href="/new" id="publications"><div title="publications"></div></a>
+          <a class="link churches" href="/new_churches" id="churches"><div title="churches"></div></a>
+          <a class="link languages" href="/new_languages" id="languages"><div title="languages"></div></a>
+          <a class="link authors sameicon" href="/new_authors" id="authors"><div title="authors"></div></a>
+          <a class="link cities sameicon" href="/new_cities" id="cities"><div title="cities"></div></a>
+          <a class="link filecategories sameicon" href="/new_filecategories" id="filecategories"><div title="filecategories"></div></a>
+          <a class="link form_of_publications sameicon" href="/new_form_of_publications" id="form_of_publications"><div title="form of publications"></div></a>
+          <a class="link genres sameicon" href="/new_genres" id="genres"><div title="genres"></div></a>
+          <a class="link keywords sameicon" href="/new_keywords" id="keywords"><div title="keywords"></div></a>
+          <a class="link owners sameicon" href="/new_owners" id="owners"><div title="owners"></div></a>
+          <a class="link special_occasions sameicon" href="/new_specialoccasions" id="specialoccasions"><div title="special occasions"></div></a>
+          <a class="link translators sameicon" href="/new_translators" id="translators"><div title="translators"></div></a>
+          <a class="link uploadedfiles sameicon" href="/new_uploadedfiles" id="uploadedfiles"><div title="uploaded files"></div></a>
         </div>
 <script>
-function isStart(){
- return localStorage.getItem('start') == 'true';
+function getState(){
+ return localStorage.getItem('state');
 }
-function setStart(){
- localStorage.setItem('start', 'true');
+function setState(state){
+ localStorage.setItem('state', state);
 }
-function setNotStart(){
- localStorage.setItem('start', 'false');
+function setOldState(state) {
+  localStorage.setItem('oldstate', state);
 }
-
-function isPub(){
- return localStorage.getItem('pub') == 'true';
+function getOldstate(){
+ return localStorage.getItem('oldstate');
 }
-function isChurch(){
- return localStorage.getItem('church') == 'true';
-}
-function isLanguage(){
- return localStorage.getItem('language') == 'true';
-}
-function setHighlight(highlight){
- localStorage.setItem(highlight, 'true');
-}
-function setNoHighlight(highlight){
- localStorage.setItem(highlight, 'false');
-}
-
 
 $(".link").click(function(e) {
-      //e.preventDefault();
-      //var mainButton = $(e.target).parent();
-      //$('.link').not(mainButton).removeClass('Down');
-      //mainButton.toggleClass('Down');
-
       var id = this.id;
-      if(isPub() && id == "publications")
+      if(getState() == id)
           return false;
-      if(isChurch() && id == "churches")
-          return false;
-      if(isLanguage() && id == "languages")
-          return false;
-      if(id=="publications") {
-          setHighlight('pub');
-          setNoHighlight('church');
-          setNoHighlight('language');
-      }
-      if(id=="churches") {
-          setHighlight('church');
-          setNoHighlight('pub');
-          setNoHighlight('language');
-      }
-
-      if(id=="languages") {
-          setHighlight('language');
-          setNoHighlight('church');
-          setNoHighlight('pub');
-      }
+      setOldState(getState());
+      setState(id);
+      return true;
 
 });
 
 
 $( document ).ready(function() {
-    //setStart();
-    //$(".link")[0].click();
-    //setNotStart();
-    if(isPub()) {
-        $('#publications').addClass('Down');
-        $('#churches').removeClass('Down');
-        $('#languages').removeClass('Down');
-    }
-    if(isLanguage()) {
-        $('#languages').addClass('Down');
-        $('#churches').removeClass('Down');
-        $('#publications').removeClass('Down');
-    }
-    if(isChurch()) {
-        $('#languages').removeClass('Down');
-        $('#churches').addClass('Down');
+    $('#' + getState()).addClass('Down');
+    $('#' + getOldstate()).removeClass('Down');
+    if(getState() != "publications") {
         $('#publications').removeClass('Down');
     }
 });

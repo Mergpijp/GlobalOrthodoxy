@@ -193,6 +193,23 @@ a {
   top: 15px;
   right: 15px;
 }
+#name_t {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  right: 15px;
+}
+#original_name_t {
+  position: absolute;
+  left: 15px;
+  top: 40px;
+}
+#extra_info_t {
+  position: absolute;
+  left: 15px;
+  top: 65px;
+}
+
 #title_translation {
   position: absolute;
   left: 15px;
@@ -259,6 +276,14 @@ body {
     left:-9px;
     position:absolute;
 }
+.sameicon > div
+{
+    background-image: url('../icons/no_select_dot.png');
+    background-repeat: no-repeat;
+    left:-9px;
+    position:absolute;
+}
+
 .publications.Down > div
 {
     background-image: url('../icons/publications_selected.png');
@@ -277,6 +302,13 @@ body {
 .languages.Down > div
 {
     background-image: url('../icons/languages_selected.png');
+    background-repeat: no-repeat;
+    left:-9px;
+    position:absolute;
+}
+.sameicon.Down > div
+{
+    background-image: url('../icons/select_dot.png');
     background-repeat: no-repeat;
     left:-9px;
     position:absolute;
@@ -300,5 +332,55 @@ body {
 #languages {
 	position: absolute;
 	top: 135px;
+	right: 15px;
+}
+#authors {
+	position: absolute;
+	top: 205px;
+	right: 15px;
+}
+#cities {
+	position: absolute;
+	top: 275px;
+	right: 15px;
+}
+#filecategories{
+	position: absolute;
+	top: 345px;
+	right: 15px;
+}
+#form_of_publications{
+	position: absolute;
+	top: 415px;
+	right: 15px;
+}
+#genres{
+	position: absolute;
+	top: 485px;
+	right: 15px;
+}
+#keywords{
+	position: absolute;
+	top: 555px;
+	right: 15px;
+}
+#owners{
+	position: absolute;
+	top: 625px;
+	right: 15px;
+}
+#specialoccasions{
+	position: absolute;
+	top: 695px;
+	right: 15px;
+}
+#translators{
+	position: absolute;
+	top: 765px;
+	right: 15px;
+}
+#uploadedfiles{
+	position: absolute;
+	top: 835px;
 	right: 15px;
 }

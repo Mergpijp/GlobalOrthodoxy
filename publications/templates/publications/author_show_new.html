@@ -3,7 +3,7 @@
 {% block content %}
 <div id="header">
     <br/>
-    <h1><b>TRANSLATORS</b></h1>
+    <h1><b>AUTHORS</b></h1>
     <div id="sub-head">SORT BY <a href="?q={{ q }}&order_by=name&direction=asc" class="asearch" id="name">Name</a>
         <a href="?q={{ q }}&order_by=name_original_language&direction=asc" class="asearch" id="name_original_language">Name Original Language</a>
         <a href="?q={{ q }}&order_by=extra_info&direction=asc" class="asearch" id="extra_info">Extra Info</a>
@@ -101,12 +101,12 @@
     </script>
 </div>
 <div id="content" class="infinite-container">
-    {% for translator in translators %}
+    {% for author in authors %}
         <div class="infinite-item content-new">
                 <div id="text-element">
-                    <div id="name_t">{{ translator.get_truncated_name_new}}</div>
-                    <div id="original_name_t">{{ translator.get_truncated_name_original_language_new}}</div>
-                    <div id="extra_info_t">{{ translator.get_truncated_extra_info_new}}</div>
+                    <div id="name_t">{{ author.get_truncated_name_new}}</div>
+                    <div id="original_name_t">{{ author.get_truncated_name_original_language_new}}</div>
+                    <div id="extra_info_t">{{ author.get_truncated_extra_info_new}}</div>
                 </div>
         </div>
     {% endfor %}
