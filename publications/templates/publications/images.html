@@ -38,19 +38,23 @@
 <div class=”app”>
   <center><h1>Four Corners of the World Library</h1></center>
   <br/>
+<center>
 {% for publication, cover_image, search_term_appear_in in zipped_data %}
 
       {% if forloop.counter0 == 0 %}
       <ul class="hs full">
       {% endif %}
-        <li class="item" style="background-image: url('/media/{{ cover_image }}');">
-        </li>
+        <a href="/publication/{{ publication.id }}/detail_view">
+          <li class="item" style="background-image: url('/media/{{ cover_image }}');">
+          </li>
+        </a>
       {% if forloop.counter|divisibleby:10 %}
       </ul>
       <ul class="hs full">
       {% endif %}
 
 {%  endfor %}
+</center>
 </div>
 </body>
 </html>
