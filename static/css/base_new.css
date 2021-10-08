@@ -192,6 +192,7 @@ a {
   left: 15px;
   top: 15px;
   right: 15px;
+  font-size: 22px;
 }
 #name_t {
   position: absolute;
@@ -214,7 +215,7 @@ a {
   position: absolute;
   left: 15px;
   top: 75px;
-  font-size: 20px;
+  font-size: 13px;
 }
 #publication_place_year{
   position: absolute;
