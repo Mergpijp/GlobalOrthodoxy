@@ -47,6 +47,9 @@ body {
   padding-bottom: calc(.75 * var(--gutter));
   margin-bottom: calc(-.25 * var(--gutter));
 }
+a {
+    color: #FF0000;
+}
 
 .hs:before,
 .hs:after {

@@ -368,10 +368,12 @@ class NewCrispyForm(forms.ModelForm):
             TabHolder(
                 Tab('Titles',
                     HTML("""
-                    <script>
+                    <script> 
                     $(document).ready(function() {
+                      var id_general_comments = document.getElementById('id_general_comments');
+                      var id_team_comments = document.getElementById('id_team_comments');
                       $(window).keydown(function(event){
-                        if(event.keyCode == 13) {
+                        if(event.keyCode == 13  && event.target !== id_general_comments && event.target !== id_team_comments) {
                           event.preventDefault();
                           return false;
                         }

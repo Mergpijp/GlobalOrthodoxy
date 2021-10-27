@@ -8,6 +8,8 @@ from time import gmtime, strftime
 import datetime
 from django.utils import timezone
 import os
+from django.core.files.storage import default_storage
+
 
 MINIMUM_YEAR = 1850
 MINIMUM_YEAR_PUBLICATION = 1970
@@ -256,8 +258,15 @@ class UploadedFile(models.Model):
         return extension
 
     def chunks(self):
+        if not default_storage.exists(self.file.name):
+            return ''
         chunks = [c for c in self.file.chunks()]
         return chunks
+
+    def size(self):
+        if not default_storage.exists(self.file.name):
+            return 0
+        return self.file.size
     class Meta:
         ordering = ('filecategory__order_index',)
 

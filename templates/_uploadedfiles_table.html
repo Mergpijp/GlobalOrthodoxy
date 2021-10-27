@@ -1,4 +1,5 @@
 <div id="uploadedfiles-div">
+{% load file_exists %}
 <table id="uploadedfiles-table" class="table">
   <thead>
   <tr>
@@ -172,17 +173,27 @@ var myDropzone = new Dropzone("div#my-drop-zone{{ uploadedfile.pk }}", {
 
         //var urlCreator = window.URL || window.webkitURL;
         // var imageUrl = urlCreator.createObjectURL( blob );
-
-        var parts = ["{{ uploadedfile.chunks }}", new ArrayBuffer()];
-        file = new File(parts, "{{ uploadedfile.file.name }}",
-            {
-                name: "{{ uploadedfile.file.name }}",
-                size: {{ uploadedfile.file.size }},
-                type: "image/" + "{{ uploadedfile.extension }}",
-                path: "/media/{{ uploadedfile.file }}",
-            });
-        myDropzone.options.addedfile.call(myDropzone, file);
-        myDropzone.options.thumbnail.call(myDropzone, file, "/media/{{ uploadedfile.file }}");
+        var check = "/media/{{ uploadedfile.file.name |file_exists }}";
+        //console.log(check + 'haha');
+        //console.log('fuck');
+        //debugger;
+        console.log(check);
+        if(check.includes("f9b221362b1527ef018dd75b4cbd92d7") === false) {
+            //console.log(check);
+            var parts = ["{{ uploadedfile.chunks }}", new ArrayBuffer()];
+            file = new File(parts, "{{ uploadedfile.file.name }}",
+                {
+                    name: "{{ uploadedfile.file.name }}",
+                    size: {{ uploadedfile.size }},
+                    type: "image/" + "{{ uploadedfile.extension }}",
+                    path: "/media/{{ uploadedfile.file }}",
+                });
+            myDropzone.options.addedfile.call(myDropzone, file);
+            myDropzone.options.thumbnail.call(myDropzone, file, "/media/{{ uploadedfile.file }}");
+        }
+        else {
+            myDropzone.removeAllFiles();
+        }
 
         //myDropzone.addFile(file);
         closeButton.click(function (e) {

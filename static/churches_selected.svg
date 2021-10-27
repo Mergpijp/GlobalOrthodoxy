@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg9"
+   width="37.333332"
+   height="34.666668"
+   viewBox="0 0 37.333332 34.666668"
+   sodipodi:docname="churches_selected.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs13">
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Colorize"
+       id="filter167"
+       x="0"
+       y="0"
+       width="1"
+       height="1">
+      <feComposite
+         in2="SourceGraphic"
+         operator="arithmetic"
+         k1="0"
+         k2="1"
+         result="composite1"
+         id="feComposite153" />
+      <feColorMatrix
+         in="composite1"
+         values="1"
+         type="saturate"
+         result="colormatrix1"
+         id="feColorMatrix155" />
+      <feFlood
+         flood-opacity="0"
+         flood-color="rgb(0,0,0)"
+         result="flood1"
+         id="feFlood157" />
+      <feBlend
+         in="flood1"
+         in2="colormatrix1"
+         mode="multiply"
+         result="blend1"
+         id="feBlend159" />
+      <feBlend
+         in2="blend1"
+         mode="screen"
+         result="blend2"
+         id="feBlend161" />
+      <feColorMatrix
+         in="blend2"
+         values="1"
+         type="saturate"
+         result="colormatrix2"
+         id="feColorMatrix163" />
+      <feComposite
+         in="colormatrix2"
+         in2="SourceGraphic"
+         operator="in"
+         k2="1"
+         result="composite2"
+         id="feComposite165" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="namedview11"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="52.730767"
+     inkscape:cx="18.670314"
+     inkscape:cy="17.333334"
+     inkscape:window-width="3840"
+     inkscape:window-height="2066"
+     inkscape:window-x="2869"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g15" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g15">
+    <image
+       width="37.333332"
+       height="34.666668"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA0CAIAAABQJmwyAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAQySURBVGhD7Zd5b9NIGIf5aAsLhZYFFm1hUUE9
+KAWEoMsijhZxbIFI2y3dXik90sSJE8exY+dwkzRXu2xhl6/Fr7iajt7EdnxUakSl5494MjPv45l3
+Dp/4oWewKzgU0Z6fRk/33SSFPjkU0Q1Be/12iRT65Fj0yIr+fPX+Qlg0KRjNtFJij4Hka2Ci5y/f
+mXz5t4mqbUViKnv8sXeEVPbAYU39H+/CpNAn37doRMh2iWhMPRYNlK4RXY92g+iZ8zdTaWNuMX7y
+7BD5yw8Bi47efaHq1VrzMxCl4sDQY1LBM4GJ4mSaXRBMxQMan1HYe+k2qeyBAEQxxQ8evStsbjO/
+YqlZrv7DHnPFBir4zAS/olcGHsYSOnMqVz9mskZS0oBeqFYbn9hfOAX6B34jzTvHuyjuRC+nFiq1
+XdMDTnmjlkzrGdWArlFupuSclMlvVnaY61ZtNzS9itVGuuoEj6KDo89kpcQMYJNWCrCEKyus1P41
+RzebK/NDq2gVrDnSoSOuRc9dHJt+H8EqMaNWG7vwgI2ibcKM2TAKRh0vQIYWLK+lL/bfI53b4EJ0
+f9EYTRYMi0bC/Mo5/GCFrSATZLWIl1F1DO1+quyVb31E8nR4W+1U9PKvD9Y2FBaDTauql/jYVmDq
+9fwW6uOtkL78Xzgdbow8IeFacRY9dW4Yt/TWRdM6m46gPkTbvN637bbPdrt1EB26NSGrZdbj/qKR
+NC1f4ddH58APCWAOLUkYJNX4oxARYNiJwhLvavaCfPr96Z+xhIJs4zdzb0ARmxd0VyOynq+z8vfz
+MeLAcBjRmbko2seT+V+ujeMxqx+Mrk/MLJ8KLZ29cAuba7X+SS/UsaXw0XkcRLGrP574C2lqPrJM
+DYrp2YjZ8/XhJ8Njk+bvtjgvJh6WCUGBNURCWOFCFPsoCeMfXFtJFCtciGJnJmH8Mx8WSRQrXIgi
+X0kY/ywuJ0kUK1yIYnmSMP5ZWkmRKFa4EMXeQcL4J7wikShWuBDFEUfCEHAoFEvbBNxBSTUe3KFI
+FCs6Fb0yML4YFpo7X0gknuev50grwN//W1nfyNy9/4rt0zY4i17qv/cmtCimshm12Nz5n0TisRDN
+kWo86zEFB+nyh/jI7Qn7jyoH0ckXM4mkir6Aki02tl2LCqKdaOSbqMnsfOTqjYekOcNBNCrIrCOI
+1pv/kUg8bUVxTyDVeKJClvUPZubWSHOGg6iQOHhjJWt4EE2kCqQaTzR+YAm8iybE/XkHslIkYQht
+RUXJrpUg6qx/4F1U5HpJZ+wmEbQVxZcGqcYTT+7dShneRfleUpLdsgDtReVNUo0nkcrzITyKnuod
+5nsRUxoJQ2grKmXsRJPS3ocNw6Po6b6RD6siI7ySULRKK+wQevp8hvQAcO3AegIwJg3BaiTDh5gK
+LZDmDIepPzociwbNsWjQdIloz+BXaYJQ8iTxZaEAAAAASUVORK5CYII=
+"
+       id="image17"
+       style="filter:url(#filter167)" />
+  </g>
+</svg>

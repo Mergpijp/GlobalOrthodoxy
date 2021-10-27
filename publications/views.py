@@ -56,6 +56,7 @@ from bootstrap_modal_forms.generic import (
 )
 import csv
 
+
 from excel_response import ExcelResponse
 
 
@@ -825,7 +826,50 @@ class PublicationDetailView(DetailView):
         self.object = []
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
-        return context 
+        return context
+
+class PublicationDetailViewNew(DetailView):
+    '''
+    Inherits DetailView
+    Detailview for publication
+    Usess now in template thus the function get_context_data
+    '''
+    model = Publication
+    template_name = 'publications/new_detail.html'
+
+    def get_queryset(self):
+        publications = Publication.objects.filter(is_deleted=False, is_stub=False)
+        return publications
+
+    def get_context_data(self, **kwargs):
+        self.object = []
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        cover_image = ''
+        context['publication'] = Publication.objects.filter(pk=self.kwargs['pk'])[0]
+        min = 9
+        for uploadedfile in context['publication'].uploadedfiles.all():
+            if uploadedfile.filecategory and uploadedfile.filecategory.list_view_priority:
+                compare = int(uploadedfile.filecategory.list_view_priority)
+                if compare < min:
+                    min = compare
+                    cover_image = uploadedfile.file
+
+        date = datetime.datetime.now()
+        date = date.replace(tzinfo=utc)
+        for uploadedfile in context['publication'].uploadedfiles.all():
+            if uploadedfile.uploaded_at and uploadedfile.uploaded_at < date and uploadedfile.file:
+                try:
+                    im = Image.open(uploadedfile.file)
+                    date = uploadedfile.uploaded_at
+                    cover_image = uploadedfile.file
+                except IOError:
+                    continue
+
+        context['cover_image'] = cover_image
+        context['request'] = self.request
+
+        return context
         
 @login_required(login_url='/accounts/login/')        
 def render_search(request):

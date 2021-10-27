@@ -1,0 +1,204 @@
+{% extends "new_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<center>
+    <h1>{{ object.title }}</h1><br/>
+    <img src="/media/{{ cover_image }}" width="400" height="400" id="crop_image">
+</center>
+    <br/><br/>
+<div class="all_row">
+
+    <div class="col_part">
+        {% if object.title_subtitle_transcription %}
+        <span id="detail_title">TITLE TRANSCRIPTION</span> <br>
+        {{ object.title_subtitle_transcription }}<br/><br/>
+        {% endif %}
+        {% if object.pdf_url %}
+        <span id="detail_title">URL</span> <br/>
+        <a href="{{ object.pdf_url }}">{{ object.pdf_url }}</a><br/><br/>
+        {% endif %}
+        {% for author in object.authors.all %}
+        <span id="detail_title">AUTHOR NAME {{ forloop.counter }}</span> <br>
+        {{ author.name }}<br/>
+        <span id="detail_title">AUTHOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br>
+        {{ author.name_original_language }}<br>
+        <span id="detail_title">AUTHOR EXTRA INFO {{ forloop.counter }}</span><br/>
+        {{ author.extra_info }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        {% if object.translated_from %}
+        <span id="detail_title">TRANSLATED FROM</span><br/>
+        {{ object.translated_from.name }}<br/>
+        <span id="detail_title">DIRECTION</span><br/>
+        {{ object.translated_from.direction }}<br/><br/>
+        {% endif %}
+        {% if object.editor %}
+        <span id="detail_title">EDITOR</span><br/>
+        {{ object.editor }}<br/><br/>
+        {% endif %}
+        {% if object.printed_by %}
+        <span id="detail_title">PRINTED BY</span><br/>
+        {{ object.printed_by }}<br/><br/>
+        {% endif %}
+        {% if object.publication_year and not object.is_periodical %}
+        <span id="detail_title">PUBLICATION YEAR</span><br/>
+        {{ object.publication_year }}<br/><br/>
+        {% endif %}
+        {% if object.publication_country %}
+        <span id="detail_title">PUBLICATION COUNTRY</span><br/>
+        {{ object.publication_country.name }}<br/><br/>
+        {% endif %}
+        {% if object.publishing_organisation %}
+        <span id="detail_title">PUBLISHING ORGANISATION</span><br/>
+        {{ object.publishing_organisation }}<br/><br/>
+        {% endif %}
+        {% if object.currency %}
+        <span id="detail_title">CURRENCY</span><br/>
+        {{ object.get_currency_display }}<br/><br/>
+        {% endif %}
+        {% if object.donor %}
+        <span id="detail_title">DONOR</span><br/>
+        {{ object.donor }}<br/><br/>
+        {% endif %}
+        {% if object.extra_info %}
+        <span id="detail_title">EXTRA INFO</span><br/>
+        {{ object.extra_info }}<br/><br/>
+        {% endif %}
+        {% for language in object.language.all %}
+        <span id="detail_title">LANGUAGE {{ forloop.counter }}</span><br/>
+        {{ language.name }}<br/>
+        <span id="detail_title">DIRECTION {{ forloop.counter }}</span><br/>
+        {{ language.direction }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        {% for genre in object.content_genre.all %}
+        <span id="detail_title">GENRE {{ forloop.counter }}</span><br/>
+        {{ genre.name }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        {% if object.description_of_illustration %}
+        <span id="detail_title">DESCRIPTION OF ILLUSTRATION</span><br/>
+        {{ object.description_of_illustration }}<br/><br/>
+        {% endif %}
+        {% if object.nr_of_pages %}
+        <span id="detail_title">NR OF PAGES</span><br/>
+        {{ object.nr_of_pages }}<br/><br/>
+        {% endif %}
+        {% for keyword in object.keywords.all %}
+        <span id="detail_title">KEYWORD {{ forloop.counter }}</span><br/>
+        {{ keyword.name }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        {% if object.created_by %}
+        <span id="detail_title">CREATED BY</span><br/>
+        {{ object.created_by }}<br/><br/>
+        {% endif %}
+
+
+    </div>
+    <div class="col_part">
+        {% if object.title_translation %}
+        <span id="detail_title">TRANSLATED TITLE</span><br/>
+        {{ object.title_translation }}<br/><br/>
+        {% endif %}
+        {% for translator in object.translators.all %}
+        <span id="detail_title">TRANSLATOR NAME {{ forloop.counter }}</span><br/>
+        {{ translator.name }}<br/>
+        <span id="detail_title">TRANSLATOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br/>
+        {{ translator.name_original_language }}<br/>
+        <span id="detail_title">TRANSLATOR EXTRA INFO {{ forloop.counter }}</span><br/>
+        {{ translator.extra_info }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        <span id="detail_title">IS A TRANSLATION</span><br/>
+        {% if object.is_a_translation %}
+         <span id="detail_title">Yes</span><br/>
+        {% elif object.is_a_translation == None %}
+         <span id="detail_title">Unknown</span><br/>
+        {% else %}
+         <span id="detail_title">No</span><br/>
+        {% endif %}<br/>
+        {% for form_of_publication in object.form_of_publication.all %}
+        <span id="detail_title">FORM OF PUBLICATION {{ forloop.counter }}</span><br/>
+        {{ form_of_publication.name }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        {% if object.ISBN_number %}
+        <span id="detail_title">ISBN NUMBER</span><br/>
+        {{ object.ISBN_number }}<br/><br/>
+        {% endif %}
+        {% if object.published_by %}
+        <span id="detail_title">PUBLISHED BY</span><br/>
+        {{ object.published_by }}<br/><br/>
+        {% endif %}
+        {% if object.is_periodical %}
+        <span id="detail_title">PERIODICAL</span><br/>
+        {{ object.start_year }} - {{ object.end_year }}<br/>
+        <span id="detail_title">ONGOING</span><br/>
+        {{ object.ongoing }}<br/><br/>
+        {% endif %}
+        {% if object.publication_city %}
+        <span id="detail_title">PUBLICATION CITY</span><br/>
+        {{ object.publication_city.name }}<br/><br/>
+        {% endif %}
+        {% if object.price %}
+        <span id="detail_title">PRICE</span><br/>
+        {{ object.price }}<br/><br/>
+        {% endif %}
+        {% for church in object.affiliated_church.all %}
+        <span id="detail_title">CHURCH {{ forloop.counter }}</span><br/>
+        {{ church.name }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        {% if object.content_description %}
+        <span id="detail_title">CONTENT DESCRIPTION</span><br/>
+        {{ object.content_description }}<br/><br/>
+        {% endif %}
+        {% for occasion in object.connected_to_special_occasion.all %}
+        <span id="detail_title">SPECIAL OCCASION {{ forloop.counter }}</span><br/>
+        {{ occasion.name }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        {% for image_detail in object.image_details.all %}
+        <span id="detail_title">IMAGE DETAIL {{ forloop.counter }}</span><br/>
+        <span id="detail_title">NAME OF SOURCE</span><br/>
+        {{ image_detail.name_of_source }}<br/>
+        <span id="detail_title">CONTACT OF SOURCE</span><br/>
+        {{ image_detail.contact_of_source }}<br/>
+        <span id="detail_title">COPYRIGHT DETAILS</span><br/>
+        {{ image_detail.copyright_issues }}<br/>
+        {% if forloop.last %}
+        <br/>
+        {% endif %}
+        {% endfor %}
+        {% if object.general_comments %}
+        <span id="detail_title">GENERAL COMMENTS</span><br/>
+        {{ object.general_comments }}<br/><br/>
+        {% endif %}
+
+
+
+    </div>
+</div>
+    {% for file in object.uploadedfiles.all %}
+    {% if file.is_deleted == False and file.file != cover_image %}
+        <img src="/media/{{ file.file }}" width="200" height="200" id="crop_image">
+    {% endif %}
+    {% endfor %}
+{% endblock %}

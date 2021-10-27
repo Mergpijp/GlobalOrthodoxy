@@ -36,7 +36,10 @@
 <br />
 <br />
 <div class=”app”>
-  <center><h1>Four Corners of the World Library</h1></center>
+  <center><h1>Four Corners of the World Library</h1>
+  <a href="/new/">Public list view</a>
+  </center>
+
   <br/>
 <center>
 {% for publication, cover_image, search_term_appear_in in zipped_data %}
@@ -44,7 +47,7 @@
       {% if forloop.counter0 == 0 %}
       <ul class="hs full">
       {% endif %}
-        <a href="/publication/{{ publication.id }}/detail_view">
+        <a href="/new/publication/{{ publication.id }}/detail_view">
           <li class="item" style="background-image: url('/media/{{ cover_image }}');">
           </li>
         </a>

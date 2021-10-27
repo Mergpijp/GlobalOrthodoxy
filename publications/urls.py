@@ -1,7 +1,7 @@
 from django.urls import path, include, re_path
 
 from .views import SearchResultsView, SearchResultsViewNew, render_search, PublicationCreate, PublicationUpdate,\
-    PublicationDelete, PublicationDetailView, SearchResultsViewImages#, UploadedfileUpdateView
+    PublicationDelete, PublicationDetailView, SearchResultsViewImages, PublicationDetailViewNew#, UploadedfileUpdateView
 from . import views
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -55,8 +55,9 @@ urlpatterns = [
     path('uploadedfile/proces/', views.process_file, name='uploadedfile-proces'),
     path('publication/show/', login_required(SearchResultsView.as_view()), name='publication-show'),
     path('new/grid/', login_required(SearchResultsViewImages.as_view()), name='images'),
-    path('publication/<int:pk>/detail_view/', login_required(PublicationDetailView.as_view()), name='publication-detail'),
-    path('publication/<int:pk>/detail_view/', login_required(PublicationDetailView.as_view()), name='publication-detail'),
+    path('publication/<int:pk>/detail_view/', PublicationDetailView.as_view(), name='publication-detail'),
+    path('new/publication/<int:pk>/detail_view/', PublicationDetailViewNew.as_view(), name='publication-detail-new'),
+    #path('publication/<int:pk>/detail_view/', login_required(PublicationDetailView.as_view()), name='publication-detail'),
     path('publication/<int:pk>/edit/', login_required(PublicationUpdate.as_view()), name='publication-update'),
     path('publication/<int:pk>/delete/', PublicationDelete, name='publication-delete'),
     path('thrashbin/show/', login_required(views.ThrashbinShow.as_view()), name='thrashbin-show'),
