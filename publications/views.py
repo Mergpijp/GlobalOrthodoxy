@@ -3874,8 +3874,6 @@ class OwnerShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_owners/':
-            return ['publications/owner_show_new.html']
         return ['publications/owner_show.html']
 
 
