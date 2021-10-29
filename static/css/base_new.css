@@ -368,17 +368,6 @@ body {
     -o-background-size: cover;
     background-size: cover;
 }
-.owners > div
-{
-    background-image: url('../icons/keyword_deselected.svg');
-    background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
 .special_occasions > div
 {
     background-image: url('../icons/occasion_deselected.svg');
@@ -438,17 +427,6 @@ body {
 .special_occasions.Down > div
 {
     background-image: url('../icons/occasion_selected.svg');
-    background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
-.owners.Down > div
-{
-    background-image: url('../icons/keyword_selected.svg');
     background-repeat: no-repeat;
     top: 0px;
 	right: 5px;
@@ -619,23 +597,18 @@ body {
 	top: 555px;
 	right: 15px;
 }
-#owners{
+#specialoccasions{
 	position: absolute;
 	top: 625px;
 	right: 15px;
 }
-#specialoccasions{
-	position: absolute;
-	top: 695px;
-	right: 15px;
-}
 #translators{
 	position: absolute;
-	top: 765px;
+    top: 695px;
 	right: 15px;
 }
 #uploadedfiles{
 	position: absolute;
-	top: 835px;
+	top: 765px;
 	right: 15px;
 }
