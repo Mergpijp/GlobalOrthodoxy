@@ -51,10 +51,10 @@
             <div id="text-element">
                 <div id="title_text">
                     <div id="important_field">
-                     {{ lang.name }}
+                        <a href="{% url 'publication-show-new' %}?language={{lang.id}}">{{ lang.name }}</a>
                      </div>
                         <br/>
-                     {{ lang.direction }}
+                    <a href="{% url 'publication-show-new' %}?q={{lang.direction}}">{{ lang.direction }}</a>
                 </div>
             </div>
         </div>
