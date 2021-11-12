@@ -104,9 +104,9 @@
     {% for author in authors %}
         <div class="infinite-item content-new">
                 <div id="text-element">
-                    <div id="name_t">{{ author.get_truncated_name_new}}</div>
-                    <div id="original_name_t">{{ author.get_truncated_name_original_language_new}}</div>
-                    <div id="extra_info_t">{{ author.get_truncated_extra_info_new}}</div>
+                    <div id="name_t"><a href="{% url 'publication-show-new' %}?authors={{author.id}}">{{ author.get_truncated_name_new}}</a></div>
+                    <div id="original_name_t"><a href="{% url 'publication-show-new' %}?q={{author.name_original_language}}">{{ author.get_truncated_name_original_language_new}}</a></div>
+                    <div id="extra_info_t"><a href="{% url 'publication-show-new' %}?q={{author.extra_info}}">{{ author.get_truncated_extra_info_new}}</a></div>
                 </div>
         </div>
     {% endfor %}

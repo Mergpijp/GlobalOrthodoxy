@@ -80,8 +80,8 @@
     {% for city in cities %}
         <div class="infinite-item content-new">
                 <div id="text-element">
-                    <div id="name_t">{{ city.name }}</div>
-                    <div id="original_name_t">{{ city.country.name}}</div>
+                    <div id="name_t"><a href="{% url 'publication-show-new' %}?publication_city={{city.id}}">{{ city.name }}</a></div>
+                    <div id="original_name_t"><a href="{% url 'publication-show-new' %}?publication_country={{city.country.pk}}">{{ city.country.name}}</a></div>
                 </div>
         </div>
     {% endfor %}

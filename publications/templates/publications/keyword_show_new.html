@@ -49,7 +49,7 @@
             <div id="text-element">
                 <div id="title_text">
                     <div id="important_field">
-                     <br/> {{ keyword.name }}
+                        <br/><a href="{% url 'publication-show-new' %}?keywords={{keyword.id}}">{{ keyword.name }}</a>
                     </div>
                 </div>
             </div>

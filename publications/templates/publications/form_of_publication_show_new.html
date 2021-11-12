@@ -49,7 +49,7 @@
             <div id="text-element">
                 <div id="title_text">
                     <div id="important_field">
-                     <br/> {{ form_of_publication.name }}
+                        <br/><a href="{% url 'publication-show-new' %}?form_of_publication={{form_of_publication.id}}">{{ form_of_publication.name }}</a>
                     </div>
                 </div>
             </div>

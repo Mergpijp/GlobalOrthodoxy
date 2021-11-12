@@ -49,7 +49,7 @@
             <div id="text-element">
                 <div id="title_text">
                     <div id="important_field">
-                     <br/> {{ filecategory.name }}
+                        <br/><a href="{% url 'publication-show-new' %}?filecategory={{filecategory.id}}">{{ filecategory.name }}</a>
                     </div>
                 </div>
             </div>

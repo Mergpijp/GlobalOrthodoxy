@@ -104,9 +104,9 @@
     {% for translator in translators %}
         <div class="infinite-item content-new">
                 <div id="text-element">
-                    <div id="name_t">{{ translator.get_truncated_name_new}}</div>
-                    <div id="original_name_t">{{ translator.get_truncated_name_original_language_new}}</div>
-                    <div id="extra_info_t">{{ translator.get_truncated_extra_info_new}}</div>
+                    <div id="name_t"><a href="{% url 'publication-show-new' %}?translators={{translator.id}}">{{ translator.get_truncated_name_new}}</a></div>
+                    <div id="original_name_t"><a href="{% url 'publication-show-new' %}?q={{translator.name_original_language}}">{{ translator.get_truncated_name_original_language_new}}</a></div>
+                    <div id="extra_info_t"><a href="{% url 'publication-show-new' %}?q={{translator.extra_info}}">{{ translator.get_truncated_extra_info_new}}</a></div>
                 </div>
         </div>
     {% endfor %}

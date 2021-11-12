@@ -130,12 +130,12 @@
             <a id="cover_image" ><img src="/media/{{ uploadedfile.file }}" width="200" height="200" id="crop_image"></a>
             <div id="right-element">
                 <div id="text-element">
-                    <div id="title_text">{{ uploadedfile.get_truncated_image_title_new }}</div>
-                    <div id="title_translation">{{ uploadedfile.get_truncated_filecategory_new }}</div>
+                    <div id="title_text"><a href="{% url 'publication-show-new' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.get_truncated_image_title_new }}</a></div>
+                    <div id="title_translation"><a href="{% url 'publication-show-new' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.get_truncated_filecategory_new }}</a></div>
                 </div>
                 <div id="bottom_right-element">
-                    <div id="author_name">{{ uploadedfile.get_truncated_image_contents_new }}</div>
-                    <div id="publication_place_year">{{ uploadedfile.uploaded_at }}</div>
+                    <div id="author_name"><a href="{% url 'publication-show-new' %}?uploadedfiles={{uploadedfile.id}}">{{ uploadedfile.get_truncated_image_contents_new }}</a></div>
+                    <div id="publication_place_year"><a href="{% url 'publication-show-new' %}?q={{uploadedfile.uploaded_at}}">{{ uploadedfile.uploaded_at }}</a></div>
                 </div>
             </div>
         </div>

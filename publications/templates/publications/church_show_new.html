@@ -51,7 +51,7 @@
             <div id="text-element">
                 <div id="title_text">
                     <div id="important_field">
-                     <br/> {{ church.name }}
+                     <br/> <a href="{% url 'publication-show-new' %}?affiliated_church={{church.id}}">{{ church.name }}</a>
                     </div>
                 </div>
             </div>
