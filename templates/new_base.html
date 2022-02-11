@@ -92,7 +92,7 @@ $(".link").click(function(e) {
 
 
 $( document ).ready(function() {
-    if(window.location.href.endsWith("/new/")) {
+    if(window.location.href.includes("/new/")) {
         $('#' + getOldstate()).removeClass('Down');
         $('#publications').addClass('Down');
     }
