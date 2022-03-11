@@ -3025,18 +3025,26 @@ class KeywordShow(ListView):
 
     def get_queryset(self):
         keywords = Keyword.objects.all()
-        ordering = self.get_ordering()
+
+        ordering = self.request.GET.get('order_by')
+        direction = self.request.GET.get('direction')
+
         if ordering is not None and ordering != "":
-            keywords = keywords.order_by(ordering)
+
+            if direction is None or direction in ['','asc']:
+                keywords = keywords.order_by(Lower(ordering))
+            elif direction == 'desc':
+                keywords = keywords.order_by(Lower(ordering).desc())
+
         return keywords
 
-    def get_ordering(self):
+    def get_ordering(self): #I think unused
         ordering = self.request.GET.get('order_by')
         direction = self.request.GET.get('direction')
         if ordering is not None and ordering != "" and direction is not None and direction != "":
             if direction == 'desc':
-                ordering = '-{}'.format(ordering)
-        return ordering
+                ordering = ordering
+        return ordering, direction
 
     def get_context_data(self, **kwargs):
         context = super(KeywordShow, self).get_context_data(**kwargs)
