@@ -3114,7 +3114,7 @@ class AuthorShow(ListView):
     def get_template_names(self):
         if self.request.path == '/new_authors/':
             return ['publications/author_show_new.html']
-        return ['publications/author_Show.html']
+        return ['publications/author_show.html']
 
     def get_queryset(self):
         authors = Author.objects.all()
