@@ -97,11 +97,6 @@
         <br/>
         {% endif %}
         {% endfor %}
-        {% if object.created_by %}
-        <span id="detail_title">CREATED BY</span><br/>
-        {{ object.created_by }}<br/><br/>
-        {% endif %}
-
 
     </div>
     <div class="col_part">
@@ -198,7 +193,7 @@
 </div>
     {% for file in object.uploadedfiles.all %}
     {% if file.is_deleted == False and file.file != cover_image %}
-        <img src="/media/{{ file.file }}" width="200" height="200" id="crop_image">
+        <a target="_blank" href="/media/{{ file.file }}"><img src="/media/{{ file.file }}" width="300" height="300" id="crop_image"></a>
     {% endif %}
     {% endfor %}
 {% endblock %}
