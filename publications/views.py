@@ -1603,6 +1603,8 @@ class SearchResultsView(ListView):
         context['search_term_appear_in'] = search_term_appear_in
         #pdb.set_trace()
         context['zipped_data'] = zip(context['publications'], context['cover_images'], context['search_term_appear_in'])
+        context['count'] = self.get_queryset().count()
+
         return context
 
 class SearchResultsViewImages(ListView):
@@ -2903,6 +2905,7 @@ class SearchResultsViewNew(ListView):
         context['search_term_appear_in'] = search_term_appear_in
         #pdb.set_trace()
         context['zipped_data'] = zip(context['publications'], context['cover_images'], context['search_term_appear_in'])
+        context['count'] = self.get_queryset().count()
         return context
 
 class ThrashbinShow(ListView):
