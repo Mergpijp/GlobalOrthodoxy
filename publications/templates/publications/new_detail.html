@@ -19,9 +19,9 @@
         {% endif %}
         {% for author in object.authors.all %}
         <span id="detail_title">AUTHOR NAME {{ forloop.counter }}</span> <br>
-        {{ author.name }}<br/>
+        <a href="/new/?authors={{ author.pk }}">{{ author.name }}</a><br/>
         <span id="detail_title">AUTHOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br>
-        {{ author.name_original_language }}<br>
+        <a href="/new/?authors={{ author.pk }}">{{ author.name_original_language }}</a><br>
         <span id="detail_title">AUTHOR EXTRA INFO {{ forloop.counter }}</span><br/>
         {{ author.extra_info }}<br/>
         {% if forloop.last %}
@@ -106,9 +106,9 @@
         {% endif %}
         {% for translator in object.translators.all %}
         <span id="detail_title">TRANSLATOR NAME {{ forloop.counter }}</span><br/>
-        {{ translator.name }}<br/>
+        <a href="/new/?translators={{ translator.pk }}">{{ translator.name }}</a><br/>
         <span id="detail_title">TRANSLATOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br/>
-        {{ translator.name_original_language }}<br/>
+        <a href="/new/?translators={{ translator.pk }}">{{ translator.name_original_language }}</a><br/>
         <span id="detail_title">TRANSLATOR EXTRA INFO {{ forloop.counter }}</span><br/>
         {{ translator.extra_info }}<br/>
         {% if forloop.last %}

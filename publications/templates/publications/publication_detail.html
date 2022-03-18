@@ -111,8 +111,8 @@
     <tbody>
 {% for author in object.authors.all %}
     <tr>
-        <td>{{author.name}}</td>
-        <td>{{author.name_original_language}}</td>
+        <td><a href="/?authors={{author.pk}}">{{author.name}}</a></td>
+        <td><a href="/?authors={{author.pk}}">{{author.name_original_language}}</a></td>
         <td>{{author.extra_info}}</td>
     </tr>
 {% empty %}
@@ -135,8 +135,8 @@
     <tbody>
 {% for translator in object.translators.all %}
     <tr>
-        <td>{{translator.name}}</td>
-        <td>{{translator.name_original_language}}</td>
+        <td><a href="/?translators={{translator.pk}}">{{translator.name}}</a></td>
+        <td><a href="/?translators={{translator.pk}}">{{translator.name_original_language}}</a></td>
         <td>{{translator.extra_info}}</td>
     </tr>
 {% empty %}
