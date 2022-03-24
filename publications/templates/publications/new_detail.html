@@ -193,7 +193,7 @@
 </div>
     {% for file in object.uploadedfiles.all %}
     {% if file.is_deleted == False and file.file != cover_image %}
-        <a target="_blank" href="/media/{{ file.file }}"><img src="/media/{{ file.file }}" width="300" height="300" id="crop_image"></a>
+        <div class="uploaded-file"><a target="_blank" href="/media/{{ file.file }}"><img src="/media/{{ file.file }}" width="300" height="300" id="crop_image"></a><br>{{ file.image_contents}}</div>
     {% endif %}
     {% endfor %}
 {% endblock %}

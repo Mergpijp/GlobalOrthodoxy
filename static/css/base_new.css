@@ -625,3 +625,16 @@ body {
 	top: 765px;
 	right: 15px;
 }
+
+.uploaded-file
+{
+    float: left;
+    width: 310px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.uploaded-file img
+{
+    margin: 10px;
+}
