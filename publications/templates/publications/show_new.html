@@ -127,7 +127,7 @@
 <div id="content" class="infinite-container">
     {% for publication, cover_image, search_term_appear_in in zipped_data %}
         <div id="publication_content" class="infinite-item">
-            <a id="cover_image" href="/new/publication/{{ publication.id }}/detail_view"><img src="/media/{{ cover_image }}" width="200" height="200" id="crop_image"></a>
+            <a id="cover_image" href="/publication/{{ publication.id }}/public"><img src="/media/{{ cover_image }}" width="200" height="200" id="crop_image"></a>
             <div id="right-element">
                 <div id="text-element">
                     <div id="title_text">{{ publication.get_truncated_title_new }}</div>

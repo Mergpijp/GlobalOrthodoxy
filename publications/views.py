@@ -3018,7 +3018,7 @@ class KeywordShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_keywords/':
+        if self.request.path == '/keywords/':
             return ['publications/keyword_show_new.html']
         return ['publications/keyword_show.html']
 
@@ -3112,7 +3112,7 @@ class AuthorShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_authors/':
+        if self.request.path == '/authors/':
             return ['publications/author_show_new.html']
         return ['publications/author_show.html']
 
@@ -3205,7 +3205,7 @@ class TranslatorShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_translators/':
+        if self.request.path == '/translators/':
             return ['publications/translator_show_new.html']
         return ['publications/translator_show.html']
 
@@ -3292,7 +3292,7 @@ class FormOfPublicationShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_form_of_publications/':
+        if self.request.path == '/form_of_publications/':
             return ['publications/form_of_publication_show_new.html']
         return ['publications/form_of_publication_show.html']
 
@@ -3383,7 +3383,7 @@ class CityShow(ListView):
 
 
     def get_template_names(self):
-        if self.request.path == '/new_cities/':
+        if self.request.path == '/cities/':
             return ['publications/city_show_new.html']
         return ['publications/city_show.html']
 
@@ -3471,7 +3471,7 @@ class GenreShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_genres/':
+        if self.request.path == '/genres/':
             return ['publications/genre_show_new.html']
         return ['publications/genre_show.html']
 
@@ -3798,7 +3798,7 @@ class SpecialOccasionShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_specialoccasions/':
+        if self.request.path == '/specialoccasions/':
             return ['publications/specialoccasion_show_new.html']
         return ['publications/specialoccasion_show.html']
 
@@ -3971,7 +3971,7 @@ class UploadedFileShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_uploadedfiles/':
+        if self.request.path == '/uploadedfiles/':
             return ['publications/uploadedfile_show_new.html']
         return ['publications/uploadedfile_show.html']
 
@@ -4071,7 +4071,7 @@ class FileCategoryShow(ListView):
     paginate_by = 10
 
     def get_template_names(self):
-        if self.request.path == '/new_filecategories/':
+        if self.request.path == '/filecategories/':
             return ['publications/filecategory_show_new.html']
         return ['publications/filecategory_show.html']
 
