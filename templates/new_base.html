@@ -41,7 +41,7 @@
                     <i class="fa fa-flip-horizontal fa-search"></i>
                 </button>
                 <script>
-                      if(!window.location.pathname.endsWith('/new/')){
+                      if(!window.location.pathname.endsWith('/publications/')){
                           $(".input-group").hide();
                       }
                   </script>
@@ -92,7 +92,7 @@ $(".link").click(function(e) {
 
 
 $( document ).ready(function() {
-    if(window.location.href.includes("/new/")) {
+    if(window.location.href.includes("/publications/")) {
         $('#' + getOldstate()).removeClass('Down');
         $('#publications').addClass('Down');
     }
