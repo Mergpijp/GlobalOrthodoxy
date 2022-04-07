@@ -80,10 +80,17 @@ function getOldstate(){
  return localStorage.getItem('oldstate');
 }
 
-$(".link").click(function(e) {
+$(".link").click(function(e) 
+{
       var id = this.id;
-      if(getState() == id)
+	  
+	  //This is related to not clicking on an already selected item, but caused problems
+      /*if(getState() == id)
+	  {
+		  console.log('nothing happens');
           return false;
+	  }*/
+	  
       setOldState(getState());
       setState(id);
       return true;
