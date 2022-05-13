@@ -191,6 +191,11 @@ a {
   top: 150px;
   width : 600px;
   height: 50px;
+  padding: 17px;
+  font-weight: 700;
+  color: hsl(0deg 0% 0% / 39%);
+  font-size: 12px;
+  letter-spacing: 2px;
 }
 #text-element {
   position: relative;
