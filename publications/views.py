@@ -32,6 +32,7 @@ from countries_plus.models import Country
 from django.core.paginator import Paginator
 from googletrans import Translator as GTranslator
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from googletrans import LANGUAGES
 from django.template.loader import render_to_string
@@ -58,6 +59,7 @@ import csv
 
 
 from excel_response import ExcelResponse
+from os.path import isfile
 
 
 utc=pytz.UTC
@@ -155,11 +157,8 @@ def process_file2(request, pkb=None):
     data = dict()
     obj, created = UploadedFile.objects.get_or_create(pk=None)
 
-    #try:
     post_mutable = {'image_title': request.POST['image_title'], 'filecategory': request.POST['filecategory'], \
                     'image_contents': request.POST['image_contents']}
-    #except:
-    #    return HttpResponse(status=200)
 
     form = UploadedFileForm(post_mutable or None, request.FILES or None, instance=obj)
 
@@ -167,22 +166,38 @@ def process_file2(request, pkb=None):
         #pdb.set_trace()
         if form.is_valid():
             instance = form.save()
-            #pdb.set_trace()
 
+            #Also save a small variant
+            #try:
+            from PIL import Image
+            SMALL_FILE_SIZE = 400
+            image = Image.open(instance.file.path)
+            image.thumbnail((SMALL_FILE_SIZE, SMALL_FILE_SIZE), Image.ANTIALIAS)
+            small_file_path = instance.file.path.replace('.jpg', '_small.jpg').replace('.png', '_small.png').replace('.jpeg', '_small.jpg')
+            print(small_file_path)
+
+            if '.png' in small_file_path.lower():
+                file_type = 'PNG'
+            else:
+                file_type = 'JPEG'
+
+            image.save(small_file_path,file_type)
+
+            #except (PermissionError, ImportError, OSError) as e:
+            #    pass
+
+            #Link to publication
             if pkb:
                 pub = Publication.objects.get(pk=pkb)
                 pub.uploadedfiles.add(instance)
                 pub.save()
-                #instance.save()
-                #pub.form.save_m2m()
-                #return super().form_valid(form)
+
                 data['table'] = render_to_string(
                     '_uploadedfiles_table.html',
                     {'publication': pub},
                     request=request
                 )
                 return JsonResponse(data)
-                #return HttpResponse(status=200)
 
     return render(request, 'error_template.html', {'form': form}, status=500)
 
@@ -1829,23 +1844,14 @@ class SearchResultsViewImages(ListView):
             val = False
             if str(copyrights) == "yes":
                 val = True
-            print('11111', str(copyrights))
             publications = publications.filter(copyrights=val)
-
-        print('666666', publications)
 
         if str(is_a_translation) != "unknown" and str(is_a_translation) != "None":
             val = False
             if str(is_a_translation) == "yes":
                 val = True
-            print('11111', str(is_a_translation))
             publications = publications.filter(is_a_translation=val)
 
-        #publications = publications.distinct('id')
-        print('777777', publications)
-        #publications = Publication.objects.values_list('id', flat=True).distinct()
-        #print(list(publications))
-        #publications = Publication.objects.filter(id__in=publications)
         ordering = self.get_ordering()
         if ordering is not None and ordering != "":
             if ordering == "author_name" or ordering == "-author_name":
@@ -2055,7 +2061,17 @@ class SearchResultsViewImages(ListView):
                             continue
             if length == len(cover_images):
                 cover_images.append(None)
-        print(context['publications'])
+
+        #Check if a small version exists for a cover image
+        for cover_image_index, cover_image in enumerate(cover_images):
+
+            if cover_image is None:
+                continue
+
+            small_image_path = cover_image.path.replace('.jpg', '_small.jpg')
+            if isfile(small_image_path):
+                cover_images[cover_image_index] = cover_image.name.replace('.jpg', '_small.jpg')
+
         context['cover_images'] = cover_images
         context['request'] = self.request
         regexp = re.compile(context['q'], re.IGNORECASE)
