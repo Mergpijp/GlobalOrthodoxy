@@ -24,6 +24,7 @@ import datetime
 import traceback
 from itertools import chain
 import itertools
+from collections import Counter
 from django.core.exceptions import ImproperlyConfigured
 import json
 from django.urls import reverse
@@ -2681,6 +2682,7 @@ class SearchResultsViewNew(ListView):
             context['filecategory'] = ''
 
         cover_images = []
+
         for pub in context['publications']:
             min = 9
             length = len(cover_images)
@@ -2711,9 +2713,10 @@ class SearchResultsViewNew(ListView):
                             continue
             if length == len(cover_images):
                 cover_images.append(None)
-        print(context['publications'])
+
         context['cover_images'] = cover_images
         context['request'] = self.request
+
         regexp = re.compile(context['q'], re.IGNORECASE)
         search_term_appear_in = []
         index = 0
@@ -2921,7 +2924,22 @@ class SearchResultsViewNew(ListView):
         context['search_term_appear_in'] = search_term_appear_in
         #pdb.set_trace()
         context['zipped_data'] = zip(context['publications'], context['cover_images'], context['search_term_appear_in'])
-        context['count'] = self.get_queryset().count()
+
+        full_query_set = self.get_queryset()
+
+        languages = Counter()
+        genres = Counter()
+
+        for pub in full_query_set:
+            for language in pub.language.all():
+                languages[language] += 1
+
+            for genre in pub.content_genre.all():
+                genres[genre] += 1
+
+        context['languages'] = languages.items()
+        context['genres'] = genres.items()
+        context['count'] = full_query_set.count()
         return context
 
 class ThrashbinShow(ListView):

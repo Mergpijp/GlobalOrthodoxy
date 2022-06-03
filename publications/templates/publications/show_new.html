@@ -124,6 +124,11 @@
     });
     </script>
 </div>
+
+<div class="post-filter-area">{% for language, freq in languages %}<div class="post-filter-button">{{ language }} ({{freq}})</div>{% endfor %}</div>
+
+<div class="post-filter-area">{% for genre, freq in genres %}<div class="post-filter-button">{{ genre }} ({{freq}})</div>{% endfor %}</div>
+
 <div id="content" class="infinite-container">
     {% for publication, cover_image, search_term_appear_in in zipped_data %}
         <div id="publication_content" class="infinite-item">

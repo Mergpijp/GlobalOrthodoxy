@@ -643,3 +643,23 @@ body {
 {
     margin: 10px;
 }
+
+.post-filter-button
+{
+background-color: hsl(228deg 19% 31%);
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 27px;
+    margin: 4px;
+    float: left;
+    color: white;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.post-filter-area
+{
+	margin-top: 10px;
+	overflow: hidden;
+}
