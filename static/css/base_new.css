@@ -18,10 +18,9 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background: linear-gradient(180deg, rgba(87,95,126,1) 135px, rgba(64,70,94,1) 135px);
+  background: linear-gradient(180deg, rgba(87,95,126,1) 215px, rgba(64,70,94,1) 135px);
   overflow-x: hidden;
   transition: 0.5s;
-  padding-top: 60px;
 }
 
 .sidenav a:after {
@@ -53,19 +52,11 @@
     width : 80px;
 }
 #publications {
-	position: absolute;
-	top: 0px;
-	right: 5px;
 }
 #churches {
-	position: absolute;
-	top: 65px;
-	right: 7px;
 }
+
 #languages {
-	position: absolute;
-	top: 135px;
-	right: 15px;
 }
 
 /* Add a black background color to the top navigation bar */
@@ -262,11 +253,6 @@ body {
   padding: 0 4px;
 }
 
-
-
-
-/* Demo styles */
-
 .grid
 {
     background-image: url('/static/icons/grid.svg');
@@ -274,7 +260,6 @@ body {
     top: 10px;
     width: 50px;
     height: 50px;
-    position: absolute;
 	right: 17px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -286,11 +271,16 @@ body {
 {
     background-image: url('/static/icons/publication_deselected.svg');
     background-repeat: no-repeat;
-    top: 6px;
-    width: 50px;
-    height: 50px;
-    position: absolute;
-	right: 13px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.about > div
+{
+    background-image: url('/static/icons/about_deselected.svg');
+    background-repeat: no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -301,9 +291,6 @@ body {
 {
     background-image: url('../icons/church_deselected.svg');
     background-repeat: no-repeat;
-    position: absolute;
-    top: 5px;
-    right: 10px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -313,8 +300,6 @@ body {
 {
     background-image: url('../icons/language_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -324,8 +309,6 @@ body {
 {
     background-image: url('../icons/author_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -335,8 +318,6 @@ body {
 {
     background-image: url('../icons/city_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -346,8 +327,6 @@ body {
 {
     background-image: url('../icons/file_category_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -357,8 +336,6 @@ body {
 {
     background-image: url('../icons/publication_type_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -368,8 +345,6 @@ body {
 {
     background-image: url('../icons/genre_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -379,8 +354,6 @@ body {
 {
     background-image: url('../icons/keyword_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -390,8 +363,6 @@ body {
 {
     background-image: url('../icons/occasion_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -401,8 +372,6 @@ body {
 {
     background-image: url('../icons/translator_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -412,8 +381,16 @@ body {
 {
     background-image: url('../icons/file_deselected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.about.Down > div
+{
+    background-image: url('../icons/about_selected.svg');
+    background-repeat: no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -424,8 +401,6 @@ body {
 {
     background-image: url('../icons/file_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -435,8 +410,6 @@ body {
 {
     background-image: url('../icons/translator_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -446,8 +419,6 @@ body {
 {
     background-image: url('../icons/occasion_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -457,8 +428,6 @@ body {
 {
     background-image: url('../icons/keyword_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -468,8 +437,6 @@ body {
 {
     background-image: url('../icons/genre_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -479,8 +446,6 @@ body {
 {
     background-image: url('../icons/publication_type_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -490,8 +455,6 @@ body {
 {
     background-image: url('../icons/file_category_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -501,8 +464,6 @@ body {
 {
     background-image: url('../icons/city_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	right: 5px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -512,8 +473,6 @@ body {
 {
     background-image: url('../icons/author_selected.svg');
     background-repeat: no-repeat;
-    top: 0px;
-	left:-50px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -524,11 +483,6 @@ body {
 {
     background-image: url('/static/icons/publication_selected.svg');
     background-repeat: no-repeat;
-    top: 6px;
-    width: 50px;
-    height: 50px;
-    position: absolute;
-	right: 13px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -538,9 +492,6 @@ body {
 {
     background-image: url('../icons/church_selected.svg');
     background-repeat: no-repeat;
-    position: absolute;
-    top: 5px;
-    right: 10px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -550,8 +501,6 @@ body {
 {
     background-image: url('../icons/language_selected.svg');
     background-repeat: no-repeat;
-    left:-50px;
-    position:absolute;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -564,6 +513,19 @@ body {
     left:-9px;
     position:absolute;
 }
+.link
+{
+	top: 10px;
+    width: 50px;
+    height: 50px;
+	margin-top: 4px;
+	margin-bottom: 20px;
+    position: relative;
+    right: 0px;
+	display: block;
+	margin-left: auto;
+    margin-right: auto;	
+}
 .link > div
 {
     width: 50px;
@@ -571,64 +533,39 @@ body {
     display:inline-block;
 }
 #publications {
-	position: absolute;
-	top: 65px;
-	right: 5px;
 }
+
 #churches {
-	position: absolute;
-	top: 135px;
-	right: 7px;
 }
+
 #languages {
-	position: absolute;
-	top: 205px;
-	right: 15px;
 }
+
 #authors {
-	position: absolute;
-	top: 275px;
-	right: 15px;
 }
+
 #cities {
-	position: absolute;
-	top: 345px;
-	right: 15px;
 }
+
 #filecategories{
-	position: absolute;
-	top: 415px;
-	right: 15px;
 }
+
 #form_of_publications{
-	position: absolute;
-	top: 485px;
-	right: 15px;
 }
+
 #genres{
-	position: absolute;
-	top: 555px;
-	right: 15px;
 }
+
 #keywords{
-	position: absolute;
-	top: 625px;
-	right: 15px;
 }
+
 #specialoccasions{
-	position: absolute;
-	top: 695px;
-	right: 15px;
 }
+
 #translators{
-	position: absolute;
-    top: 765px;
-	right: 15px;
 }
+
 #uploadedfiles{
-	position: absolute;
-	top: 765px;
-	right: 15px;
 }
 
 .uploaded-file

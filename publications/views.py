@@ -4221,6 +4221,9 @@ class IllustrationLayoutTypeUpdate(UpdateView):
             url += '&direction=' + self.request.GET.get('direction')
         return url
 
+def about(request):
+    return render(request, 'about.html')
+
 def normalize_query(query_string,
     findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
     normspace=re.compile(r'\s{2,}').sub):

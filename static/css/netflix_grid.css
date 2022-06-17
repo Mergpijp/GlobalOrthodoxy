@@ -18,7 +18,13 @@ body {
   --gutter: 20px;
 }
 
-.app {
+.main 
+{
+  margin-left: 100px;
+}
+  
+.app
+{
   padding: var(--gutter) 0;
   display: grid;
   grid-gap: var(--gutter) 0;
@@ -93,4 +99,193 @@ h3 {
 }
 @function white($opacity) {
   @return rgba(white, $opacity)
+}
+
+.sidenav {
+  height: 100%;
+  width: 80px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background: linear-gradient(180deg, rgba(87,95,126,1) 215px, rgba(64,70,94,1) 135px);
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.sidenav a:after {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+
+.grid
+{
+    background-image: url('/static/icons/grid.svg');
+    background-repeat: no-repeat;
+    top: 10px;
+    width: 50px;
+    height: 50px;
+	right: 17px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.publications > div
+{
+    background-image: url('/static/icons/publication_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.about > div
+{
+    background-image: url('/static/icons/about_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.churches > div
+{
+    background-image: url('../icons/church_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.languages > div
+{
+    background-image: url('../icons/language_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.authors > div
+{
+    background-image: url('../icons/author_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.cities > div
+{
+    background-image: url('../icons/city_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.filecategories > div
+{
+    background-image: url('../icons/file_category_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.form_of_publications > div
+{
+    background-image: url('../icons/publication_type_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.genres > div
+{
+    background-image: url('../icons/genre_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.keywords > div
+{
+    background-image: url('../icons/keyword_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.special_occasions > div
+{
+    background-image: url('../icons/occasion_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.translators > div
+{
+    background-image: url('../icons/translator_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.uploadedfiles > div
+{
+    background-image: url('../icons/file_deselected.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.link
+{
+	top: 10px;
+    width: 50px;
+    height: 50px;
+	margin-top: 4px;
+	margin-bottom: 20px;
+    position: relative;
+    right: 0px;
+	display: block;
+	margin-left: auto;
+    margin-right: auto;	
+}
+
+.link > div
+{
+    width: 50px;
+    height: 50px;
+    display:inline-block;
 }

@@ -130,5 +130,6 @@ urlpatterns = [
     path('specialoccasions/', views.SpecialOccasionShow.as_view(), name='specialoccasions-show-new'),
     path('translators/', views.TranslatorShow.as_view(), name='translators-show-new'),
     path('uploadedfiles/', views.UploadedFileShow.as_view(), name='uploadedfiles-show-new'),
-    #path('new_languages/', views.LanguagesViewNew.as_view(), name='languages-show-new'),
+
+    path('about/', views.about, name='about')
 ]
