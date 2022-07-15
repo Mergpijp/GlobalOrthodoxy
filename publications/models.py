@@ -349,7 +349,7 @@ class Publication(models.Model):
     title5 = models.CharField(max_length=300, blank=True)
     title_subtitle_transcription5 = models.CharField(max_length=300, blank=True)
     title_translation5 = models.CharField(max_length=300, blank=True)
-    pdf_url = models.URLField(max_length=200, blank=True)
+    pdf_url = models.URLField(max_length=500, blank=True)
     authors = models.ManyToManyField(Author)
     translators = models.ManyToManyField(Translator)
     form_of_publication = models.ManyToManyField(FormOfPublication)
