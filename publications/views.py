@@ -2310,7 +2310,7 @@ class SearchResultsViewNew(ListView):
     #template_name = 'publications/show.html'
     context_object_name = 'publications'
     publications = Publication.objects.filter(is_deleted=False, is_stub=False)
-    paginate_by = 3
+    paginate_by = 500
     #ordering = 'title'
 
     '''

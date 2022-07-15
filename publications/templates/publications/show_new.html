@@ -4,6 +4,11 @@
 <div id="header">
     <br/>
     <h1><b>PUBLICATIONS</b></h1>
+	
+	{% if request.GET|length == 0 %}
+		<p>Complete list of all publications in the database. Each publication includes a basic description of the publication, as well as one of more images, of the cover, front matter, and body matter. Each search of subcategories (via /churches/, /languages/ etc., presents a subset of this basic list.</p>
+	{% endif %}
+	
     <div id="sub-head">{{ count }} HITS, SORT BY
         <a href="?q={{ q }}&order_by=title&direction=asc" class="asearch" id="title">Title</a>
         <a href="?q={{ q }}&order_by=author_name&direction=asc" class="asearch" id="author">Author</a>
@@ -125,13 +130,13 @@
     </script>
 </div>
 
-<div class="post-filter-area">{% for language, freq in languages %}<div class="post-filter-button">{{ language }} ({{freq}})</div>{% endfor %}</div>
+<div class="post-filter-area">{% for language, freq in languages %}<div class="post-filter-button language-filter-button" language="{{ language }}">{{ language }} ({{freq}})</div>{% endfor %}</div>
 
-<div class="post-filter-area">{% for genre, freq in genres %}<div class="post-filter-button">{{ genre }} ({{freq}})</div>{% endfor %}</div>
+<div class="post-filter-area">{% for genre, freq in genres %}<div class="post-filter-button genre-filter-button" genre="{{ genre }}">{{ genre }} ({{freq}})</div>{% endfor %}</div>
 
 <div id="content" class="infinite-container">
     {% for publication, cover_image, search_term_appear_in in zipped_data %}
-        <div id="publication_content" class="infinite-item">
+        <div id="publication_content" class="publication-item infinite-item" data-genre='[{% for genre in publication.content_genre.all %}"{{genre}}"{% if not forloop.last %},{% endif %}{% endfor %}]' data-language='[{% for language in publication.language.all %}"{{language}}"{% if not forloop.last %},{% endif %}{% endfor %}]'>
             <a id="cover_image" href="/publication/{{ publication.id }}/public"><img src="/media/{{ cover_image }}" width="200" height="200" id="crop_image"></a>
             <div id="right-element">
                 <div id="text-element">
@@ -139,7 +144,7 @@
                     <div id="title_translation">{{ publication.get_truncated_title_translation_new }}</div>
                 </div>
                 <div id="bottom_right-element">
-                    {{ publication.content_genre.first.name }} - {{ publication.publication_city.name }} ({{ publication.publication_country }}), {{ publication.publication_year }}</div>
+                    {{ publication.content_genre.first.name }} - {{ publication.publication_city.name }} ({{ publication.publication_country }}), {{ publication.publication_year }}
                 </div>
             </div>
         </div>
@@ -156,7 +161,105 @@
 <script src="{% static 'js/waypoints/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/waypoints/infinite.min.js' %}"></script>
 <script>
-    var infinite = new Waypoint.Infinite({
+	console.log('here');
+
+	var currentPostQueryLanguageFilter = null;
+	var currentPostQueryGenreFilter = null;
+
+	var languageFilterButtons = document.getElementsByClassName('language-filter-button');
+	var genreFilterButtons = document.getElementsByClassName('genre-filter-button');
+		
+	var clickableButton;
+	var candidateButton;
+	var selectAllButtons;
+			
+	for (var clickableButton of languageFilterButtons)
+	{
+		clickableButton.addEventListener('click',function()
+		{
+			selectAllButtons = currentPostQueryLanguageFilter == this.getAttribute('language');
+			
+			if (selectAllButtons)
+			{
+				currentPostQueryLanguageFilter = null;
+			}
+					
+			for (var candidateButton of languageFilterButtons)
+			{
+				if (selectAllButtons || candidateButton == this)
+				{
+					candidateButton.classList.remove('postquery-filter-button-deselected');					
+				}
+				else
+				{
+					candidateButton.classList.add('postquery-filter-button-deselected');
+				}
+				
+				if (!selectAllButtons && candidateButton == this)
+				{
+					currentPostQueryLanguageFilter = this.getAttribute('language');
+				}				
+			}
+
+			updatePublicationVisibility(currentPostQueryLanguageFilter,currentPostQueryGenreFilter);
+		});
+	}
+	
+	for (var clickableButton of genreFilterButtons)
+	{
+		clickableButton.addEventListener('click',function()
+		{
+			selectAllButtons = currentPostQueryGenreFilter == this.getAttribute('genre');
+			
+			if (selectAllButtons)
+			{
+				currentPostQueryGenreFilter = null;
+			}
+					
+			for (var candidateButton of genreFilterButtons)
+			{
+				if (selectAllButtons || candidateButton == this)
+				{
+					candidateButton.classList.remove('postquery-filter-button-deselected');
+				}
+				else
+				{
+					candidateButton.classList.add('postquery-filter-button-deselected');				
+				}
+				
+				if (!selectAllButtons && candidateButton == this)
+				{
+					currentPostQueryGenreFilter = this.getAttribute('genre');
+				}				
+			}	
+			
+			updatePublicationVisibility(currentPostQueryLanguageFilter,currentPostQueryGenreFilter);
+		});
+	}
+
+	function updatePublicationVisibility(currentPostQueryLanguageFilter,currentPostQueryGenreFilter)
+	{
+		var languageOkay = true;
+		var genreOkay = true;
+
+		for (var publicationItem of document.getElementsByClassName('publication-item'))
+		{
+			languageOkay = currentPostQueryLanguageFilter == null || JSON.parse(publicationItem.dataset.language).includes(currentPostQueryLanguageFilter);
+			genreOkay = currentPostQueryGenreFilter == null || JSON.parse(publicationItem.dataset.genre).includes(currentPostQueryGenreFilter);
+		
+			if (languageOkay && genreOkay)
+			{
+				publicationItem.style.display = "block";	
+			}
+			else
+			{
+				publicationItem.style.display = "none";	
+			}
+		}
+	}
+	
+	//Turned off infinite scroll to make post filter buttons possible
+    /*var infinite = new Waypoint.Infinite({
         element: $('.infinite-container')[0],
         offset: 'bottom-in-view',
 
@@ -166,6 +269,6 @@
         onAfterPageLoad: function () {
 
         },
-    });
+    });*/
 </script>
 {% endblock %}

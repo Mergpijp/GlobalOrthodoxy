@@ -289,3 +289,40 @@ h3 {
     height: 50px;
     display:inline-block;
 }
+
+#explanation
+{
+    margin: auto;
+    text-align: center;
+    line-height: 2;
+    width: 1000px;
+	font-family: 'Montserrat', sans-serif;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    letter-spacing: 1.5px;
+    color: #ffffffcf;
+	font-size: 13px;
+}
+
+.logos
+{
+	margin-top: 60px;
+}
+
+.erc_logo
+{
+    margin-left: 670px;
+    margin-top: -56px;
+    width: 130px;
+    border-radius: 15px;
+}
+
+.ru_logo
+{
+	width: 240px;
+    margin: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 11px;
+    margin-top: -24px;
+}

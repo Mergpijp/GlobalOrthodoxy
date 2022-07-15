@@ -595,8 +595,45 @@ background-color: hsl(228deg 19% 31%);
     font-size: 10px;
 }
 
+.postquery-filter-button-deselected
+{
+background-color: hsl(228deg 19% 75%);	
+}
+
 .post-filter-area
 {
 	margin-top: 10px;
 	overflow: hidden;
+}
+
+h1
+{
+	text-transform: uppercase;
+    font-weight: bolder;
+    color: hsl(0deg 0% 0% / 64%);
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+p
+{
+    color: hsl(0deg 0% 0% / 64%);	
+}
+
+.erc_logo
+{
+	margin-left: 260px;
+    margin-top: 40px;
+    width: 200px;
+    border-radius: 40px;
+}
+
+.ru_logo
+{
+    width: 295px;
+    margin: 30px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 18px;
+    margin-top: 65px;
 }
