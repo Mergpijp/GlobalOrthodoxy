@@ -2689,6 +2689,11 @@ class SearchResultsViewNew(ListView):
             inside = False
             for uploadedfile in pub.uploadedfiles.all():
                 if uploadedfile.filecategory and uploadedfile.filecategory.list_view_priority:
+
+                    #If filtering on a file category, only use files of that category
+                    if filecategory != None and uploadedfile.filecategory.pk != int(filecategory):
+                        continue
+
                     compare = int(uploadedfile.filecategory.list_view_priority)
                     if compare < min:
                         min = compare
