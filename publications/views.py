@@ -873,8 +873,10 @@ class PublicationDetailViewNew(DetailView):
 
         date = datetime.datetime.now()
         date = date.replace(tzinfo=utc)
+
         for uploadedfile in context['publication'].uploadedfiles.all():
-            if uploadedfile.uploaded_at and uploadedfile.uploaded_at < date and uploadedfile.file:
+            if uploadedfile.uploaded_at and uploadedfile.uploaded_at < date and uploadedfile.file and \
+                    uploadedfile.filecategory.list_view_priority == min:
                 try:
                     im = Image.open(uploadedfile.file)
                     date = uploadedfile.uploaded_at
@@ -883,6 +885,21 @@ class PublicationDetailViewNew(DetailView):
                     continue
 
         context['cover_image'] = cover_image
+        context['cover_image_small'] = cover_image # set the backup, then try to find a smaller one
+
+        if cover_image is not None:
+
+            for extension in ['png', 'jpg', 'jpeg']:
+
+                if not cover_image.path.endswith(extension):
+                    continue
+
+                small_image_path = cover_image.path.replace('.'+extension, '_small.'+extension)
+
+                if isfile(small_image_path):
+                    context['cover_image_small'] = cover_image.name.replace('.'+extension, '_small.'+extension)
+                    break
+
         context['request'] = self.request
 
         return context
@@ -2069,9 +2086,16 @@ class SearchResultsViewImages(ListView):
             if cover_image is None:
                 continue
 
-            small_image_path = cover_image.path.replace('.jpg', '_small.jpg')
-            if isfile(small_image_path):
-                cover_images[cover_image_index] = cover_image.name.replace('.jpg', '_small.jpg')
+            for extension in ['png', 'jpg', 'jpeg']:
+
+                if not cover_image.path.endswith(extension):
+                    continue
+
+                small_image_path = cover_image.path.replace('.'+extension, '_small.'+extension)
+
+                if isfile(small_image_path):
+                    cover_images[cover_image_index] = cover_image.name.replace('.'+extension, '_small.'+extension)
+                    break
 
         context['cover_images'] = cover_images
         context['request'] = self.request
@@ -2719,7 +2743,36 @@ class SearchResultsViewNew(ListView):
             if length == len(cover_images):
                 cover_images.append(None)
 
-        context['cover_images'] = cover_images
+        #Now we have all cover images, try to find smaller versions
+        small_cover_images = []
+        small_cover_image = None
+
+        for cover_image in cover_images:
+
+            small_cover_image = None
+
+            if cover_image is None:
+                small_cover_images.append(None)
+                continue
+
+            for extension in ['png', 'jpg', 'jpeg']:
+
+                if not cover_image.path.endswith(extension):
+                    continue
+
+                small_image_path = cover_image.path.replace('.' + extension, '_small.' + extension)
+
+                if isfile(small_image_path):
+                    small_cover_image = cover_image.name.replace('.' + extension, '_small.' + extension)
+                    break
+
+            if small_cover_image is None:
+                small_cover_images.append(cover_image)
+            else:
+                small_cover_images.append(small_cover_image)
+
+        context['cover_images'] = small_cover_images
+
         context['request'] = self.request
 
         regexp = re.compile(context['q'], re.IGNORECASE)
