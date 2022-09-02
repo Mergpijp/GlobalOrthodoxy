@@ -22,8 +22,6 @@
         <a href="/new/?authors={{ author.pk }}">{{ author.name }}</a><br/>
         <span id="detail_title">AUTHOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br>
         <a href="/new/?authors={{ author.pk }}">{{ author.name_original_language }}</a><br>
-        <span id="detail_title">AUTHOR EXTRA INFO {{ forloop.counter }}</span><br/>
-        {{ author.extra_info }}<br/>
         {% if forloop.last %}
         <br/>
         {% endif %}
@@ -31,8 +29,6 @@
         {% if object.translated_from %}
         <span id="detail_title">TRANSLATED FROM</span><br/>
         {{ object.translated_from.name }}<br/>
-        <span id="detail_title">DIRECTION</span><br/>
-        {{ object.translated_from.direction }}<br/><br/>
         {% endif %}
         {% if object.editor %}
         <span id="detail_title">EDITOR</span><br/>
@@ -54,10 +50,6 @@
         <span id="detail_title">PUBLISHING ORGANISATION</span><br/>
         {{ object.publishing_organisation }}<br/><br/>
         {% endif %}
-        {% if object.currency %}
-        <span id="detail_title">CURRENCY</span><br/>
-        {{ object.get_currency_display }}<br/><br/>
-        {% endif %}
         {% if object.donor %}
         <span id="detail_title">DONOR</span><br/>
         {{ object.donor }}<br/><br/>
@@ -69,8 +61,6 @@
         {% for language in object.language.all %}
         <span id="detail_title">LANGUAGE {{ forloop.counter }}</span><br/>
         {{ language.name }}<br/>
-        <span id="detail_title">DIRECTION {{ forloop.counter }}</span><br/>
-        {{ language.direction }}<br/>
         {% if forloop.last %}
         <br/>
         {% endif %}
@@ -91,10 +81,14 @@
         {{ object.nr_of_pages }}<br/><br/>
         {% endif %}
         {% for keyword in object.keywords.all %}
-        <span id="detail_title">KEYWORD {{ forloop.counter }}</span><br/>
-        {{ keyword.name }}<br/>
+		{% if forloop.first %}
+        <span id="detail_title">KEYWORDS</span><br/>
+		{% endif %}
+        {{ keyword.name }}
         {% if forloop.last %}
         <br/>
+		{% else %}
+		,
         {% endif %}
         {% endfor %}
 
@@ -109,8 +103,6 @@
         <a href="/new/?translators={{ translator.pk }}">{{ translator.name }}</a><br/>
         <span id="detail_title">TRANSLATOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br/>
         <a href="/new/?translators={{ translator.pk }}">{{ translator.name_original_language }}</a><br/>
-        <span id="detail_title">TRANSLATOR EXTRA INFO {{ forloop.counter }}</span><br/>
-        {{ translator.extra_info }}<br/>
         {% if forloop.last %}
         <br/>
         {% endif %}
@@ -147,10 +139,6 @@
         {% if object.publication_city %}
         <span id="detail_title">PUBLICATION CITY</span><br/>
         {{ object.publication_city.name }}<br/><br/>
-        {% endif %}
-        {% if object.price %}
-        <span id="detail_title">PRICE</span><br/>
-        {{ object.price }}<br/><br/>
         {% endif %}
         {% for church in object.affiliated_church.all %}
         <span id="detail_title">CHURCH {{ forloop.counter }}</span><br/>
