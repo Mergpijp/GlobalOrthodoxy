@@ -326,3 +326,27 @@ h3 {
     border-radius: 11px;
     margin-top: -24px;
 }
+
+#right 
+{
+    position: fixed;
+    right: 0px;
+    top: 10px;
+}
+
+.search
+{
+	width: 500px;
+    margin: auto;
+    margin-top: 30px;
+}
+
+.search input
+{
+	padding: 22px;
+    width: 240px;
+    border-radius: 23px;
+    border: 0px;
+    margin-left: 100px;
+    height: 37px;	
+}
