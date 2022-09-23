@@ -174,7 +174,11 @@ def process_file2(request, pkb=None):
             SMALL_FILE_SIZE = 400
             image = Image.open(instance.file.path)
             image.thumbnail((SMALL_FILE_SIZE, SMALL_FILE_SIZE), Image.ANTIALIAS)
-            small_file_path = instance.file.path.replace('.jpg', '_small.jpg').replace('.png', '_small.png').replace('.jpeg', '_small.jpg')
+
+            small_file_path = instance.file.path
+            for extension in ['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG']:
+                small_file_path = small_file_path.replace('.'+extension, '_small.'+extension)
+
             print(small_file_path)
 
             if '.png' in small_file_path.lower():
@@ -875,8 +879,16 @@ class PublicationDetailViewNew(DetailView):
         date = date.replace(tzinfo=utc)
 
         for uploadedfile in context['publication'].uploadedfiles.all():
+
+            list_view_priority = 9
+
+            try:
+                list_view_priority = uploadedfile.filecategory.list_view_priority
+            except AttributeError:
+                pass
+
             if uploadedfile.uploaded_at and uploadedfile.uploaded_at < date and uploadedfile.file and \
-                    uploadedfile.filecategory.list_view_priority == min:
+                    list_view_priority == min:
                 try:
                     im = Image.open(uploadedfile.file)
                     date = uploadedfile.uploaded_at
@@ -889,7 +901,7 @@ class PublicationDetailViewNew(DetailView):
 
         if cover_image is not None:
 
-            for extension in ['png', 'jpg', 'jpeg']:
+            for extension in ['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG']:
 
                 if not cover_image.path.endswith(extension):
                     continue
@@ -2086,7 +2098,7 @@ class SearchResultsViewImages(ListView):
             if cover_image is None:
                 continue
 
-            for extension in ['png', 'jpg', 'jpeg']:
+            for extension in ['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG']:
 
                 if not cover_image.path.endswith(extension):
                     continue
@@ -2755,7 +2767,7 @@ class SearchResultsViewNew(ListView):
                 small_cover_images.append(None)
                 continue
 
-            for extension in ['png', 'jpg', 'jpeg']:
+            for extension in ['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG']:
 
                 if not cover_image.path.endswith(extension):
                     continue
