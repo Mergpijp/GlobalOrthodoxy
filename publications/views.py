@@ -3213,7 +3213,7 @@ class AuthorShow(ListView):
     model = Author
     #template_name = 'publications/author_show.html'
     context_object_name = 'authors'
-    paginate_by = 10
+    paginate_by = 500
 
     def get_template_names(self):
         if self.request.path == '/authors/':
@@ -3306,7 +3306,7 @@ class TranslatorShow(ListView):
     model = Translator
     #template_name = 'publications/translator_show.html'
     context_object_name = 'translators'
-    paginate_by = 10
+    paginate_by = 500
 
     def get_template_names(self):
         if self.request.path == '/translators/':
