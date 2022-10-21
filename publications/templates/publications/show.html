@@ -68,22 +68,30 @@
             {{ publication.get_truncated_author_name }}
         </td>
         <td>
-            {% if publication.publication_year and not publication.is_periodical %}
-                {{ publication.publication_year }}
-            {% else %}
-                {% if publication.ongoing and publication.start_year %}
-                    {{ publication.start_year }}-now
-                {% elif publication.ongoing %}
-                    ?-now
-                {% elif publication.end_year and publication.start_year %}
-                    {{ publication.start_year }}-{{ publication.end_year }}
-                {% elif publication.start_year and not publication.end_year %}
-                    {{ publication.start_year }}-?
-                {% elif publication.end_year and not publication.start_year  %}
-                    ?-{{ publication.end_year }}
-                {% else %}
-                    ?-?
-                {% endif %}
+            {% if publication.is_periodical or publication.start_year %}
+			
+				{% if publication.start_year %}
+					{{ publication.start_year }}
+				{% else %}
+					unknown
+				{% endif %}
+				-
+				
+				{% if publication.ongoing %}
+					now
+				{% elif publication.end_year %}
+					{{ publication.end_year }}
+				{% else %}
+					unknown
+				{% endif %}
+				
+			
+			{% else %}
+				{% if publication.publication_year %}
+					{{ publication.publication_year }}
+				{% else %}
+					no date
+				{% endif %}
             {% endif %}
         </td>
         <td>

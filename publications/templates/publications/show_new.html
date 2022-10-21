@@ -145,7 +145,31 @@
                 </div>
                 <div id="bottom_right-element">
                     {{ publication.content_genre.first.name }} - {{ publication.publication_city.name }} ({{ publication.publication_country }}), 
-					{% if not publication.publication_year %}no date{% else %}{{ publication.publication_year }}{% endif %}
+					{% if publication.is_periodical or publication.start_year %}
+					
+						{% if publication.start_year %}
+							{{ publication.start_year }}
+						{% else %}
+							unknown
+						{% endif %}
+						-
+						
+						{% if publication.ongoing %}
+							now
+						{% elif publication.end_year %}
+							{{ publication.end_year }}
+						{% else %}
+							unknown
+						{% endif %}
+						
+					
+					{% else %}
+						{% if publication.publication_year %}
+							{{ publication.publication_year }}
+						{% else %}
+							no date
+						{% endif %}
+					{% endif %}
                 </div>
             </div>
         </div>
