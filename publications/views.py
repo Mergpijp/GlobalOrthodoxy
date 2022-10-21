@@ -8,6 +8,7 @@ from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 import random
 import string
+from django.db.models.functions import Coalesce
 from .forms import PublicationForm, NewCrispyForm, KeywordForm,\
     AuthorForm, TranslatorForm, FormOfPublicationForm, GenreForm, ChurchForm, LanguageForm, CityForm, SpecialOccasionForm, \
     OwnerForm, IllustrationLayoutTypeForm, UploadedFileForm, CityForm, FileCategoryForm
@@ -2520,7 +2521,17 @@ class SearchResultsViewNew(ListView):
             print(publications)
             ordering = self.get_ordering()
             if ordering is not None and ordering != "":
-                publications = publications.order_by(ordering)
+
+                if 'publication_year' in ordering:
+                    if ordering == "publication_year":
+                        ordering = 'y'
+                    else:
+                        ordering = '-y'
+
+                    publications = publications.annotate(y=Coalesce('publication_year', 'start_year')).order_by(ordering)
+                else:
+                    publications = publications.order_by(ordering)
+
             publications = publications.distinct()
 
             #pdb.set_trace()
