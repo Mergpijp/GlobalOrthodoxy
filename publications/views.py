@@ -1172,6 +1172,7 @@ class SearchResultsView(ListView):
             #pdb.set_trace()
             #publications = publications.filter(Q(entry_query) | Q(arabic_query))
             publications = publications.filter(Q(entry_query))
+
             #for (idx, apin) in enumerate(appears_in):
             '''
             print(publications)
@@ -1834,6 +1835,7 @@ class SearchResultsViewImages(ListView):
             #publications = publications.filter(Q(entry_query) | Q(arabic_query))
             publications = publications.filter(Q(entry_query))
             #for (idx, apin) in enumerate(appears_in):
+
             '''
             print(publications)
             ordering = self.get_ordering()
@@ -2518,7 +2520,6 @@ class SearchResultsViewNew(ListView):
             publications = publications.filter(Q(entry_query))
             #for (idx, apin) in enumerate(appears_in):
 
-            print(publications)
             ordering = self.get_ordering()
             if ordering is not None and ordering != "":
 
@@ -2644,9 +2645,21 @@ class SearchResultsViewNew(ListView):
                         'name')
                 publications = Publication.objects.annotate(content_genre_name=Subquery(content_genre_subquery)).order_by(ordering)
             else:
-                publications = publications.order_by(ordering)
+
+                if 'publication_year' in ordering:
+                    if ordering == "publication_year":
+                        ordering = 'y'
+                    else:
+                        ordering = '-y'
+
+                    publications = publications.annotate(y=Coalesce('publication_year', 'start_year')).order_by(
+                        ordering)
+                else:
+                    publications = publications.order_by(ordering)
+
         elif self.request.path == '/publication/show/' or self.request.path == '/':
             publications = publications.order_by('-date_created')
+
         return publications
 
     def make_human_friendly(self, field):
