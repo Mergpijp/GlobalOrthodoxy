@@ -417,16 +417,7 @@ class NewCrispyForm(forms.ModelForm):
                     'ISBN_number',
                     'printed_by',
                     'published_by',
-                    HTML("""
-                        <input type="checkbox" name="is_periodical" class="checkboxinput" id="id_is_periodical" onclick="togglePeriodical();">
-                        <label for=id_is_periodical">is periodical</label>
-                          <script>
-                            function togglePeriodical() {
-                                $('#hiddenp').toggleClass('phidden');
-                                $('#shownp').toggleClass('phidepubyear');
-                            }
-                         </script>
-                    """),
+                    'is_periodical',
                     Div('publication_year', css_id="shownp"),
                     Div('start_year', 'end_year', 'ongoing', css_class="phidden", css_id="hiddenp"),
                     'publication_country',

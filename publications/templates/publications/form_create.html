@@ -20,4 +20,20 @@
     {% csrf_token %}
     {% crispy form form.helper %}
 </form>
+
+<script>
+if ($('#id_is_periodical').is(':checked'))
+{
+	togglePeriodical();
+}
+
+$('#id_is_periodical').click(togglePeriodical);
+
+function togglePeriodical()
+{
+    $('#hiddenp').toggleClass('phidden');
+    $('#shownp').toggleClass('phidepubyear');
+}
+</script>
+
 {% endblock content %}
