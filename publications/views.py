@@ -2743,15 +2743,22 @@ class SearchResultsViewNew(ListView):
 
         cover_images = []
 
+        used_uploaded_file_pks = set()
+
         for pub in context['publications']:
-            min = 9
+            min = 999
             length = len(cover_images)
             inside = False
+
             for uploadedfile in pub.uploadedfiles.all():
                 if uploadedfile.filecategory and uploadedfile.filecategory.list_view_priority:
 
                     #If filtering on a file category, only use files of that category
                     if filecategory != None and uploadedfile.filecategory.pk != int(filecategory):
+                        continue
+
+                    #Dont show the same uploaded file twice (for example when a periodical has >1 front covers)
+                    if uploadedfile.pk in used_uploaded_file_pks:
                         continue
 
                     compare = int(uploadedfile.filecategory.list_view_priority)
@@ -2761,6 +2768,8 @@ class SearchResultsViewNew(ListView):
                             cover_images = cover_images[:-1]
                         inside = True
                         cover_images.append(uploadedfile.file)
+                        used_uploaded_file_pks.add(uploadedfile.pk)
+
             if length == len(cover_images):
                 date = datetime.datetime.now()
                 date = date.replace(tzinfo=utc)
@@ -2773,9 +2782,12 @@ class SearchResultsViewNew(ListView):
                             if inside:
                                 cover_images = cover_images[:-1]
                             cover_images.append(uploadedfile.file)
+
                             inside = True
                         except IOError:
                             continue
+
+
             if length == len(cover_images):
                 cover_images.append(None)
 
