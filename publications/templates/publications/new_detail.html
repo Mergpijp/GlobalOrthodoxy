@@ -6,18 +6,64 @@
     <a target="_blank" href="/media/{{ cover_image }}"><img src="/media/{{ cover_image_small }}" width="400" height="400" id="crop_image"></a>
 </center>
     <br/><br/>
+
+<div class="title_section">
+	<span id="detail_title">TITLE</span><br/>
+	{{ object.title }}
+	
+	{% if object.title_subtitle_transcription %}
+	
+		- {{ object.title_subtitle_transcription }} 
+	{% endif %}
+
+	{% if object.title_translation %}
+		(English: {{ object.title_translation }})
+	{% endif %}
+
+	{% if object.title2 %}
+	
+		<br><br>
+	
+		<span id="detail_title">ALTERNATIVE TITLE</span><br/>
+		{{ object.title2 }}
+		
+		{% if object.title_subtitle_transcription2 %}
+		
+			- {{ object.title_subtitle_transcription2 }} 
+		{% endif %}
+
+		{% if object.title_translation2 %}
+			(English: {{ object.title_translation2 }})
+		{% endif %}	
+
+	{% endif %}
+	
+	{% if object.title3 %}
+	
+		<br><br>
+	
+		<span id="detail_title">ALTERNATIVE TITLE</span><br/>
+		{{ object.title3 }}
+		
+		{% if object.title_subtitle_transcription3 %}
+		
+			- {{ object.title_subtitle_transcription3 }} 
+		{% endif %}
+
+		{% if object.title_translation3 %}
+			(English: {{ object.title_translation3 }})
+		{% endif %}	
+
+	{% endif %}	
+
+</div>
+
+<br><br>
+
 <div class="all_row">
 
     <div class="col_part">
-        {% if object.title_subtitle_transcription %}
-        <span id="detail_title">TITLE TRANSCRIPTION</span> <br>
-        {{ object.title_subtitle_transcription }}<br/><br/>
-        {% endif %}
-        {% if object.pdf_url %}
-        <span id="detail_title">URL</span> <br/>
-        <a href="{{ object.pdf_url }}">{{ object.pdf_url }}</a><br/><br/>
-        {% endif %}
-        {% for author in object.authors.all %}
+        {% for author in object.authors.all %} 
         <span id="detail_title">AUTHOR NAME {{ forloop.counter }}</span> <br>
         <a href="/new/?authors={{ author.pk }}">{{ author.name }}</a><br/>
         <span id="detail_title">AUTHOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br>
@@ -94,10 +140,6 @@
 
     </div>
     <div class="col_part">
-        {% if object.title_translation %}
-        <span id="detail_title">TRANSLATED TITLE</span><br/>
-        {{ object.title_translation }}<br/><br/>
-        {% endif %}
         {% for translator in object.translators.all %}
         <span id="detail_title">TRANSLATOR NAME {{ forloop.counter }}</span><br/>
         <a href="/new/?translators={{ translator.pk }}">{{ translator.name }}</a><br/>
