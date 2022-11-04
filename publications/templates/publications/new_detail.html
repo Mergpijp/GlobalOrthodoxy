@@ -143,8 +143,12 @@
         {% for translator in object.translators.all %}
         <span id="detail_title">TRANSLATOR NAME {{ forloop.counter }}</span><br/>
         <a href="/new/?translators={{ translator.pk }}">{{ translator.name }}</a><br/>
-        <span id="detail_title">TRANSLATOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br/>
-        <a href="/new/?translators={{ translator.pk }}">{{ translator.name_original_language }}</a><br/>
+			
+		{% if translator.name_original_name %}
+			<span id="detail_title">TRANSLATOR NAME ORIGINAL LANGUAGE {{ forloop.counter }}</span><br/>
+			<a href="/new/?translators={{ translator.pk }}">{{ translator.name_original_language }}</a><br/>
+		{% endif %}
+
         {% if forloop.last %}
         <br/>
         {% endif %}
