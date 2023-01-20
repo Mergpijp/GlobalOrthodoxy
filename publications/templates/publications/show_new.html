@@ -136,6 +136,11 @@
 
 <div id="content" class="infinite-container">
     {% for publication, cover_image, search_term_appear_in in zipped_data %}
+	
+		{% if publication.content_genre.first.name %}
+		<div class="genre-bubble">{{ publication.content_genre.first.name }}</div>
+		{% endif %}
+
         <div id="publication_content" class="publication-item infinite-item" data-genre='[{% for genre in publication.content_genre.all %}"{{genre}}"{% if not forloop.last %},{% endif %}{% endfor %}]' data-language='[{% for language in publication.language.all %}"{{language}}"{% if not forloop.last %},{% endif %}{% endfor %}]'>
             <a id="cover_image" href="/publication/{{ publication.id }}/public"><img src="/media/{{ cover_image }}" width="200" height="200" id="crop_image"></a>
             <div id="right-element">
@@ -144,7 +149,7 @@
                     <div id="title_translation">{{ publication.get_truncated_title_translation_new }}</div>
                 </div>
                 <div id="bottom_right-element">
-                    {{ publication.content_genre.first.name }} - {{ publication.publication_city.name }} ({{ publication.publication_country }}), 
+                    {{ publication.authors.first.name }} - {{ publication.publication_city.name }} ({{ publication.publication_country }}), 
 					{% if publication.is_periodical or publication.start_year %}
 					
 						{% if publication.start_year %}

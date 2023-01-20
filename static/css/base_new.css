@@ -192,15 +192,18 @@ a {
   position: relative;
   width : 600px;
   height : 150px;
+  padding: 22px;
 
   background: white;
 }
 #title_text {
-  position: absolute;
-  left: 15px;
-  top: 15px;
-  right: 15px;
-  font-size: 22px;
+    left: 15px;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: 900;
+    color: hsl(0deg 0% 0% / 65%);
+	margin-bottom: 10px;
 }
 #name_t {
   position: absolute;
@@ -220,10 +223,10 @@ a {
 }
 
 #title_translation {
-  position: absolute;
   left: 15px;
   top: 75px;
   font-size: 13px;
+  color: hsl(0deg 0% 66%);  
 }
 #publication_place_year{
   position: absolute;
@@ -636,4 +639,22 @@ p
     padding: 20px;
     border-radius: 18px;
     margin-top: 65px;
+}
+
+.genre-bubble
+{
+    background-color: hsl(228deg 19% 31%);
+    width: 154px;
+    padding-left: 16px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-right: 16px;
+    border-radius: 22px;
+    color: white;
+    margin-left: 767px;
+    margin-bottom: -67px;
+    font-size: 10px;
+    position: relative;
+    z-index: 1000;
+    text-align: center;
 }
