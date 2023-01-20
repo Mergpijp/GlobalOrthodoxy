@@ -390,7 +390,7 @@ class Publication(models.Model):
     nr_of_pages = models.IntegerField(blank=True, null=True)
     collection_date = models.CharField(max_length=100, blank=True)
     collection_country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='collections', null=True, blank=True)
-    collection_venue_and_city = models.CharField(max_length=100, blank=True)
+    collection_venue_and_city = models.CharField('Collection venue', max_length=100, blank=True)
     collection_context = models.TextField(max_length=800, blank=True)
     copyrights = models.NullBooleanField()
     currently_owned_by = models.ManyToManyField(Owner)
