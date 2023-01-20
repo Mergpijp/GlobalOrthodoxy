@@ -862,7 +862,10 @@ class UploadedFileForm(forms.ModelForm):
             'image_title',
             FieldWithButtons('filecategory', StrictButton('+', type='button', css_class='btn-danger',
                                                              onClick="window.open('/filecategory/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+            'main_color',
+            'secondary_color',
             'image_contents',
+            'image_content_category',
             #FieldWithButtons('imagecontents', StrictButton('+', type='button', css_class='btn-danger',
             #                                                 onClick="window.open('/imagecontent/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
             HTML("""
@@ -948,7 +951,7 @@ class UploadedFileForm(forms.ModelForm):
 
     class Meta:
         model = UploadedFile
-        fields = ('image_title', 'filecategory', 'file', 'image_contents',)
+        fields = ('image_title', 'filecategory', 'file', 'image_contents','image_content_category', 'main_color', 'secondary_color')
 
     def save(self, commit=True):
         instance = super().save(commit)
@@ -963,7 +966,7 @@ class UploadedFileForm(forms.ModelForm):
 class UploadedFileModelForm2(BSModalModelForm):
     class Meta:
         model = UploadedFile
-        fields = ('image_title', 'filecategory', 'file', 'image_contents',)
+        fields = ('image_title', 'filecategory', 'file', 'image_contents','image_content_category', 'main_color', 'secondary_color')
 
 class UploadedFileModelForm(BSModalModelForm):
     '''
@@ -1007,7 +1010,10 @@ class UploadedFileModelForm(BSModalModelForm):
             'image_title',
             FieldWithButtons('filecategory', StrictButton('+', type='button', css_class='btn-danger',
                                                           onClick="window.open('/filecategory/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
+            'main_color',
+            'secondary_color',
             'image_contents',
+            'image_content_category',
             # FieldWithButtons('imagecontents', StrictButton('+', type='button', css_class='btn-danger',
             #                                                 onClick="window.open('/imagecontent/new', '_blank', 'width=1000,height=600,menubar=no,toolbar=no');")),
             HTML("""
@@ -1088,7 +1094,7 @@ class UploadedFileModelForm(BSModalModelForm):
 
     class Meta:
         model = UploadedFile
-        fields = ('image_title', 'filecategory', 'file', 'image_contents',)
+        fields = ('image_title', 'filecategory', 'file', 'image_contents','image_content_category', 'main_color', 'secondary_color')
 
 class IllustrationLayoutTypeForm(forms.ModelForm):
     '''
