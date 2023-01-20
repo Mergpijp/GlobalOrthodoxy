@@ -106,7 +106,14 @@ class PublicationForm(forms.ModelForm):
         model=Language,
         search_fields=['name__icontains', ],
         attrs={'data-minimum-input-length': 0},
-    ), queryset=Language.objects.all(), required=False)
+    ), queryset=Language.objects.all(), required=False),
+    collection_city = forms.ModelChoiceField(widget=ModelSelect2Widget(
+        model=City,
+        search_fields=['name__icontains', ],
+        dependent_fields={'collection_country': 'country'},
+        attrs={'data-minimum-input-length': 0},
+    ), queryset=City.objects.all(), required=False)
+
 
     class Meta:
         model = Publication
@@ -138,6 +145,7 @@ class PublicationForm(forms.ModelForm):
         self.fields['is_a_translation'].required = False
         self.fields['keywords'].required = False
         self.fields['translated_from'].required = False
+        self.fields['collection_city'].required = False
 
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'
@@ -186,6 +194,7 @@ class PublicationForm(forms.ModelForm):
                 Tab('Collection info',
                     'collection_date',
                     'collection_country',
+                    'collection_city'
                     'collection_venue_and_city',
                     'copyrights',
                     'currently_owned_by',
@@ -363,6 +372,7 @@ class NewCrispyForm(forms.ModelForm):
         self.fields['currency'].required = False
         self.fields['pdf_url'].required = False
         self.fields['contact_website'].required = False
+        self.fields['collection_city'].required = False
 
         self.helper.layout = Layout(
             TabHolder(
@@ -455,6 +465,9 @@ class NewCrispyForm(forms.ModelForm):
                 Tab('Collection info',
                     'collection_date',
                     'collection_country',
+                    'collection_city',
+                    #This is where you can add the 'add a city' button, but requires extra work
+                    #HTML("""{% include "_publication_city_modal.html" %}"""),
                     'collection_venue_and_city',
                     'collection_context',
                     'copyrights',
@@ -520,7 +533,8 @@ class NewCrispyForm(forms.ModelForm):
                   'publication_country', 'publication_city', 'publishing_organisation', \
                   'donor', 'affiliated_church', 'extra_info', 'language', 'content_description', 'content_genre',
                   'connected_to_special_occasion', 'description_of_illustration', \
-                  'nr_of_pages', 'collection_date', 'collection_country', 'collection_venue_and_city', 'copyrights',
+                  'nr_of_pages', 'collection_date', 'collection_country', 'collection_city',
+                  'collection_venue_and_city', 'copyrights',
                   'currently_owned_by', 'contact_telephone_number', \
                   'contact_email', 'contact_website', 'general_comments', 'team_comments', 'keywords',
                   'is_a_translation', 'ISBN_number', 'translated_from', \

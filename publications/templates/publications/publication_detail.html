@@ -583,11 +583,25 @@
     </tbody>
 </table>
 {% endif %}
+{% if object.collection_city %}
+<table class="table table-striped table-bordered table-sm">
+    <thead class="thead-light"> 
+    <tr>
+        <th>collection city</th> 
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{object.collection_city}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
 {% if object.collection_venue_and_city %}
 <table class="table table-striped table-bordered table-sm">
     <thead class="thead-light"> 
     <tr>
-        <th>collection venue and city</th> 
+        <th>collection venue</th> 
     </tr>
     </thead>
     <tbody>
