@@ -237,6 +237,12 @@ class FileCategory(models.Model):
     def __str__(self):
         return self.name
 
+class ImageContentCategory(models.Model):
+    name = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.name
+
 class UploadedFile(models.Model):
     '''
     Manytomany field class with three fields.
@@ -246,9 +252,13 @@ class UploadedFile(models.Model):
     image_title = models.CharField(max_length=255, blank=True)
     filecategory = models.ForeignKey(FileCategory, on_delete=models.CASCADE, related_name="filecategory", null=True, blank=True)
     image_contents = models.CharField(max_length=1000, blank=True)
+    image_content_category = models.ForeignKey(ImageContentCategory, on_delete=models.CASCADE, related_name="image_content_category", null=True, blank=True)
     file = models.FileField(upload_to='files/%Y/%m/%d/%H/%M/%S/%f/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
+
+    main_color = models.CharField(max_length=255, blank=True)
+    secondary_color = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.image_title
@@ -395,6 +405,7 @@ class Publication(models.Model):
     is_stub = models.BooleanField(default=False)
     created_by = models.ForeignKey('auth.User', related_name='publications', on_delete=models.CASCADE, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    collection_city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='collection_city', null=True, blank=True)
 
     #Fields that do not exist in excel sheet:
     venue = models.CharField(max_length=100, blank=True)
