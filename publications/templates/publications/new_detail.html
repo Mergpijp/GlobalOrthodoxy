@@ -137,6 +137,9 @@
 		,
         {% endif %}
         {% endfor %}
+		<br/>
+		<span id="detail_title">CITATION</span><br/>
+		{% for author in object.authors.all %}{{ author.name }}{% if not forloop.last %},{% else %}.{% endif %}{% endfor %} {{ object.title }}{% if object.title_translation%}, {{ object.title_translation }}{% endif %}. {% if object.city %}{{object.city}},{% endif %} {{object.published_by}}{% if object.publication_year %}{% if object.city or object.published_by %}, {% endif %}{{object.publication_year}}{% endif %}.
 
     </div>
     <div class="col_part">
