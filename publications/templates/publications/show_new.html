@@ -276,15 +276,15 @@
 		{
 			languageOkay = currentPostQueryLanguageFilter == null || JSON.parse(publicationItem.dataset.language).includes(currentPostQueryLanguageFilter);
 			genreOkay = currentPostQueryGenreFilter == null || JSON.parse(publicationItem.dataset.genre).includes(currentPostQueryGenreFilter);
-		
-			if (languageOkay && genreOkay)
-			{
-				publicationItem.style.display = "block";	
-			}
-			else
-			{
-				publicationItem.style.display = "none";	
-			}
+            var display = languageOkay && genreOkay ? "block" : "none";
+            publicationItem.style.display = display;
+
+            var previousElementSibling = publicationItem.previousElementSibling;
+
+            if (previousElementSibling != null && previousElementSibling.classList.contains('genre-bubble'))
+            {
+                previousElementSibling.style.display = display;
+            }
 		}
 	}
 	
