@@ -19,3 +19,5 @@ django-gitlog==0.2
 googletrans
 openpyxl==2.4.11
 django-excel-response==2.0.5
+extcolors
+

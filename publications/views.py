@@ -4152,6 +4152,20 @@ class UploadedFileShow(ListView):
             context['direction'] = ''
         return context
 
+class SpaceTimeSearch(ListView):
+
+    model = Publication
+    context_object_name = 'publications'
+    template_name = 'publications/spacetime_search.html'    
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.exclude(Q(publication_year__isnull=True) & Q(start_year__isnull=True))
+
+        queryset = queryset.annotate(y=Coalesce('publication_year', 'start_year')).order_by('y')
+
+        return queryset
+
 @login_required(login_url='/accounts/login/')
 def UploadedFileDelete(request, pk):
     '''
