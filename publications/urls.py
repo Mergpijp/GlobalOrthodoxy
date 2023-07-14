@@ -130,6 +130,7 @@ urlpatterns = [
     path('specialoccasions/', views.SpecialOccasionShow.as_view(), name='specialoccasions-show-new'),
     path('translators/', views.TranslatorShow.as_view(), name='translators-show-new'),
     path('uploadedfiles/', views.UploadedFileShow.as_view(), name='uploadedfiles-show-new'),
+    path('spacetime/', views.SpaceTimeSearch.as_view(), name='space-time-search'),
 
     path('about/', views.about, name='about')
 ]

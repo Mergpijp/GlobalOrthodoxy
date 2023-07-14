@@ -1,0 +1,117 @@
+{% extends "new_base.html" %}
+{% load staticfiles %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js" integrity="sha512-UOJe4paV6hYWBnS0c9GnIRH8PLm2nFK22uhfAvsTIqd3uwnWsVri1OPn5fJYdLtGY3wB11LGHJ4yPU1WFJeBYQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" integrity="sha512-qveKnGrvOChbSzAdtSs8p69eoLegyh+1hwOMbmpCViIwj7rn4oJjdmMvWOuyQlTOZgTlZA0N2PXA7iA8/2TUYA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+.noUi-handle
+{
+    border-radius: 25px !important;
+    width: 27px !important; 
+    box-shadow: none !important;    
+}    
+
+.noUi-handle::after, .noUi-handle::before
+{
+    background: white !important;
+}
+
+.noUi-connect 
+{
+    background: hsl(228.65deg 29.66% 62.15%) !important;
+}
+</style>
+
+
+<div id="header">
+    <br/>
+    <h1><b>PUBLICATIONS IN SPACE AND TIME</b></h1>
+	
+    <div id="slider"></div>
+
+</div>
+
+<script>
+var slider = document.getElementById('slider');
+
+noUiSlider.create(slider, {
+    start: [2000, 2010],
+    connect: true,
+    range: {
+        'min': 1970,
+        'max': 2020
+    }
+});
+
+slider.noUiSlider.on('update.one', function (value) 
+{
+    if (document.getElementById('ÿear_indicator') == null)
+    {
+        return;
+    }
+
+    document.getElementById('ÿear_indicator').innerHTML = Math.round(value[0]) + '-' + Math.round(value[1]);
+    updateVisiblePublications(value[0],value[1]);
+});
+
+function updateVisiblePublications(from,to)
+{
+    var publications = document.getElementsByClassName('publication');
+    var hits = 0;
+
+    for (var i = 0; i < publications.length; i++) 
+    {
+        var publication = publications[i];
+
+        var publication_year = publication.getAttribute('publication_year');
+
+        if (publication_year == "None")
+        {
+            publication_year = publication.getAttribute('start_year');
+        }
+
+        if (publication_year >= from && publication_year <= to)
+        {
+            publication.style.display = 'table-row';
+            hits++;
+        }
+        else
+        {
+            publication.style.display = 'none';
+        }
+    }
+
+    if (document.getElementById('nr_publications') == null)
+    {
+        return;
+    }
+
+    document.getElementById('nr_publications').innerHTML = (hits) + ' hits';
+}
+
+updateVisiblePublications(1970,2020);
+</script>
+
+<p id="ÿear_indicator">2000-2010</p>
+
+<p id="nr_publications">85 hits</p>
+
+<table>
+
+{% for publication in publications %}
+
+    <tr class="publication" start_year={{ publication.start_year }} publication_year={{ publication.publication_year }}>
+        {% if publication.publication_year is null %}
+            <td>{{ publication.start_year }}</td><td>periodical</td>
+        {% else %}
+            <td>{{ publication.publication_year }}</td><td>single</td>
+        {% endif %}
+
+        <td><a href="/publication/{{ publication.pk }}/public">{{ publication.title }}</a></td></tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}
