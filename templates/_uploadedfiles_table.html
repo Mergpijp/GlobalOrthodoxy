@@ -16,7 +16,12 @@
       <th class="text-center" scope="row">{{ uploadedfile.pk }}</th>
       <td class="text-center">{{ uploadedfile.image_title }}</td>
       <td class="text-center">{{ uploadedfile.image_contents }}</td>
-      <td style="text-align: center;"><img src="/media/{{ uploadedfile.file }}" width="200" height="200" id="crop_image"></td>
+      {% if uploadedfile.filecategory.name == "PDF" %}
+        <td class="text-center"><a href="/media/{{uploadedfile.file}}">Download</a></td></td>
+      {% else %}
+        <td style="text-align: center;"><img src="/media/{{ uploadedfile.file }}" width="200" height="200" id="crop_image"></td>
+      {% endif %}
+
       <td class="text-center">
         <!-- Unlink Uploadedfile buttons -->
         <button type="button" class="uploadedfile-unlink btn btn-sm btn-danger" data-form-url="{% url 'unlink-file' publication.pk uploadedfile.pk %}">

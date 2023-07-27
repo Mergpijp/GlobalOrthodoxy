@@ -169,28 +169,27 @@ def process_file2(request, pkb=None):
         if form.is_valid():
             instance = form.save()
 
-            #Also save a small variant
-            #try:
-            from PIL import Image
-            SMALL_FILE_SIZE = 400
-            image = Image.open(instance.file.path)
-            image.thumbnail((SMALL_FILE_SIZE, SMALL_FILE_SIZE), Image.ANTIALIAS)
+            IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG']
 
-            small_file_path = instance.file.path
-            for extension in ['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG']:
-                small_file_path = small_file_path.replace('.'+extension, '_small.'+extension)
+            #In an image, create a small version
+            if instance.file.path.split('.')[-1] in IMAGE_EXTENSIONS:
 
-            print(small_file_path)
+                from PIL import Image
 
-            if '.png' in small_file_path.lower():
-                file_type = 'PNG'
-            else:
-                file_type = 'JPEG'
+                SMALL_FILE_SIZE = 400
+                image = Image.open(instance.file.path)
+                image.thumbnail((SMALL_FILE_SIZE, SMALL_FILE_SIZE), Image.ANTIALIAS)
 
-            image.save(small_file_path,file_type)
+                small_file_path = instance.file.path
+                for extension in ['png', 'jpg', 'jpeg', 'PNG', 'JPG', 'JPEG']:
+                    small_file_path = small_file_path.replace('.'+extension, '_small.'+extension)
 
-            #except (PermissionError, ImportError, OSError) as e:
-            #    pass
+                if '.png' in small_file_path.lower():
+                    file_type = 'PNG'
+                else:
+                    file_type = 'JPEG'
+
+                image.save(small_file_path,file_type)
 
             #Link to publication
             if pkb:
