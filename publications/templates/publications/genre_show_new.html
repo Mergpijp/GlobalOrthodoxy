@@ -51,7 +51,10 @@
             <div id="text-element">
                 <div id="title_text">
                     <div id="important_field">
-                        <br/><a href="{% url 'publication-show-new' %}?content_genre={{genre.id}}">{{ genre.name }}</a>
+                        <a href="{% url 'publication-show-new' %}?content_genre={{genre.id}}">{{ genre.name }}</a>
+                    </div>
+                    <div id="description">
+                        {{ genre.description }}
                     </div>
                 </div>
             </div>

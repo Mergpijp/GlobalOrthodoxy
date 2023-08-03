@@ -191,7 +191,7 @@ a {
 #text-element {
   position: relative;
   width : 600px;
-  height : 150px;
+  height : auto;
   padding: 22px;
 
   background: white;
@@ -243,6 +243,12 @@ a {
 #important_field{
   font-size: 20px;
 }
+
+#description
+{
+  font-size: 12px;  
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
 }

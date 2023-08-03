@@ -64,6 +64,7 @@ class Genre(models.Model):
     Manytomany field class. Contains only a charfield.
     '''
     name = models.CharField(max_length=100, blank=True)
+    description = models.CharField(max_length=1000, blank=True)
 	
     def __str__(self):
         return self.name
@@ -233,6 +234,7 @@ class FileCategory(models.Model):
     order_index = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=255, blank=True)
     list_view_priority = models.IntegerField(blank=True, null=True)
+    description = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):
         return self.name
