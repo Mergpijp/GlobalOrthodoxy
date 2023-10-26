@@ -218,6 +218,12 @@ class City(models.Model):
     name = models.CharField(max_length=255, blank=True)
     country = models.ForeignKey(Country, related_name='cities', on_delete=models.CASCADE)
 
+    x = models.FloatField(blank=True, null=True)
+    y = models.FloatField(blank=True, null=True)
+
+    coordinates_requested = models.BooleanField(default=False)
+    coordinates_known = models.BooleanField(default=False)
+
     class Meta:
         verbose_name_plural = "cities"
 

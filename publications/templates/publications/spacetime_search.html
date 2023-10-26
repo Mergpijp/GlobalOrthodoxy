@@ -4,6 +4,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js" integrity="sha512-UOJe4paV6hYWBnS0c9GnIRH8PLm2nFK22uhfAvsTIqd3uwnWsVri1OPn5fJYdLtGY3wB11LGHJ4yPU1WFJeBYQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" integrity="sha512-qveKnGrvOChbSzAdtSs8p69eoLegyh+1hwOMbmpCViIwj7rn4oJjdmMvWOuyQlTOZgTlZA0N2PXA7iA8/2TUYA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+   crossorigin=""/>   
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+   crossorigin=""></script>
+
+<style>
+#map { height: 700px; }
+</style>
+
 <style>
 .noUi-handle
 {
@@ -32,15 +44,55 @@
 
 </div>
 
+<p id="ÿear_indicator">2000-{% now "Y" %}</p>
+
+<p id="nr_publications">85 hits</p>
+
+<div id="map"></div>
+
+<table>
+
+{% for publication in publications %}
+
+    <tr class="publication" pk={{ publication.pk }} start_year={{ publication.start_year }} publication_year={{ publication.publication_year }}>
+        {% if publication.publication_year is null %}
+            <td>{{ publication.start_year }}</td><td>periodical</td>
+        {% else %}
+            <td>{{ publication.publication_year }}</td><td>single</td>
+        {% endif %}
+
+        <td><a href="/publication/{{ publication.pk }}/public">{{ publication.title }}</a></td></tr>
+
+{% endfor %}
+
+</table>
+
 <script>
+var coordinate = [43.29695, 5.38107]
+
+var map = L.map('map').setView(coordinate, 4);
+var markersPerPublicationPK = {};
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+{% for publication in publications %}
+    //{{ publication.publication_city.name }} {{ publication.publication_city.coordinates_known }} {{ publication.publication_city.x }} {{ publication.publication_city.y }}
+    {% if publication.publication_city.coordinates_known %}
+        markersPerPublicationPK[{{publication.pk}}] = L.marker([{{ publication.publication_city.x }}, {{ publication.publication_city.y }}]).addTo(map);
+    {% endif %}
+{% endfor %}
+
 var slider = document.getElementById('slider');
 
 noUiSlider.create(slider, {
-    start: [2000, 2010],
+    start: [2000, {% now "Y" %}],
     connect: true,
     range: {
         'min': 1970,
-        'max': 2020
+        'max': {% now "Y" %}
     }
 });
 
@@ -71,14 +123,26 @@ function updateVisiblePublications(from,to)
             publication_year = publication.getAttribute('start_year');
         }
 
+        var marker = markersPerPublicationPK[publication.getAttribute('pk')];
+
         if (publication_year >= from && publication_year <= to)
         {
             publication.style.display = 'table-row';
+
+            if (marker != null)
+            {
+                marker.addTo(map);
+            }
             hits++;
         }
         else
         {
             publication.style.display = 'none';
+
+            if (marker != null)
+            {
+                marker.remove();
+            }
         }
     }
 
@@ -92,26 +156,5 @@ function updateVisiblePublications(from,to)
 
 updateVisiblePublications(1970,2020);
 </script>
-
-<p id="ÿear_indicator">2000-2010</p>
-
-<p id="nr_publications">85 hits</p>
-
-<table>
-
-{% for publication in publications %}
-
-    <tr class="publication" start_year={{ publication.start_year }} publication_year={{ publication.publication_year }}>
-        {% if publication.publication_year is null %}
-            <td>{{ publication.start_year }}</td><td>periodical</td>
-        {% else %}
-            <td>{{ publication.publication_year }}</td><td>single</td>
-        {% endif %}
-
-        <td><a href="/publication/{{ publication.pk }}/public">{{ publication.title }}</a></td></tr>
-
-{% endfor %}
-
-</table>
 
 {% endblock %}
