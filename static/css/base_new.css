@@ -18,7 +18,7 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background: linear-gradient(180deg, rgba(87,95,126,1) 215px, rgba(64,70,94,1) 135px);
+  background: linear-gradient(180deg, rgba(87,95,126,1) 285px, rgba(64,70,94,1) 135px);
   overflow-x: hidden;
   transition: 0.5s;
 }
