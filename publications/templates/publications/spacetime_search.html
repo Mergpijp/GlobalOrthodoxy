@@ -58,7 +58,7 @@
         {% if publication.publication_year is null %}
             <td>{{ publication.start_year }}</td><td>periodical</td>
         {% else %}
-            <td>{{ publication.publication_year }}</td><td>single</td>
+            <td>{{ publication.publication_year }}</td><td> </td>
         {% endif %}
 
         <td><a href="/publication/{{ publication.pk }}/public">{{ publication.title }}</a></td></tr>
