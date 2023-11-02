@@ -33,12 +33,18 @@
 {
     background: hsl(228.65deg 29.66% 62.15%) !important;
 }
+
+button
+{
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
 </style>
 
 
 <div id="header">
     <br/>
-    <h1><b>PUBLICATIONS IN SPACE AND TIME 1</b></h1>
+    <h1><b>PUBLICATIONS IN SPACE AND TIME</b></h1>
 	
     <div id="slider"></div>
 
@@ -46,7 +52,7 @@
 
 <p id="ÿear_indicator">2000-{% now "Y" %}</p>
 
-<p id="nr_publications">85 hits</p>
+<div><span id="nr_publications">85 hits</span><button onclick="toggleMap()">Toggle map</button></div>
 
 <div id="map"></div>
 
@@ -54,10 +60,10 @@
 
 {% for publication in publications %}
 
-    <tr class="publication" pk={{ publication.pk }} start_year={{ publication.start_year }} publication_year={{ publication.publication_year }}>
+    <tr class="publication" pk={{ publication.pk }} start_year={{ publication.start_year }} publication_year={{ publication.publication_year }} city={{ publication.publication_city }} publication_title="{{ publication.title }}">
         {% if publication.publication_year is null %}
             <td>{{ publication.start_year }}</td><td>periodical</td>
-        {% else %}
+       {% else %}
             <td>{{ publication.publication_year }}</td><td> </td>
         {% endif %}
 
@@ -71,18 +77,28 @@
 var coordinate = [47, 15]
 
 var map = L.map('map').setView(coordinate, 4);
-var markersPerPublicationPK = {};
+var markersPerCity = {};
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 20,
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-{% for publication in publications %}
-    //{{ publication.publication_city.name }} {{ publication.publication_city.coordinates_known }} {{ publication.publication_city.x }} {{ publication.publication_city.y }}
-    {% if publication.publication_city.coordinates_known %}
-        markersPerPublicationPK[{{publication.pk}}] = L.marker([{{ publication.publication_city.x }}, {{ publication.publication_city.y }}]).addTo(map);
-    {% endif %}
+var bookIcons = [];
+
+for (var i = 1; i < 5; i++)
+{
+    bookIcons.push(L.icon({
+        iconUrl: '/static/icons/pub' + i + '.png',
+
+        iconSize:     [30, 30], // size of the icon
+        iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    }));
+}
+
+{% for city, city_details in cities.items %}
+    markersPerCity['{{city}}'] = L.marker([{{ city_details.x_coord }}, {{ city_details.y_coord }}], {icon: bookIcons[0]}).addTo(map);
 {% endfor %}
 
 var slider = document.getElementById('slider');
@@ -112,38 +128,62 @@ function updateVisiblePublications(from,to)
     var publications = document.getElementsByClassName('publication');
     var hits = 0;
 
+    var publicationsPerCity = {};
+
     for (var i = 0; i < publications.length; i++) 
     {
         var publication = publications[i];
 
-        var publication_year = publication.getAttribute('publication_year');
+        var publicationYear = publication.getAttribute('publication_year');
 
-        if (publication_year == "None")
+        if (publicationYear == "None")
         {
-            publication_year = publication.getAttribute('start_year');
+            publicationYear = publication.getAttribute('start_year');
         }
 
-        var marker = markersPerPublicationPK[publication.getAttribute('pk')];
-
-        if (publication_year >= from && publication_year <= to)
+        if (publicationYear >= from && publicationYear <= to)
         {
             publication.style.display = 'table-row';
 
-            if (marker != null)
+            if (publicationsPerCity[publication.getAttribute('city')] == null)
             {
-                marker.addTo(map);
+                publicationsPerCity[publication.getAttribute('city')] = [];
             }
+
+            publicationsPerCity[publication.getAttribute('city')].push({'title': publication.getAttribute('publication_title'), 'year': publicationYear});
             hits++;
         }
         else
         {
             publication.style.display = 'none';
-
-            if (marker != null)
-            {
-                marker.remove();
-            }
         }
+    }
+
+    for (var city in markersPerCity)
+    {
+        if (publicationsPerCity[city] == null || publicationsPerCity[city].length == 0)
+        {
+            markersPerCity[city].remove();
+        }
+        else
+        {
+            markersPerCity[city].addTo(map);
+
+            var popupContent = '<strong>' + city + '</strong><ul>';
+
+            for (var publication of publicationsPerCity[city])
+            {
+                popupContent += '<li>' + publication['title'] + ' (' + publication['year'] + ')</li>';
+            }
+
+            popupContent += '</ul>';
+
+            markersPerCity[city].bindPopup(popupContent);
+
+            var iconIndex = Math.min(Math.floor(publicationsPerCity[city].length / 2),3);
+            markersPerCity[city].setIcon(bookIcons[iconIndex]);
+        }
+
     }
 
     if (document.getElementById('nr_publications') == null)
@@ -155,6 +195,23 @@ function updateVisiblePublications(from,to)
 }
 
 updateVisiblePublications(1970,2020);
+
+function toggleMap()
+{
+    var map = document.getElementById('map');
+    var table = document.getElementsByTagName('table')[0];
+
+    if (map.style.display == 'none')
+    {
+        map.style.display = 'block';
+        table.style.display = 'none';
+    }
+    else
+    {
+        map.style.display = 'none';
+        table.style.display = 'block';
+    }
+}
 </script>
 
 {% endblock %}

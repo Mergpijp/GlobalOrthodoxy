@@ -59,7 +59,6 @@ from bootstrap_modal_forms.generic import (
 )
 import csv
 
-
 from excel_response import ExcelResponse
 from os.path import isfile
 
@@ -4164,6 +4163,30 @@ class SpaceTimeSearch(ListView):
         queryset = queryset.annotate(y=Coalesce('publication_year', 'start_year')).order_by('y')
 
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        #Count all cities in the query set
+        cities = {}
+
+        for publication in context['publications']:
+
+            if publication.publication_city is None:
+                continue
+
+            if not publication.publication_city.coordinates_known:
+                continue
+
+            if publication.publication_city.name not in cities:
+                cities[publication.publication_city.name] = {'x_coord':publication.publication_city.x, 'y_coord':publication.publication_city.y, 'publications': []}
+
+            year = str(publication.publication_year) if publication.publication_year is not None else '0'
+
+            cities[publication.publication_city.name]['publications'].append({'year': year, 'title': publication.title})
+
+        context['cities'] = cities
+        return context
 
 @login_required(login_url='/accounts/login/')
 def UploadedFileDelete(request, pk):
