@@ -60,7 +60,7 @@ button
 
 {% for publication in publications %}
 
-    <tr class="publication" pk={{ publication.pk }} start_year={{ publication.start_year }} publication_year={{ publication.publication_year }} city={{ publication.publication_city }} publication_title="{{ publication.title }}">
+    <tr class="publication" pk={{ publication.pk }} start_year={{ publication.start_year }} publication_year={{ publication.publication_year }} city="{{ publication.publication_city }}" publication_title="{{ publication.title }}">
         {% if publication.publication_year is null %}
             <td>{{ publication.start_year }}</td><td>periodical</td>
        {% else %}
